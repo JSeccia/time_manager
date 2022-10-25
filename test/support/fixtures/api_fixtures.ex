@@ -18,4 +18,19 @@ defmodule TimeManager.ApiFixtures do
 
     user
   end
+
+  @doc """
+  Generate a working_time.
+  """
+  def working_time_fixture(attrs \\ %{}) do
+    {:ok, working_time} =
+      attrs
+      |> Enum.into(%{
+        end: ~N[2022-10-24 08:30:00],
+        start: ~N[2022-10-24 08:30:00]
+      })
+      |> TimeManager.Api.create_working_time()
+
+    working_time
+  end
 end
