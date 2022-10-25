@@ -8,7 +8,7 @@ defmodule TimeManagerWeb.ClockController do
 
   action_fallback TimeManagerWeb.FallbackController
 
-  def index(conn, %{"user" => user_id}) do
+  def index(conn, %{"user_id" => user_id}) do
     clocks = Repo.all(from c in Clock, where: c.user == ^user_id)
     render(conn, "index.json", clocks: clocks)
   end
@@ -23,10 +23,10 @@ defmodule TimeManagerWeb.ClockController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    clock = Api.get_clock!(id)
-    render(conn, "show.json", clock: clock)
-  end
+  # def show(conn, %{"id" => id}) do
+  #   clock = Api.get_clock!(id)
+  #   render(conn, "show.json", clock: clock)
+  # end
 
   def update(conn, %{"id" => id, "clock" => clock_params}) do
     clock = Api.get_clock!(id)
