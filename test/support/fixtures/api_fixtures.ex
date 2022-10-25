@@ -33,4 +33,19 @@ defmodule TimeManager.ApiFixtures do
 
     working_time
   end
+
+  @doc """
+  Generate a clock.
+  """
+  def clock_fixture(attrs \\ %{}) do
+    {:ok, clock} =
+      attrs
+      |> Enum.into(%{
+        status: true,
+        time: ~N[2022-10-24 08:40:00]
+      })
+      |> TimeManager.Api.create_clock()
+
+    clock
+  end
 end

@@ -9,6 +9,7 @@ defmodule TimeManagerWeb.Router do
     pipe_through :api
     resources "/users", UserController
     resources "/working_times", WorkingTimeController
+    resources "/clocks", ClockController
   end
 
   # Enables LiveDashboard only for development
