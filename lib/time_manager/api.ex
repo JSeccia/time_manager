@@ -145,7 +145,7 @@ defmodule TimeManager.Api do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_working_time(attrs \\ %{}) do
+  def create_working_time(attrs \\%{}) do
     %WorkingTime{}
     |> WorkingTime.changeset(attrs)
     |> Repo.insert()

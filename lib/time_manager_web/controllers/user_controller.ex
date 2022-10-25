@@ -1,10 +1,17 @@
 defmodule TimeManagerWeb.UserController do
+  import Ecto.Query
   use TimeManagerWeb, :controller
 
+  alias TimeManager.Repo
   alias TimeManager.Api
   alias TimeManager.Api.User
 
   action_fallback TimeManagerWeb.FallbackController
+
+  def index(conn, %{"email" => email, "username" => username} = _params) do
+    users = Repo.all(from u in User, where: u.email == ^email and u.username == ^username)
+    render(conn, "index.json", users: users)
+  end
 
   def index(conn, _params) do
     users = Api.list_users()

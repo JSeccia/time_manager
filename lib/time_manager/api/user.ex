@@ -15,5 +15,6 @@ defmodule TimeManager.Api.User do
     |> cast(attrs, [:username, :email])
     |> validate_required([:username, :email])
     |> validate_format(:email, ~r/\S+@\S+\.\S+/)
+    |> unique_constraint(:email)
   end
 end

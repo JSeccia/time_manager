@@ -11,7 +11,8 @@ defmodule TimeManagerWeb.ClockController do
     render(conn, "index.json", clocks: clocks)
   end
 
-  def create(conn, %{"clock" => clock_params}) do
+  def create_by_id(conn, %{"user_id" => user_id, "clock" => clock_params}) do
+    clock_params = Map.put(clock_params, "user", user_id)
     with {:ok, %Clock{} = clock} <- Api.create_clock(clock_params) do
       conn
       |> put_status(:created)

@@ -13,8 +13,7 @@ defmodule TimeManager.Api.WorkingTime do
   @doc false
   def changeset(working_time, attrs) do
     working_time
-    |> cast(attrs, [:start, :end])
-    |> cast(attrs, [:user, :id])
+    |> cast(attrs, [:start, :end, :user])
     |> validate_required([:start, :end, :user])
   end
 end
