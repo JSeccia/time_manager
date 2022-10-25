@@ -1,13 +1,15 @@
 defmodule TimeManagerWeb.ClockController do
+  import Ecto.Query
   use TimeManagerWeb, :controller
 
+  alias TimeManager.Repo
   alias TimeManager.Api
   alias TimeManager.Api.Clock
 
   action_fallback TimeManagerWeb.FallbackController
 
-  def index(conn, _params) do
-    clocks = Api.list_clocks()
+  def index(conn, %{"user" => user_id}) do
+    clocks = Repo.all(from c in Clock, where: c.user == ^user_id)
     render(conn, "index.json", clocks: clocks)
   end
 

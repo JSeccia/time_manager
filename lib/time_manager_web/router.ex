@@ -10,6 +10,7 @@ defmodule TimeManagerWeb.Router do
     resources "/users", UserController
     resources "/working_times", WorkingTimeController
     resources "/clocks", ClockController
+    get "/clocks/:user_id", ClockController, :index
     post "/clocks/:user_id", ClockController, :create_by_id
     post "/working_times/:user_id", WorkingTimeController, :create_by_id
   end
