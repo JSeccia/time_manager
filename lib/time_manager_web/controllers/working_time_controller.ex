@@ -1,13 +1,15 @@
 defmodule TimeManagerWeb.WorkingTimeController do
+  import Ecto.Query
   use TimeManagerWeb, :controller
 
+  alias TimeManager.Repo
   alias TimeManager.Api
   alias TimeManager.Api.WorkingTime
 
   action_fallback TimeManagerWeb.FallbackController
 
-  def index(conn, _params) do
-    working_times = Api.list_working_times()
+  def index(conn, %{"user_id" => user_id, "start" => start, "end" => end_} = _params) do
+    working_times = Repo.all(from w in WorkingTime, where: w.start == ^start and w.end == ^end_ and w.user == ^user_id)
     render(conn, "index.json", working_times: working_times)
   end
 
@@ -16,7 +18,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
     with {:ok, %WorkingTime{} = working_time} <- Api.create_working_time(working_time_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.working_time_path(conn, :show, working_time))
+      # |> put_resp_header("location", Routes.working_time_path(conn, :show, working_time))
       |> render("show.json", working_time: working_time)
     end
   end
