@@ -23,6 +23,11 @@ defmodule TimeManagerWeb.WorkingTimeController do
     end
   end
 
+  def get_one(conn, %{"user_id" => user_id, "id" => id}) do
+    working_time = Repo.one(from w in WorkingTime, where: w.user == ^user_id and w.id == ^id)
+    render(conn, "show.json", working_time: working_time)
+  end
+
   def show(conn, %{"id" => id}) do
     working_time = Api.get_working_time!(id)
     render(conn, "show.json", working_time: working_time)
