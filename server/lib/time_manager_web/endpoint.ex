@@ -44,5 +44,10 @@ defmodule TimeManagerWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  plug CORSPlug,
+  origins: "*",
+  allow_headers: ["accept", "content-type", "authorization", "contenttype"],
+  allow_credentials: true,
+  log: [rejected: :error, invalid: :warn, accepted: :debug]
   plug TimeManagerWeb.Router
 end
