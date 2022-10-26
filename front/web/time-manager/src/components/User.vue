@@ -35,7 +35,12 @@
     <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Submit" />
   </form>
-  <button @click="changeUpdate">{{ update ? "update" : "create" }}</button>
+  <form @submit="getUser">
+    <input type="text" id="get_user" v-model="userId" />
+    <label for="get_user" placeholder="enter user id"></label>
+    <input type="submit" value="Get user" />
+  </form>
+  <!-- <button @click="changeUpdate">{{ update ? "update" : "create" }}</button> -->
 </template>
 
 <script>
@@ -54,6 +59,19 @@ export default {
     };
   },
   methods: {
+    getUser(e) {
+      e.preventDefault();
+      if (this.userId === null) {
+        window.alert("no id");
+        return;
+      }
+
+      axios
+        .get(`http://localhost:4000/api/users/${this.userId}`)
+        .then((res) =>
+          localStorage.setItem("currentUser", JSON.stringify(res.data.data))
+        );
+    },
     changeUpdate() {
       if (update) {
         update = false;
@@ -72,7 +90,7 @@ export default {
       const body = {
         user: { username: this.username ?? null, email: this.email ?? null },
       };
-      axios.patch(`http://localhost:4000/api/users${userId}`, body, {
+      axios.put(`http://localhost:4000/api/users/${this.userId}`, body, {
         headers: {
           "Content-Type": "application/json",
         },
