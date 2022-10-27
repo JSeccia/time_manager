@@ -1,11 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+// import User from "./components/User.vue";
+// import WorkingTimes from "../components/WorkingTimes.vue";
 // import HelloWorld from "./components/HelloWorld.vue";
 </script>
 
 <template>
   <header>
- 
+
 
     <div class="wrapper">
       <!-- <HelloWorld msg="You did it!" /> -->
@@ -14,6 +16,9 @@ import { RouterLink, RouterView } from "vue-router";
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/workingtimes">WorkingTimes</RouterLink>
+        <RouterLink to="/chart">Chart</RouterLink>
+        <RouterLink to="/clock">Clock</RouterLink>
+
 
 
       </nav>
@@ -22,6 +27,7 @@ import { RouterLink, RouterView } from "vue-router";
   <main>
     <RouterView />
   </main>
+  <WorkingTimes />
 </template>
 
 <style scoped>

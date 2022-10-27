@@ -1,5 +1,5 @@
 <template>
-    <main>
-      Yo
-    </main>
-  </template>
+  <main>
+    WorkingTimes Template
+  </main>
+</template>

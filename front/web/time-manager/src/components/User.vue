@@ -1,37 +1,18 @@
 <template>
+  <p>Page de connexion</p>
   <form @submit="onSubmitCreate">
-    <input
-      type="text"
-      v-model="username"
-      id="username_input"
-      placeholder="Your username"
-    />
+    <input type="text" v-model="username" id="username_input" placeholder="Your username" />
     <label for="username_input">Username</label>
-    <input
-      type="text"
-      id="email_input"
-      placeholder="Your email"
-      v-model="email"
-    />
+    <input type="text" id="email_input" placeholder="Your email" v-model="email" />
     <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Submit" />
   </form>
   <form @submit="onSubmitUpdate">
     <input type="text" v-model="userId" placeholder="User id" id="user_id" />
     <label for="user_id">User id</label>
-    <input
-      type="text"
-      v-model="username"
-      id="username_input"
-      placeholder="Your username"
-    />
+    <input type="text" v-model="username" id="username_input" placeholder="Your username" />
     <label for="username_input">Username</label>
-    <input
-      type="text"
-      id="email_input"
-      placeholder="Your email"
-      v-model="email"
-    />
+    <input type="text" id="email_input" placeholder="Your email" v-model="email" />
     <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Submit" />
   </form>
