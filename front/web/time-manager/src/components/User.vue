@@ -54,28 +54,6 @@
       v-model="email"
     />
     <label for="email_input">Email</label>
-    <input type="submit" id="user_submit" value="Update" />
-  </form>
-  <form @submit="getUserById">
-    <input type="text" id="get_user" v-model="userId" />
-    <label for="get_user" placeholder="enter user id"></label>
-    <input type="submit" value="Get user by Id" />
-  </form>
-  <form @submit="getUserByFields">
-    <input
-      type="text"
-      v-model="username"
-      id="username_input"
-      placeholder="Your username"
-    />
-    <label for="username_input">Username</label>
-    <input
-      type="text"
-      id="email_input"
-      placeholder="Your email"
-      v-model="email"
-    />
-    <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Get user by field" />
     <h2>Current User</h2>
     <ul :key="user.id">
