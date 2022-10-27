@@ -9,7 +9,12 @@ defmodule TimeManagerWeb.WorkingTimeController do
   action_fallback TimeManagerWeb.FallbackController
 
   def index(conn, %{"user_id" => user_id, "start" => start, "end" => end_} = _params) do
-    working_times = Repo.all(from w in WorkingTime, where: w.start == ^start and w.end == ^end_ and w.user == ^user_id)
+    working_times = Repo.all(from w in WorkingTime, where: w.start >= ^start and w.end <= ^end_ and w.user == ^user_id)
+    render(conn, "index.json", working_times: working_times)
+  end
+
+  def index(conn, %{"user_id" => user_id} = _params) do
+    working_times = Repo.all(from w in WorkingTime, where: w.user == ^user_id)
     render(conn, "index.json", working_times: working_times)
   end
 
