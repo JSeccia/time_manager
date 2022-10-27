@@ -9,10 +9,12 @@ import App from "./App.vue";
 import router from "./router";
 
 import "./assets/main.css";
+import { Quasar } from 'quasar'
+import quasarUserOptions from './quasar-user-options'
 
 //Vue.use(VueFusionCharts, FusionCharts);
 
-const app = createApp(App);
+const app = createApp(App).use(Quasar, quasarUserOptions);
 
 app.use(createPinia());
 app.use(router);
