@@ -187,22 +187,4 @@ export default {
     },
   },
 };
-
-let a = true;
-let b = false;
-const method = () => {
-  return 1;
-};
-
-if (!a) {
-  console.log("a is false");
-} else {
-  console.log(method());
-}
-
-if (!a) {
-  console.log("a is false");
-  return;
-}
-console.log(method());
 </script>
