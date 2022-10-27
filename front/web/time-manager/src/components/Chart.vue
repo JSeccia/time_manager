@@ -1,6 +1,14 @@
 <template>
-    <p>Chart template</p>
+    <main>
+        <div class="text">
+            <p>Chart template</p>
+        </div>
+    </main>
+    <div class="container">
+        <Bar v-if="loaded" :chart-data="chartData" />
+    </div>
     <div class="data">
+        <p><b>Modifier des données: </b></p>
         <button v-on:click="addData()">ADD DATA</button>
         <button v-on:click="removeData()">REMOVE DATA</button>
     </div>
@@ -16,7 +24,23 @@
     </div>
 </template>
 
+<style>
+.text {
+    text-align: center;
+    margin-top: 2rem;
+    font-weight: bold;
+}
+
+.data {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+</style>
+
 <script>
+
+import axios from "axios";
 
 export default {
     name: "Chart",
