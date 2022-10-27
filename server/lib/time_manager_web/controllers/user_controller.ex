@@ -9,8 +9,18 @@ defmodule TimeManagerWeb.UserController do
   action_fallback TimeManagerWeb.FallbackController
 
   def index(conn, %{"email" => email, "username" => username} = _params) do
-    users = Repo.all(from u in User, where: u.email == ^email and u.username == ^username)
-    render(conn, "index.json", users: users)
+    user = Repo.one(from u in User, where: u.email == ^email and u.username == ^username)
+    render(conn, "show.json", user: user)
+  end
+
+  def index(conn, %{"username" => username} = _params) do
+    user = Repo.one(from u in User, where: u.username == ^username)
+    render(conn, "show.json", user: user)
+  end
+
+  def index(conn, %{"email" => email,} = _params) do
+    user = Repo.one(from u in User, where: u.email == ^email)
+    render(conn, "show.json", user: user)
   end
 
   def index(conn, _params) do
