@@ -1,9 +1,9 @@
 name: test-deploy
-on: on:
+on:
   push:
-    branches: [ jerome ]
+    branches: [jerome]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
