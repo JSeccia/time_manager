@@ -5,6 +5,9 @@ services:
     # networks:
     #   - result-tier
     #   - back-tier
+    ports:
+      # Mapping the port to make the Phoenix app accessible outside of the container.
+      - '5432:5432'
     volumes:
       - dbdata:/var/lib/postgresql/data
       # - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
