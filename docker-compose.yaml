@@ -16,7 +16,10 @@ services:
       POSTGRES_PASSWORD: postgres
 
   back:
-    image: timemanagerjerome.azurecr.io/timemanager:0.1
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    # image: timemanagerjerome.azurecr.io/timemanager:0.1
     environment:
       # Variables to connect to our Postgres server.
       PGUSER: postgres
