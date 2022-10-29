@@ -6,7 +6,7 @@ services:
     #   - result-tier
     #   - back-tier
     volumes:
-      - c:/pgdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql/data
       # - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     environment:
       POSTGRES_USER: postgres
@@ -30,3 +30,6 @@ services:
     depends_on:
       # The DB container needs to be started before we start this container.
       - db
+
+volumes:
+  db-data:
