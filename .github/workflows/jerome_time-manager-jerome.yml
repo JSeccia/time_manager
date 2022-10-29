@@ -26,12 +26,12 @@ jobs:
           username: ${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_d625c13ea41840d386d87f424e890eb1 }}
 
-      - name: Build and push container image to registry
-        uses: docker/build-push-action@v2
-        # with:
-        #   push: true
-        #   tags: timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}
-        #   file: ./Dockerfile
+      # - name: Build and push container image to registry
+      #   uses: docker/build-push-action@v2
+      # with:
+      #   push: true
+      #   tags: timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}
+      #   file: ./Dockerfile
 
       - name: Build Docker image
         run: docker-compose build
