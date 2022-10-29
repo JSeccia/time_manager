@@ -14,6 +14,7 @@
       placeholder="Your email"
       v-model="email"
     />
+    <input type="datetime-local" />
     <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Create" />
   </form>
@@ -98,9 +99,14 @@ export default {
         `
         )
         .then((res) => {
-          localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
-        });
+          if (res.data.data !== null) {
+            localStorage.setItem("currentUser", JSON.stringify(res.data.data));
+            this.user = res.data.data;
+          } else {
+            window.alert("No user found");
+          }
+        })
+        .catch((err) => window.alert("could not retrieve user"));
     },
     getUserById(e) {
       e.preventDefault();
@@ -108,8 +114,11 @@ export default {
         .get(`http://localhost:4000/api/users/${this.userId}`)
         .then((res) => {
           localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
-        });
+          if (res.data.data.hasOwnProperty("id")) {
+            this.user = res.data.data;
+          }
+        })
+        .catch((err) => window.alert("could not retrieve user"));
     },
     changeUpdate() {
       if (update) {
