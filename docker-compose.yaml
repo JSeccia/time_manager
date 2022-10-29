@@ -19,6 +19,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    image: timemanager/0.1
     environment:
       # Variables to connect to our Postgres server.
       PGUSER: postgres
