@@ -12,6 +12,5 @@ RUN mix local.hex --force && \
 RUN mix deps.get
 RUN mix do compile, release
 RUN mix phx.digest
-RUN export DATABASE_URL=ecto://USER:PASS@HOST/database
 EXPOSE ${PORT}
 CMD ["/app/entrypoint.sh"]

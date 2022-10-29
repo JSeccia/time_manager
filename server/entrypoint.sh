@@ -1,6 +1,6 @@
 #!/bin/sh
 # # Docker entrypoint script.
-export DATABASE_URL=ecto://$PGUSER:$PGPASSWORD@$PGHOST/time_manager
+export DATABASE_URL=ecto://$PGUSER:$PGPASSWORD@$PGHOST/$PGDATABASE
 export SECRET_KEY_BASE=SMN1ScMRX7A8UaQXZRtsXRA4UPgHbFf9cSH/65FgyyCiS/cX7/738qEscRZQxvml
 # Wait until Postgres is ready.
 while ! pg_isready -q -h $PGHOST -p $PGPORT -U $PGUSER
