@@ -35,21 +35,21 @@ jobs:
 
       - name: Build Docker image
         run: docker-compose build
-          timemanagerjerome.azurecr.io/docker push timemanager:0.1
+          docker push timemanagerjerome.azurecr.io/timemanager:0.1
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   environment:
+  #     name: 'production'
+  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'time-manager-jerome'
-          slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_8e18969a69a84a47a36eb2436e57ca75 }}
-          images: 'timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}'
+  #   steps:
+  #     - name: Deploy to Azure Web App
+  #       id: deploy-to-webapp
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: 'time-manager-jerome'
+  #         slot-name: 'production'
+  #         publish-profile: ${{ secrets.AzureAppService_PublishProfile_8e18969a69a84a47a36eb2436e57ca75 }}
+  #         images: 'timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}'
