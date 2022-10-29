@@ -16,15 +16,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
 
-      - name: Log in to registry
+      - name: Log in to registry and build images
         uses: docker/login-action@v1
         with:
           registry: https://timemanagerjerome.azurecr.io/
           username: ${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_d625c13ea41840d386d87f424e890eb1 }}
+        run: docker-compose build
+          docker push timemanagerjerome.azurecr.io/timemanager:0.1
 
       # - name: Build and push container image to registry
       #   uses: docker/build-push-action@v2
@@ -33,11 +35,7 @@ jobs:
       #   tags: timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}
       #   file: ./Dockerfile
 
-      - name: Build Docker image
-        run: docker-compose build
-          docker push timemanagerjerome.azurecr.io/timemanager:0.1
-
-  # deploy:
+  # deploy
   #   runs-on: ubuntu-latest
   #   needs: build
   #   environment:
