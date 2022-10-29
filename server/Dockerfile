@@ -1,5 +1,5 @@
 FROM elixir:latest
-ENV MIX_ENV=prod
+# ENV MIX_ENV=prod
 ENV PORT=4000
 RUN mkdir /app
 COPY . /app
@@ -11,5 +11,5 @@ RUN mix local.hex --force && \
     mix local.rebar --force
 RUN mix deps.get
 RUN mix compile --force
-EXPOSE ${PORT}
+RUN export DATABASE_URL=ecto://USER:PASS@HOST/database
 CMD ["/app/entrypoint.sh"]
