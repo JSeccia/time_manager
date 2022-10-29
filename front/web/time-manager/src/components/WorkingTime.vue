@@ -1,21 +1,25 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <!-- working time id is {{ $route.params.id }} -->
-    <!-- {{getWorkingTime()}} -->
     
     <ul>
         <li>Number : {{workingTime.id}}</li>
         <li>start work :{{workingTime.start}}</li>
         <li>end work : {{workingTime.end}}</li>
-        <li>{{workingTime.end - workingTime.start}}</li>
     </ul>
+    <button>Update</button>
+    <button>Delete</button>
+
+
+
+   
+    
     <br>
 
 </template>
 
 <script>
 import axios from "axios";
-import moment from "moment";
+// import moment from "moment";
 export default {
   name: "WorkingTime",
   data() {
@@ -29,7 +33,7 @@ export default {
   methods: {
     getWorkingTime() {
       axios
-        .get(`http://192.168.69.190:4000/api/working_times/${this.userId}/${this.workingTimeId}`)
+        .get(`http://192.168.75.113:4000/api/working_times/${this.userId}/${this.workingTimeId}`)
         .then((response) => {
           this.workingTime = response.data.data;
           console.log(this.workingTime);
@@ -41,3 +45,4 @@ export default {
   },
 };
 </script>
+
