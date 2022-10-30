@@ -33,12 +33,12 @@
   
   <form v-if="isAddButtonSelected" @submit="createWorkingTime">
       <label for="start_date_input">Start Time</label>
-      <input type="datetime-local" v-model="CreateStartDate" id="start_date_input" name="start_date_input">
+      <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input">
       <br>
       <label for="end_date_input">End Time</label>
-      <input type="datetime-local" v-model="CreateEndDate" id="end_date_input" name="end_date_input">
+      <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input">
       <br>
-      <input type="submit" id="create_working_time_submit" value="Create">
+      <input type="submit" id="create_working_time_submit" value="create">
   </form>
 
 
@@ -52,15 +52,6 @@
 import axios from "axios";
 
 
-// creer un addWorkingTime Button:
-// ce button renvoie vers la method addWorkingTime
-// créer un formulaire qui se display avec un input start et un input end
-// recuperer le current user 
-// récuperer les valeurs du start et du end
-// et les ajouter au tableau working times du current user
-// retourner le nouveau working time d'abord sur la page
-
-
 
 export default {
   name: "WorkingTimes",
@@ -71,8 +62,8 @@ export default {
       currentUserId: "",
       currentWorkingTimeId: "",
       form: {
-        CreateStartDate: new Date().toLocaleString(),
-        CreateEndDate: new Date().toLocaleString(),
+        StartDate: new Date().toLocaleString(),
+        EndDate: new Date().toLocaleString(),
       },
       isAddButtonSelected: false,
     };
@@ -119,13 +110,13 @@ export default {
       e.preventDefault();
       console.log("create submit button clicked");
       if (this.userId === "") {
-        window.alert("Please enter an employee id");
+        window.alert("no employee id found");
         return;
       }
       const body = {
         working_time: {
-          start: this.CreateStartDate,
-          end: this.CreateEndDate,
+          start: this.StartDate,
+          end: this.EndDate,
           // user: this.currentUserId,
         },
       };
