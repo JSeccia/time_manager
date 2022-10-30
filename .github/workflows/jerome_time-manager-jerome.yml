@@ -33,6 +33,11 @@ jobs:
           docker build -f ./server/Dockerfile ./server -t timemanagerjerome.azurecr.io/timemanager:0.1
           docker push timemanagerjerome.azurecr.io/timemanager:0.1
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.CI_AZURE_CREDENTIALS }}
+
       - name: Docker Login to Azure
         run: |
           CLIENT_ID=$(echo '${{ secrets.CI_AZURE_CREDENTIALS }}' | jq --raw-output .clientId)
