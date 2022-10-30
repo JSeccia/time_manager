@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set environment variables
+        run: |
+          cat "cloud.env" | awk -F = 'NF == 2 {print $0}' | xargs -L 1 echo >> $GITHUB_ENV
+
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v1
       - name: Install Docker Compose CLI
