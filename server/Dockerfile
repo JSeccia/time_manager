@@ -11,6 +11,5 @@ RUN mix local.hex --force && \
     mix local.rebar --force
 RUN mix deps.get
 RUN mix do compile, release
-RUN mix phx.digest
 EXPOSE ${PORT}
 CMD ["/app/entrypoint.sh"]
