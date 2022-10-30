@@ -57,4 +57,5 @@ jobs:
 
       - name: Deploy the app
         run: |
-          docker compose --context timemanageracicontext up
+          docker context use timemanageracicontext
+          docker compose up
