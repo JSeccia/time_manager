@@ -28,7 +28,8 @@ jobs:
           registry: https://timemanagerjerome.azurecr.io/
           username: ${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_d625c13ea41840d386d87f424e890eb1 }}
-        run: |
+
+      - run: |
           docker build -f ./server/Dockerfile ./server -t timemanagerjerome.azurecr.io/timemanager:0.1
           docker push timemanagerjerome.azurecr.io/timemanager:0.1
 
