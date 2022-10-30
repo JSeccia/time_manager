@@ -18,6 +18,9 @@ jobs:
 
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v1
+      - name: Install Docker Compose CLI
+        run: >
+          curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh
 
       - name: Log in to registry and build images
         uses: docker/login-action@v1
@@ -25,29 +28,23 @@ jobs:
           registry: https://timemanagerjerome.azurecr.io/
           username: ${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}
           password: ${{ secrets.AzureAppService_ContainerPassword_d625c13ea41840d386d87f424e890eb1 }}
-      - run: docker build -f ./server/Dockerfile ./server -t timemanagerjerome.azurecr.io/timemanager:0.1
-      - run: docker push timemanagerjerome.azurecr.io/timemanager:0.1
+        run: |
+          docker build -f ./server/Dockerfile ./server -t timemanagerjerome.azurecr.io/timemanager:0.1
+          docker push timemanagerjerome.azurecr.io/timemanager:0.1
 
-      # - name: Build and push container image to registry
-      #   uses: docker/build-push-action@v2
-      # with:
-      #   push: true
-      #   tags: timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}
-      #   file: ./Dockerfile
+      - name: Docker Login to Azure
+        run: |
+          CLIENT_ID=$(echo '${{ secrets.CI_AZURE_CREDENTIALS }}' | jq --raw-output .clientId)
+          CLIENT_SECRET=$(echo '${{ secrets.CI_AZURE_CREDENTIALS }}' | jq --raw-output .clientSecret)
+          TENANT_ID=$(az account show --query homeTenantId --output tsv)
+          docker login azure --client-id "$CLIENT_ID" --client-secret "$CLIENT_SECRET" --tenant-id "$TENANT_ID"
+          az acr login --name "$REGISTRY_NAME" --username "$CLIENT_ID" --password "$CLIENT_SECRET"
 
-  # deploy
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   environment:
-  #     name: 'production'
-  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      - name: Create ACI context
+        run: |
+          SUBSCRIPTION_ID=$(az account show --query id --output tsv)
+          docker context create timamanageracicontext aci --resource-group "$RESOURCE_GROUP" --location "$AZURE_REGION" --subscription-id "$SUBSCRIPTION_ID"
 
-  #   steps:
-  #     - name: Deploy to Azure Web App
-  #       id: deploy-to-webapp
-  #       uses: azure/webapps-deploy@v2
-  #       with:
-  #         app-name: 'time-manager-jerome'
-  #         slot-name: 'production'
-  #         publish-profile: ${{ secrets.AzureAppService_PublishProfile_8e18969a69a84a47a36eb2436e57ca75 }}
-  #         images: 'timemanagerjerome.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0a9faa2589b24a7cb683adaf818e3297 }}/0.1:${{ github.sha }}'
+      - name: Deploy the app
+        run: |
+          docker compose --context timemanageracicontext up
