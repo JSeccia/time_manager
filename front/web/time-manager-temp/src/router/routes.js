@@ -1,6 +1,7 @@
 import ClockPage from "../pages/ClockPage.vue";
 import ChartsPages from "../pages/ChartsPage.vue";
 import WorkingPage from "../pages/WorkingsPage.vue";
+import WTPage from "../pages/WTPage.vue";
 
 const routes = [
   {
@@ -16,18 +17,10 @@ const routes = [
       { path: "workings", component: WorkingPage },
       {
         path: "workings/:userId/:id",
-        component: () => import("pages/WTPage.vue"),
+        component: WTPage,
       },
     ],
   },
-  // {
-  //   path: '/workings',
-  //   component: () => import('src/pages/WorkingsPage.vue'),
-  //   children: [
-  //     { path: '/:userId/:id', component: () => import('pages/WorkingTime.vue') },
-
-  //   ]
-  // },
 
   // Always leave this as last one,
   // but you can also remove it

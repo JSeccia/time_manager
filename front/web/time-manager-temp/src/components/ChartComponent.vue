@@ -14,11 +14,13 @@
     <div class="actions">
       <button @click="appendData">+ ADD</button>
 
-      <button @click="removeData">- REMOVE</button>
+      <div class="actions">
+        <button @click="appendData">+ ADD</button>
 
-      <button @click="randomize">RANDOMIZE</button>
+        <button @click="removeData">- REMOVE</button>
 
-      <button @click="reset">RESET</button>
+        <button @click="reset">RESET</button>
+      </div>
     </div>
   </div>
 </template>

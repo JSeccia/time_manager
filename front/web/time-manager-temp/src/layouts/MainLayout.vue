@@ -12,7 +12,7 @@
         <q-toolbar inset>
           <q-breadcrumbs active-color="white" style="font-size: 16px">
             <q-breadcrumbs-el label="Profile" icon="home" to="/" />
-            <q-breadcrumbs-el label="WorkingTimes" icon="widgets" to="/workingtimes" />
+            <!-- <q-breadcrumbs-el label="WorkingTimes" icon="widgets" to="/workingtimes" />-->
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
             <q-breadcrumbs-el label="Workings" to="/workings" />

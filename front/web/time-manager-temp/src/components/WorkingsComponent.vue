@@ -98,7 +98,7 @@ export default {
               `current workingtime id : ${this.currentWorkingTimeId}`
             );
             this.$router.push(
-              `/workingtime/${this.currentUserId}/${this.currentWorkingTimeId}`
+              `/workings/${this.currentUserId}/${this.currentWorkingTimeId}`
             );
           }
         });
