@@ -15,6 +15,7 @@
             <q-breadcrumbs-el label="WorkingTimes" icon="widgets" to="/workingtimes" />
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
+            <q-breadcrumbs-el label="Workings" to="/workings" />
           </q-breadcrumbs>
         </q-toolbar>
       </div>
