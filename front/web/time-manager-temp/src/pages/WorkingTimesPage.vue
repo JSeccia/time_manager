@@ -1,19 +1,20 @@
 <template>
     <div>
-        <WorkingTimesTest />
+        <WorkingTimes />
     </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-import WorkingTimesTest from 'src/components/WorkingTimesTest.vue';
+import WorkingTimes from 'src/components/WorkingTimes.vue';
 
 export default defineComponent({
     name: 'WorkingTimes',
 
     components: {
-        WorkingTimesTest,
+        WorkingTimes,
     },
-});
+    },
+);
 
 </script>
