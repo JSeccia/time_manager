@@ -34,8 +34,10 @@ jobs:
           password: ${{ secrets.AzureAppService_ContainerPassword_d625c13ea41840d386d87f424e890eb1 }}
 
       - run: |
-          docker build -f ./server/Dockerfile ./server -t timemanagerjerome.azurecr.io/timemanager:0.1
-          docker push timemanagerjerome.azurecr.io/timemanager:0.1
+          docker build -f ./server/Dockerfile ./server -t timemanagerjerome.azurecr.io/timemanager-back:0.1
+          docker push timemanagerjerome.azurecr.io/timemanager-back:0.1
+          docker build -f ./front/web/time-manager-temp/Dockerfile ./front/web/time-manager-temp -t timemanagerjerome.azurecr.io/timemanager-front:0.1
+          docker push timemanagerjerome.azurecr.io/timemanager-front:0.1
 
       - name: Azure Login
         uses: azure/login@v1
