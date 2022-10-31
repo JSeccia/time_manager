@@ -1,18 +1,20 @@
 <template>
     <div>
-        <WorkingTimesTest />
+        <WTComponent />
     </div>
 </template>
 
+
 <script>
+
 import { defineComponent } from 'vue';
-import WorkingTimesTest from 'src/components/WorkingTimesTest.vue';
+import WTComponent from 'src/components/WTComponent.vue';
 
 export default defineComponent({
-    name: 'WorkingTimes',
+    name: 'WTPage',
 
     components: {
-        WorkingTimesTest,
+        WTComponent,
     },
 });
 

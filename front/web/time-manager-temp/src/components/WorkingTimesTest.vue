@@ -103,5 +103,4 @@ const rows = [
   }
 ]
 
-
 </script>

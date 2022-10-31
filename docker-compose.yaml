@@ -8,12 +8,12 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - dbdata:/var/lib/postgresql/foobar
+      - dbdata:/var/lib/postgresql
       # - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      PGDATA: /var/lib/postgresql
+      PGDATA: /var/lib/postgresql/data
 
   back:
     build:
@@ -45,7 +45,7 @@ services:
 
 volumes:
   dbdata:
-    driver: azure_file
-    driver_opts:
-      share_name: timemanagershare
-      storage_account_name: timemanagerjerome
+    # driver: azure_file
+    # driver_opts:
+    #   share_name: timemanagershare
+    #   storage_account_name: timemanagerjerome

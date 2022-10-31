@@ -43,12 +43,12 @@
 import axios from "axios";
 
 export default {
-    name: "Chart",
+  name: "Chart",
     data() {
         return {
             counter: 0
         }
-    }
+  },
 }
 
 </script>

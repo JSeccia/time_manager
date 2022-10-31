@@ -17,7 +17,6 @@
   <ul class="WT_item" v-for="item in workingTimes" :key="item.id">
     <p>Working Times number {{ item.id }}</p>
     <input type="button" :value="item.id" @click="goWorkingTime" />
-    <!-- <RouterLink :to="{ name: 'WorkingTime', params: { id: item.id }}">workingTime</RouterLink>-->
     <li>Start work time: {{ item.start }}</li>
     <li>End work time:{{ item.end }}</li>
     <br />
@@ -78,7 +77,7 @@ export default {
         return;
       }
       axios
-        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}`)
+        .get(`http://localhost:4000/api/working_times/${this.userId}`)
         .then((response) => {
           if (response.data.data.length > 0) {
             this.workingTimes = response.data.data;
@@ -90,7 +89,7 @@ export default {
     },
     goWorkingTime(e) {
       axios
-        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}`)
+        .get(`http://localhost:4000/api/working_times/${this.userId}`)
         .then((response) => {
           if (response.data.data.length > 0) {
             this.workingTimes = response.data.data;
@@ -123,15 +122,11 @@ export default {
         },
       };
       axios
-        .post(
-          `http://192.168.73.197:4000/api/working_times/${this.userId}`,
-          body,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(`http://localhost:4000/api/working_times/${this.userId}`, body, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           console.log(response);
         });

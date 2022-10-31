@@ -34,6 +34,11 @@ const router = createRouter({
       name: "WorkingTimes",
       component: () => import("../views/WorkingTimesView.vue"),
     },
+    {
+      path: "/workingtime/:userId/:id",
+      name: "WorkingTime",
+      component: () => import("../views/WorkingTimeShowView.vue"),
+    },
   ],
 });
 
