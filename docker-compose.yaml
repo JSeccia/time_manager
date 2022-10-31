@@ -13,6 +13,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/foobar
 
   back:
     build:
@@ -34,9 +35,16 @@ services:
       # The DB container needs to be started before we start this container.
       - db
 
+  front:
+    build:
+      context: ./front/web/time-manager-temp
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+
 volumes:
   dbdata:
-    driver: azure_file
-    driver_opts:
-      share_name: timemanagershare
-      storage_account_name: timemanagerjerome
+    # driver: azure_file
+    # driver_opts:
+    #   share_name: timemanagershare
+    #   storage_account_name: timemanagerjerome
