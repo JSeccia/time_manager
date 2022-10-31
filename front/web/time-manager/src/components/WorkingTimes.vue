@@ -78,7 +78,7 @@ export default {
         return;
       }
       axios
-        .get(`http://192.168.75.113:4000/api/working_times/${this.userId}`)
+        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}`)
         .then((response) => {
           if (response.data.data.length > 0) {
             this.workingTimes = response.data.data;
@@ -90,7 +90,7 @@ export default {
     },
     goWorkingTime(e) {
       axios
-        .get(`http://192.168.75.113:4000/api/working_times/${this.userId}`)
+        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}`)
         .then((response) => {
           if (response.data.data.length > 0) {
             this.workingTimes = response.data.data;
@@ -121,7 +121,7 @@ export default {
         },
       };
       axios
-      .post(`http://192.168.75.113:4000/api/working_times/${this.userId}`, body, {
+      .post(`http://192.168.73.197:4000/api/working_times/${this.userId}`, body, {
         headers: {
           "Content-Type": "application/json",
         },

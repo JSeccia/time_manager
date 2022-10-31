@@ -48,7 +48,7 @@ export default {
   methods: {
     getWorkingTime() {
       axios
-        .get(`http://192.168.75.113:4000/api/working_times/${this.userId}/${this.workingTimeId}`)
+        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}/${this.workingTimeId}`)
         .then((response) => {
           this.workingTime = response.data.data;
           console.log(this.workingTime);
@@ -70,7 +70,7 @@ export default {
         },
       }
       axios
-        .put(`http://192.168.75.113:4000/api/working_times/${this.workingTimeId}`, body, {
+        .put(`http://192.168.73.197:4000/api/working_times/${this.workingTimeId}`, body, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -86,7 +86,7 @@ export default {
       console.log("delete button clicked");
       if (confirm("Are you sure you want to delete this working time?")) {
         axios
-          .delete(`http://192.168.75.113:4000/api/working_times/${this.workingTimeId}`)
+          .delete(`http://192.168.73.197:4000/api/working_times/${this.workingTimeId}`)
           this.$router.go(-1);
       }
     },
