@@ -14,7 +14,7 @@
     </div>
 
     <div class="workingtimes">
-        <button @click="$router.push('/workingtimes')">Click to go on WorkingTimes</button>
+        <button @click="$router.push('/workings')">Click to go on WorkingTimes</button>
     </div>
     <div class="clock">
         <button @click="$router.push('/clocks')">Click to go to Clocks</button>"
