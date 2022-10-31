@@ -4,12 +4,11 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'workingtimes', component: () => import('src/pages/WorkingsTimesPage.vue') },
+      // { path: 'workingtimes', component: () => import('src/pages/WorkingsTimesPage.vue') },
       { path: 'clocks', component: () => import('pages/ClockPage.vue') },
       { path: 'charts', component: () => import('pages/ChartsPage.vue') },
       { path: 'workings', component: () => import('pages/WorkingsPage.vue') },
       { path: 'workings/:userId/:id', component: () => import('pages/WTPage.vue') },
-
     ]
   },
   // {

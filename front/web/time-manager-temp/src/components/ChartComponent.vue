@@ -6,16 +6,6 @@
             </div>
         </div>
 
-<<<<<<< Updated upstream
-    <div class="workingtimes">
-        <button @click="$router.push('/workings')">Click to go on WorkingTimes</button>
-    </div>
-    <div class="clock">
-        <button @click="$router.push('/clocks')">Click to go to Clocks</button>"
-    </div>
-    <div class="home">
-        <button @click="$router.push('/')">Click to go to Home</button>
-=======
         <div class="actions">
             <button @click="appendData">
                 + ADD
@@ -33,7 +23,6 @@
                 RESET
             </button>
         </div>
->>>>>>> Stashed changes
     </div>
 </template>
 
