@@ -45,7 +45,7 @@ services:
 
 volumes:
   dbdata:
-    # driver: azure_file
-    # driver_opts:
-    #   share_name: timemanagershare
-    #   storage_account_name: timemanagerjerome
+    driver: azure_file
+    driver_opts:
+      share_name: timemanagershare
+      storage_account_name: timemanagerjerome
