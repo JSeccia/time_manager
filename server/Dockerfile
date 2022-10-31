@@ -2,6 +2,7 @@ FROM elixir:latest
 ENV MIX_ENV=prod
 ENV PORT=4000
 RUN mkdir /app
+ENV PGDATA=/var/lib/postgresql/foobar
 COPY . /app
 RUN apt-get update && \
   apt-get install -y postgresql-client
