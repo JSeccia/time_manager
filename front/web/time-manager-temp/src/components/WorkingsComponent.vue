@@ -12,7 +12,6 @@
     <ul class="WT_item" v-for="item in workingTimes" :key="item.id">
         <p>Working Times number {{ item.id }}</p>
         <input type="button" :value="item.id" @click="goWorkingTime">
-        <!-- <RouterLink :to="{ name: 'WorkingTime', params: { id: item.id }}">workingTime</RouterLink>-->
         <li>Start work time: {{ item.start }}</li>
         <li>End work time:{{ item.end }}</li>
         <br>
@@ -34,15 +33,12 @@
     </form>
 </template>
 
-
-
-
-
-
 <script>
 
+import axios from "axios";
+
 export default {
-    name: "WorkingTimes",
+    name: "WorkingsComponent",
     data() {
         return {
             workingTimes: {},
@@ -82,7 +78,7 @@ export default {
                         this.currentWorkingTimeId = e.target.value;
                         console.log(`current workingtime id : ${this.currentWorkingTimeId}`);
                         this.$router.push(
-                            `/workingtime/${this.currentUserId}/${this.currentWorkingTimeId}`
+                            `/workings/${this.currentUserId}/${this.currentWorkingTimeId}`
                         );
                     }
                 });
