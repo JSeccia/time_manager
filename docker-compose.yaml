@@ -8,12 +8,12 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - dbdata:/var/lib/postgresql/foobar
+      - dbdata:/var/lib/postgresql
       # - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      PGDATA: /var/lib/postgresql/foobar
+      PGDATA: /var/lib/postgresql/pgdata
 
   back:
     build:
