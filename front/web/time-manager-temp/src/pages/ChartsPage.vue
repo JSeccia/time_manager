@@ -5,8 +5,10 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import ChartComponent from 'src/components/ChartComponent.vue';
+import { defineComponent, defineAsyncComponent } from 'vue';
+
+
+const ChartComponent = defineAsyncComponent(() => import('src/components/ChartComponent.vue'));
 
 export default defineComponent({
     name: 'ChartsPage',
