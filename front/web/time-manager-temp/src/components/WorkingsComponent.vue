@@ -1,6 +1,9 @@
 <template>
     <main>
         <h1>Check employee's working times</h1>
+
+        <!-- Search Employee Id form -->
+
         <section class="search-id">
             <form @submit="getWorkingTimes">
                 <label for="get_user_working_times" placeholder="enter employee id"></label>
@@ -10,6 +13,8 @@
             </form>
             <input id="add-button" type="button" value="Add working times" @click="handleAddWorkingTime">
         </section>
+
+        <!-- Display Employee's Working Times from its ID -->
 
         <section class="display-data">
             <h2>Employee n° {{ currentUserId }} Working Times:</h2>
@@ -30,6 +35,8 @@
                 </tbody>
             </table>
         </section>
+
+        <!-- Create form -->
 
         <form id="create-form" v-if="isAddButtonSelected" @submit="createWorkingTime">
             <fieldset>
@@ -71,6 +78,7 @@ export default {
         };
     },
     methods: {
+        // get working times from user id
         getWorkingTimes(submitNumber) {
             submitNumber.preventDefault();
             if (this.userId === "") {
@@ -88,6 +96,7 @@ export default {
                     }
                 });
         },
+        // Select one working time
         goWorkingTime(e) {
             axios
                 .get(`/api/working_times/${this.userId}`)
@@ -102,10 +111,12 @@ export default {
                     }
                 });
         },
+        // handle add working time button condition 
         handleAddWorkingTime() {
             console.log("add WorkingTime button clicked");
             this.isAddButtonSelected = true;
         },
+        // create working time
         createWorkingTime(e) {
             e.preventDefault();
             console.log("create submit button clicked");
@@ -134,6 +145,7 @@ export default {
             console.log(body);
             
         },
+        // Using moment library to format date 
         format_date(value) {
             if (value) {
                 return moment(String(value)).format("MM/DD/YYYY  hh:mm");
