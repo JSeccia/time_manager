@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 # # Docker entrypoint script.
 export DATABASE_URL=ecto://$PGUSER:$PGPASSWORD@$PGHOST/$PGDATABASE
 export SECRET_KEY_BASE=SMN1ScMRX7A8UaQXZRtsXRA4UPgHbFf9cSH/65FgyyCiS/cX7/738qEscRZQxvml

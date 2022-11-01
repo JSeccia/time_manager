@@ -5,6 +5,8 @@ RUN mkdir /app
 COPY . /app
 RUN apt-get update && \
   apt-get install -y postgresql-client
+RUN  apt-get install -y dos2unix
+RUN dos2unix /app/entrypoint.sh
 WORKDIR /app
 RUN chmod +x /app/entrypoint.sh
 RUN mix local.hex --force && \
