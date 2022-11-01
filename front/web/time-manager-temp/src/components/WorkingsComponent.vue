@@ -23,8 +23,8 @@
                 <tbody>
                     <tr class="WT_items" v-for="item in workingTimes" :key="item.id">
                         <td><input class="select-wt" type="button" :value="item.id" @click="goWorkingTime"></td>
-                        <td> {{ item.start }} </td>
-                        <td>{{ item.end }}</td>
+                        <td> {{ format_date(item.start) }} </td>
+                        <td>{{ format_date(item.end) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -51,6 +51,7 @@
 <script>
 
 import axios from "axios";
+import moment  from "moment";
 
 export default {
     name: "WorkingsComponent",
@@ -66,7 +67,6 @@ export default {
             isAddButtonSelected: false,
         };
     },
-
     methods: {
         getWorkingTimes(submitNumber) {
             submitNumber.preventDefault();
@@ -75,7 +75,7 @@ export default {
                 return;
             }
             axios
-                .get(`http://192.168.73.197:4000/api/working_times/${this.userId}`)
+                .get(`/api/working_times/${this.userId}`)
                 .then((response) => {
                     if (response.data.data.length > 0) {
                         this.workingTimes = response.data.data;
@@ -87,7 +87,7 @@ export default {
         },
         goWorkingTime(e) {
             axios
-                .get(`http://192.168.73.197:4000/api/working_times/${this.userId}`)
+                .get(`/api/working_times/${this.userId}`)
                 .then((response) => {
                     if (response.data.data.length > 0) {
                         this.workingTimes = response.data.data;
@@ -118,17 +118,26 @@ export default {
                 },
             };
             axios
-                .post(`http://192.168.73.197:4000/api/working_times/${this.userId}`, body, {
+                .post(`/api/working_times/${this.userId}`, body, {
                     headers: {
                         "Content-Type": "application/json",
                     },
                 })
                 .then((response) => {
                     console.log(response);
+                    window.alert("working time created");
+                    this.$router.go()
                 });
             console.log(body);
-        }
+            
+        },
+        format_date(value) {
+            if (value) {
+                return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+            }
+        },
     },
+    
 };
 
 </script>
@@ -138,7 +147,6 @@ export default {
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 100vh;
     }
 
     h1 {
@@ -184,7 +192,7 @@ export default {
         flex-direction: column;
         align-items: center;
         width: 100%;
-        height: 100%;
+        height: 10%;
     }
 
     .display-data h2 {
@@ -221,7 +229,4 @@ export default {
         border-color: #4CAF50;
         text-decoration: none;
     }
-
-
-
 </style>

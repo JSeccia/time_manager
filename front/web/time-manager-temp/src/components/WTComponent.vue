@@ -15,8 +15,8 @@
         <tbody>
           <tr class="WT_items">
             <td> {{ workingTime.id }}</td>
-            <td :key="workingTime.start">{{ workingTime.start }} </td>
-            <td :key="workingTime.end">{{ workingTime.end }}</td>
+            <td :key="workingTime.start">{{ format_date(workingTime.start) }} </td>
+            <td :key="workingTime.end">{{ format_date(workingTime.end) }}</td>
             <td>
               <input class="edit-button" type="button" value="update" @click="handleUpdate">
               <input class="delete-button" type="button" value="delete" @click="deleteWorkingTime">
@@ -50,7 +50,8 @@
 <script>
 
 import axios from "axios";
-// import moment from "moment";
+import moment from "moment";
+
 export default {
   name: "WTComponent",
   data() {
@@ -69,7 +70,7 @@ export default {
   methods: {
     getWorkingTime() {
       axios
-        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}/${this.workingTimeId}`)
+        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
         .then((response) => {
           this.workingTime = response.data.data;
           console.log(this.workingTime);
@@ -91,7 +92,7 @@ export default {
         },
       }
       axios
-        .put(`http://192.168.73.197:4000/api/working_times/${this.workingTimeId}`, body, {
+        .put(`/api/working_times/${this.workingTimeId}`, body, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -107,10 +108,15 @@ export default {
       console.log("delete button clicked");
       if (confirm("Are you sure you want to delete this working time?")) {
         axios
-          .delete(`http://192.168.73.197:4000/api/working_times/${this.workingTimeId}`)
+          .delete(`/api/working_times/${this.workingTimeId}`)
         this.$router.go(-1);
       }
     },
+    format_date(value) {
+            if (value) {
+                return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+            }
+        },
   },
 
   mounted() {
