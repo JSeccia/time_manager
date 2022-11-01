@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - uses: appleboy/ssh-action@master
-      - name: heckout and setup containers
+        name: heckout and setup containers
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
