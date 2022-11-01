@@ -8,6 +8,7 @@
                     ref="userIdInput" />
                 <input type="submit" value="Get working times" />
             </form>
+            <input id="add-button" type="button" value="Add working times" @click="handleAddWorkingTime">
         </section>
 
         <section class="display-data">
@@ -29,16 +30,18 @@
                 </tbody>
             </table>
         </section>
-        <input type="button" value="Add more working times" @click="handleAddWorkingTime">
 
-        <form v-if="isAddButtonSelected" @submit="createWorkingTime">
-            <label for="start_date_input">Start Time</label>
-            <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input">
-            <br>
-            <label for="end_date_input">End Time</label>
-            <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input">
-            <br>
-            <input type="submit" id="create_working_time_submit" value="create">
+        <form id="create-form" v-if="isAddButtonSelected" @submit="createWorkingTime">
+            <fieldset>
+                <h2 class="fs-title">Add working times </h2>
+                <label for="start_date_input">Start Time</label>
+                <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input">
+                <br>
+                <label for="end_date_input">End Time</label>
+                <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input">
+                <br>
+                <input type="submit" id="create-submit" value="create">
+            </fieldset>
         </form>
 
 
@@ -154,12 +157,13 @@ export default {
         font-size: 24px;
         font-weight: bold;
     }
-
+    /* search section */
     .search-id {
         margin-left: 50px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        width: 100%;
+        width: 80%;
         height: 10%;
     }
 
@@ -181,18 +185,25 @@ export default {
         outline: none;
     }
 
-    .search-id input[type="submit"]:hover {
+    .search-id input[type="submit"]:hover, #add-button:hover {
         border-color: #4CAF50;
         color: #4CAF50;
         background-color: white;
     }
+    #add-button {
+        height: 30px;
+        width: 190px;
+        text-align: center;
+        text-decoration: none;
+    }
 
+    /*display table*/
     .display-data {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 100%;
-        height: 10%;
+        width: 90%;
+        height: 75%;
     }
 
     .display-data h2 {
@@ -228,5 +239,55 @@ export default {
         color: #4CAF50;
         border-color: #4CAF50;
         text-decoration: none;
+    }
+
+    /* add form */
+
+    #create-form {
+        width: 400px;
+        margin: 50px auto;
+        text-align: center;
+        position: relative;
+    }
+    #create-form h2 {
+        font-size: 20px;
+        font-weight: bold;
+    } 
+
+    #create-form fieldset {
+        background: white;
+        border: 0 none;
+        border-radius: 3px;
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+        padding: 20px 30px;
+        box-sizing: border-box;
+        width: 80%;
+        margin: 0 10%;
+    }
+
+    #create-form input {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        font-family: montserrat;
+        color: #2C3E50;
+        font-size: 13px;
+    }
+    #create-form #create-submit {
+        width: 100px;
+        background: #27AE60;
+        font-weight: bold;
+        color: white;
+        border: 0 none;
+        border-radius: 1px;
+        cursor: pointer;
+        padding: 10px 5px;
+        margin: 10px 5px;
+    }
+    #create-form #create-submit:hover, #create-form #create-submit:focus {
+        box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
     }
 </style>
