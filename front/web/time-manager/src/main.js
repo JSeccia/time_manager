@@ -1,20 +1,13 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
-//import Vue from "vue";
-//import VueFusionCharts from "vue-fusioncharts";
-//import FusionCharts from "fusioncharts";
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
 
+import './assets/main.css'
+import { Quasar } from 'quasar'
+import quasarUserOptions from './quasar-user-options'
 
-import App from "./App.vue";
-import router from "./router";
+const app = createApp(App).use(Quasar, quasarUserOptions)
 
-import "./assets/main.css";
+app.use(router)
 
-//Vue.use(VueFusionCharts, FusionCharts);
-
-const app = createApp(App);
-
-app.use(createPinia());
-app.use(router);
-
-app.mount("#app");
+app.mount('#app')

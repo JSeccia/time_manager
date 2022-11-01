@@ -14,32 +14,11 @@
       placeholder="Your email"
       v-model="email"
     />
+    <input type="datetime-local" />
     <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Create" />
   </form>
   <form @submit="onSubmitUpdate">
-    <input
-      type="text"
-      v-model="username"
-      id="username_input"
-      placeholder="Your username"
-    />
-    <label for="username_input">Username</label>
-    <input
-      type="text"
-      id="email_input"
-      placeholder="Your email"
-      v-model="email"
-    />
-    <label for="email_input">Email</label>
-    <input type="submit" id="user_submit" value="Update" />
-  </form>
-  <form @submit="getUserById">
-    <input type="text" id="get_user" v-model="userId" />
-    <label for="get_user" placeholder="enter user id"></label>
-    <input type="submit" value="Get user by Id" />
-  </form>
-  <form @submit="getUserByFields">
     <input
       type="text"
       v-model="username"
@@ -112,26 +91,32 @@ export default {
       }
       axios
         .get(
-          `http://localhost:4000/api/users/?${
-            this.email ? `email=${this.email}` : ""
-          }${this.email && this.username ? "&" : ""}${
-            this.username ? `username=${this.username}` : ""
-          }
+          `/api/users/?${this.email ? `email=${this.email}` : ""}${
+            this.email && this.username ? "&" : ""
+          }${this.username ? `username=${this.username}` : ""}
         `
         )
         .then((res) => {
-          localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
-        });
+          if (res.data.data !== null) {
+            localStorage.setItem("currentUser", JSON.stringify(res.data.data));
+            this.user = res.data.data;
+          } else {
+            window.alert("No user found");
+          }
+        })
+        .catch((err) => window.alert("could not retrieve user"));
     },
     getUserById(e) {
       e.preventDefault();
       axios
-        .get(`http://localhost:4000/api/users/${this.userId}`)
+        .get(`/api/users/${this.userId}`)
         .then((res) => {
           localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
-        });
+          if (res.data.data.hasOwnProperty("id")) {
+            this.user = res.data.data;
+          }
+        })
+        .catch((err) => window.alert("could not retrieve user"));
     },
     changeUpdate() {
       if (update) {
@@ -153,9 +138,7 @@ export default {
       };
       axios
         .put(
-          `http://localhost:4000/api/users/${
-            JSON.parse(localStorage.getItem("currentUser")).id
-          }`,
+          `/api/users/${JSON.parse(localStorage.getItem("currentUser")).id}`,
           body,
           {
             headers: {
@@ -174,7 +157,7 @@ export default {
         user: { username: this.username, email: this.email },
       };
       axios
-        .post("http://localhost:4000/api/users", body, {
+        .post("/api/users", body, {
           headers: {
             "Content-Type": "application/json",
           },
