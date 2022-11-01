@@ -76,32 +76,26 @@ export default {
         window.alert("Please enter an employee id");
         return;
       }
-      axios
-        .get(`http://localhost:4000/api/working_times/${this.userId}`)
-        .then((response) => {
-          if (response.data.data.length > 0) {
-            this.workingTimes = response.data.data;
-            this.currentUserId = this.$refs.userIdInput.value;
-          } else {
-            window.alert("No employee or working times found");
-          }
-        });
+      axios.get(`/api/working_times/${this.userId}`).then((response) => {
+        if (response.data.data.length > 0) {
+          this.workingTimes = response.data.data;
+          this.currentUserId = this.$refs.userIdInput.value;
+        } else {
+          window.alert("No employee or working times found");
+        }
+      });
     },
     goWorkingTime(e) {
-      axios
-        .get(`http://localhost:4000/api/working_times/${this.userId}`)
-        .then((response) => {
-          if (response.data.data.length > 0) {
-            this.workingTimes = response.data.data;
-            this.currentWorkingTimeId = e.target.value;
-            console.log(
-              `current workingtime id : ${this.currentWorkingTimeId}`
-            );
-            this.$router.push(
-              `/workings/${this.currentUserId}/${this.currentWorkingTimeId}`
-            );
-          }
-        });
+      axios.get(`/api/working_times/${this.userId}`).then((response) => {
+        if (response.data.data.length > 0) {
+          this.workingTimes = response.data.data;
+          this.currentWorkingTimeId = e.target.value;
+          console.log(`current workingtime id : ${this.currentWorkingTimeId}`);
+          this.$router.push(
+            `/workings/${this.currentUserId}/${this.currentWorkingTimeId}`
+          );
+        }
+      });
     },
     handleAddWorkingTime() {
       console.log("add WorkingTime button clicked");
@@ -122,7 +116,7 @@ export default {
         },
       };
       axios
-        .post(`http://localhost:4000/api/working_times/${this.userId}`, body, {
+        .post(`/api/working_times/${this.userId}`, body, {
           headers: {
             "Content-Type": "application/json",
           },

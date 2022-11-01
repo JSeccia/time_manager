@@ -42,6 +42,8 @@ services:
     image: timemanagerjerome.azurecr.io/timemanager-front:0.1
     ports:
       - '80:80'
+    depends_on:
+      - back
 
 volumes:
   dbdata:

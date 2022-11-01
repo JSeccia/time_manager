@@ -54,9 +54,7 @@ export default {
   methods: {
     getWorkingTime() {
       axios
-        .get(
-          `http://localhost:4000/api/working_times/${this.userId}/${this.workingTimeId}`
-        )
+        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
         .then((response) => {
           this.workingTime = response.data.data;
           console.log(this.workingTime);
@@ -78,15 +76,11 @@ export default {
         },
       };
       axios
-        .put(
-          `http://localhost:4000/api/working_times/${this.workingTimeId}`,
-          body,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .put(`/working_times/${this.workingTimeId}`, body, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           console.log(response);
           this.$router.push(
@@ -99,9 +93,7 @@ export default {
     deleteWorkingTime() {
       console.log("delete button clicked");
       if (confirm("Are you sure you want to delete this working time?")) {
-        axios.delete(
-          `http://localhost:4000/api/working_times/${this.workingTimeId}`
-        );
+        axios.delete(`working_times/${this.workingTimeId}`);
         this.$router.go(-1);
       }
     },

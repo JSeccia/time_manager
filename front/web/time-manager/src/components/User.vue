@@ -91,11 +91,9 @@ export default {
       }
       axios
         .get(
-          `http://localhost:4000/api/users/?${
-            this.email ? `email=${this.email}` : ""
-          }${this.email && this.username ? "&" : ""}${
-            this.username ? `username=${this.username}` : ""
-          }
+          `/api/users/?${this.email ? `email=${this.email}` : ""}${
+            this.email && this.username ? "&" : ""
+          }${this.username ? `username=${this.username}` : ""}
         `
         )
         .then((res) => {
@@ -111,7 +109,7 @@ export default {
     getUserById(e) {
       e.preventDefault();
       axios
-        .get(`http://localhost:4000/api/users/${this.userId}`)
+        .get(`/api/users/${this.userId}`)
         .then((res) => {
           localStorage.setItem("currentUser", JSON.stringify(res.data.data));
           if (res.data.data.hasOwnProperty("id")) {
@@ -140,9 +138,7 @@ export default {
       };
       axios
         .put(
-          `http://localhost:4000/api/users/${
-            JSON.parse(localStorage.getItem("currentUser")).id
-          }`,
+          `/api/users/${JSON.parse(localStorage.getItem("currentUser")).id}`,
           body,
           {
             headers: {
@@ -161,7 +157,7 @@ export default {
         user: { username: this.username, email: this.email },
       };
       axios
-        .post("http://localhost:4000/api/users", body, {
+        .post("/api/users", body, {
           headers: {
             "Content-Type": "application/json",
           },
