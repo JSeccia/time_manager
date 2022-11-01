@@ -6,7 +6,7 @@ name: Build and deploy container app to Azure Web App - time-manager-jerome
 on:
   push:
     branches:
-      - jerome
+      - main
   workflow_dispatch:
 
 jobs:
@@ -15,16 +15,17 @@ jobs:
 
     steps:
       - uses: appleboy/ssh-action@master
-        name: heckout and setup containers
+        name: Checkout and setup containers
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            docker compose down
             cd /home/workspace/timemanager
-            git pull origin jerome
+            docker compose down
+            git checkout main
+            git pull origin main
             docker compose up --build -d
 
 #       - name: Set environment variables
