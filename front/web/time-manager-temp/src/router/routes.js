@@ -4,6 +4,8 @@ import WorkingPage from "../pages/WorkingsPage.vue";
 import WTPage from "../pages/WTPage.vue";
 import ProfilePage from "../pages/ProfilePage.vue";
 import User from "../pages/User.vue";
+import LoginPage from "../pages/LoginPage.vue";
+
 
 const routes = [
   {
@@ -23,6 +25,8 @@ const routes = [
         component: WTPage,
       },
       { path: "users", component: User },
+      { path: "login", component: LoginPage},
+
     ],
   },
 

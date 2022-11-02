@@ -3,7 +3,7 @@
     <q-header>
       <div class="bg-green text-white">
         <q-toolbar>
-          <q-btn flat round dense icon="assignment_ind" />
+          <q-btn flat round dense icon="assignment_ind" to="/login" />
 
           <q-space />
           <q-btn flat round dense icon="search" class="q-mr-xs" />
@@ -37,3 +37,4 @@ export default defineComponent({
   name: "MainLayout",
 });
 </script>
+
