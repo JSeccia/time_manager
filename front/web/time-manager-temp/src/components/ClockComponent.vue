@@ -142,7 +142,7 @@ export default {
         if (response.data.data.length > 0) {
           this.clocks = response.data.data;
         } else {
-          window.alert("No employer or clocks times found");
+          window.alert("No employee or clocks times found");
         }
       });
     },
