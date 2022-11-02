@@ -83,7 +83,7 @@ module.exports = configure(function (/* ctx */) {
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
         "/api": {
-          target: "http://localhost:4000",
+          target: "http://192.168.72.81:4000",
           changeOrigin: true,
           pathRewrite: {
             "^/api": "",
