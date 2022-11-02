@@ -1,6 +1,8 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
   <main>
+    
+    <!-- Display one working time -->
+
     <div class="show-table">
       <h1> Employee Number {{ workingTime.user }}</h1>
       <table>
@@ -15,42 +17,42 @@
         <tbody>
           <tr class="WT_items">
             <td> {{ workingTime.id }}</td>
-            <td :key="workingTime.start">{{ workingTime.start }} </td>
-            <td :key="workingTime.end">{{ workingTime.end }}</td>
+            <td :key="workingTime.start">{{ format_date(workingTime.start) }} </td>
+            <td :key="workingTime.end">{{ format_date(workingTime.end) }}</td>
             <td>
               <input class="edit-button" type="button" value="update" @click="handleUpdate">
+              
+              <!-- Delete working time -->
               <input class="delete-button" type="button" value="delete" @click="deleteWorkingTime">
             </td>
           </tr>
         </tbody>
       </table>
-  </div>
+    </div>
+    <!-- Update Employee's Working Times -->
 
-
-
+    <form id="edit-form" v-if="isUpdateButtonSelected" @submit="updateWorkingTime">
+      <fieldset>
+        <h2 class="fs-title">Edit this working time:</h2>
+        <label for="start_date_input">Start Time</label>
+        <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input">
+        <br>
+        <label for="end_date_input">End Time</label>
+        <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input">
+        <br>
+        <input type="submit" id="edit-submit" value="edit">
+      </fieldset>
+    </form>
   </main>
 
-  <form v-if="isUpdateButtonSelected" @submit="updateWorkingTime">
-    <p>Fill this form to update the working time:</p>
-    <label for="start_date_input">Start Time</label>
-    <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input">
-    <br>
-    <label for="end_date_input">End Time</label>
-    <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input">
-    <br>
-    <input type="submit" id="update_working_time_submit" value="edit">
-  </form>
-
-
-  <br>
-
+  
 </template>
-<!-- eslint-disable prettier/prettier -->
 
 <script>
 
 import axios from "axios";
-// import moment from "moment";
+import moment from "moment";
+
 export default {
   name: "WTComponent",
   data() {
@@ -67,18 +69,21 @@ export default {
   },
 
   methods: {
+    // Get one working time
     getWorkingTime() {
       axios
-        .get(`http://192.168.73.197:4000/api/working_times/${this.userId}/${this.workingTimeId}`)
+        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
         .then((response) => {
           this.workingTime = response.data.data;
           console.log(this.workingTime);
         });
     },
+    // Handle update working time button condition
     handleUpdate() {
       console.log("Update WorkingTime button clicked");
       this.isUpdateButtonSelected = true;
     },
+    // Update working time
     updateWorkingTime(e) {
       e.preventDefault();
       console.log("update button clicked");
@@ -91,7 +96,7 @@ export default {
         },
       }
       axios
-        .put(`http://192.168.73.197:4000/api/working_times/${this.workingTimeId}`, body, {
+        .put(`/api/working_times/${this.workingTimeId}`, body, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -103,16 +108,23 @@ export default {
         });
       console.log(body);
     },
+    // Delete working time
     deleteWorkingTime() {
       console.log("delete button clicked");
       if (confirm("Are you sure you want to delete this working time?")) {
         axios
-          .delete(`http://192.168.73.197:4000/api/working_times/${this.workingTimeId}`)
+          .delete(`/api/working_times/${this.workingTimeId}`)
         this.$router.go(-1);
       }
     },
+    // Using moment library to retrieve the date in a readable format
+    format_date(value) {
+            if (value) {
+                return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+            }
+        },
   },
-
+  // Calling get working time method when the component is created
   mounted() {
     this.getWorkingTime();
   },
@@ -125,9 +137,9 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
 }
 
+/* Display working time details*/
 .show-table {
   margin-top: 100px;
   background-color: rgba(76, 175, 80, 0.2);
@@ -135,7 +147,7 @@ main {
   flex-direction: column;
   align-items: center;
   width: 60%;
-  height: 40%;
+  height: 45vh;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);}
 
@@ -211,6 +223,55 @@ tbody tr {
   background-color: #eb575793;
 }
 
+/* Update form */
+
+#edit-form {
+        width: 400px;
+        margin: 50px auto;
+        text-align: center;
+        position: relative;
+    }
+    #edit-form h2 {
+        font-size: 20px;
+        font-weight: bold;
+    } 
+
+    #edit-form fieldset {
+        background: white;
+        border: 0 none;
+        border-radius: 3px;
+        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+        padding: 20px 30px;
+        box-sizing: border-box;
+        width: 80%;
+        margin: 0 10%;
+    }
+
+    #edit-form input {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        font-family: montserrat;
+        color: #2C3E50;
+        font-size: 13px;
+    }
+    #edit-form #edit-submit {
+        width: 100px;
+        background: #27AE60;
+        font-weight: bold;
+        color: white;
+        border: 0 none;
+        border-radius: 1px;
+        cursor: pointer;
+        padding: 10px 5px;
+        margin: 10px 5px;
+    }
+    #edit-form #edit-submit:hover, #edit-form #edit-submit:focus {
+        box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+    }
 
 
 
