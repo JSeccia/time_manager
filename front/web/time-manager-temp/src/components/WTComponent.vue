@@ -1,10 +1,8 @@
 <template>
   <main>
-    
     <!-- Display one working time -->
-
     <div class="show-table">
-      <h1> Employee Number {{ workingTime.user }}</h1>
+      <h1>Employee Number {{ workingTime.user }}</h1>
       <table>
         <thead>
           <tr>
@@ -16,14 +14,26 @@
         </thead>
         <tbody>
           <tr class="WT_items">
-            <td> {{ workingTime.id }}</td>
-            <td :key="workingTime.start">{{ format_date(workingTime.start) }} </td>
+            <td>{{ workingTime.id }}</td>
+            <td :key="workingTime.start">
+              {{ format_date(workingTime.start) }}
+            </td>
             <td :key="workingTime.end">{{ format_date(workingTime.end) }}</td>
             <td>
-              <input class="edit-button" type="button" value="update" @click="handleUpdate">
-              
+              <input
+                class="edit-button"
+                type="button"
+                value="update"
+                @click="handleUpdate"
+              />
+
               <!-- Delete working time -->
-              <input class="delete-button" type="button" value="delete" @click="deleteWorkingTime">
+              <input
+                class="delete-button"
+                type="button"
+                value="delete"
+                @click="deleteWorkingTime"
+              />
             </td>
           </tr>
         </tbody>
@@ -31,25 +41,36 @@
     </div>
     <!-- Update Employee's Working Times -->
 
-    <form id="edit-form" v-if="isUpdateButtonSelected" @submit="updateWorkingTime">
+    <form
+      id="edit-form"
+      v-if="isUpdateButtonSelected"
+      @submit="updateWorkingTime"
+    >
       <fieldset>
         <h2 class="fs-title">Edit this working time:</h2>
         <label for="start_date_input">Start Time</label>
-        <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input">
-        <br>
+        <input
+          type="datetime-local"
+          v-model="StartDate"
+          id="start_date_input"
+          name="start_date_input"
+        />
+        <br />
         <label for="end_date_input">End Time</label>
-        <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input">
-        <br>
-        <input type="submit" id="edit-submit" value="edit">
+        <input
+          type="datetime-local"
+          v-model="EndDate"
+          id="end_date_input"
+          name="end_date_input"
+        />
+        <br />
+        <input type="submit" id="edit-submit" value="edit" />
       </fieldset>
     </form>
   </main>
-
-  
 </template>
 
 <script>
-
 import axios from "axios";
 import moment from "moment";
 
@@ -57,6 +78,13 @@ export default {
   name: "WTComponent",
   data() {
     return {
+      currentUser: localStorage.getItem("currentUser")
+        ? JSON.parse(localStorage.getItem("currentUser"))
+        : {
+            email: "",
+            username: "",
+            id: 0,
+          },
       workingTime: {},
       userId: this.$route.params.userId,
       workingTimeId: this.$route.params.id,
@@ -94,7 +122,7 @@ export default {
           start: this.StartDate ?? null,
           end: this.EndDate ?? null,
         },
-      }
+      };
       axios
         .put(`/api/working_times/${this.workingTimeId}`, body, {
           headers: {
@@ -103,7 +131,9 @@ export default {
         })
         .then((response) => {
           console.log(response);
-          this.$router.push(`/workingtime/${this.userId}/${this.workingTimeId}`);
+          this.$router.push(
+            `/workingtime/${this.userId}/${this.workingTimeId}`
+          );
           this.$router.go(0);
         });
       console.log(body);
@@ -112,17 +142,16 @@ export default {
     deleteWorkingTime() {
       console.log("delete button clicked");
       if (confirm("Are you sure you want to delete this working time?")) {
-        axios
-          .delete(`/api/working_times/${this.workingTimeId}`)
+        axios.delete(`/api/working_times/${this.workingTimeId}`);
         this.$router.go(-1);
       }
     },
     // Using moment library to retrieve the date in a readable format
     format_date(value) {
-            if (value) {
-                return moment(String(value)).format("MM/DD/YYYY  hh:mm");
-            }
-        },
+      if (value) {
+        return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+      }
+    },
   },
   // Calling get working time method when the component is created
   mounted() {
@@ -149,7 +178,8 @@ main {
   width: 60%;
   height: 45vh;
   border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);}
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
 
 h1 {
   text-align: center;
@@ -191,7 +221,8 @@ tbody tr {
   margin: 0 50px;
 }
 
-.edit-button, .delete-button {
+.edit-button,
+.delete-button {
   display: inline-block;
   outline: 0;
   border: none;
@@ -205,17 +236,16 @@ tbody tr {
 }
 
 .edit-button {
-  background-color: #ADAF4C;
+  background-color: #adaf4c;
   margin-right: 10px;
   color: #62632b;
-
 }
 .edit-button:hover {
   background-color: #adaf4cc0;
 }
 
 .delete-button {
-  background-color: #EB5757;
+  background-color: #eb5757;
   color: darkred;
 }
 
@@ -226,56 +256,51 @@ tbody tr {
 /* Update form */
 
 #edit-form {
-        width: 400px;
-        margin: 50px auto;
-        text-align: center;
-        position: relative;
-    }
-    #edit-form h2 {
-        font-size: 20px;
-        font-weight: bold;
-    } 
+  width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  position: relative;
+}
+#edit-form h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-    #edit-form fieldset {
-        background: white;
-        border: 0 none;
-        border-radius: 3px;
-        box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-        padding: 20px 30px;
-        box-sizing: border-box;
-        width: 80%;
-        margin: 0 10%;
-    }
+#edit-form fieldset {
+  background: white;
+  border: 0 none;
+  border-radius: 3px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+  padding: 20px 30px;
+  box-sizing: border-box;
+  width: 80%;
+  margin: 0 10%;
+}
 
-    #edit-form input {
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        margin-bottom: 10px;
-        width: 100%;
-        box-sizing: border-box;
-        font-family: montserrat;
-        color: #2C3E50;
-        font-size: 13px;
-    }
-    #edit-form #edit-submit {
-        width: 100px;
-        background: #27AE60;
-        font-weight: bold;
-        color: white;
-        border: 0 none;
-        border-radius: 1px;
-        cursor: pointer;
-        padding: 10px 5px;
-        margin: 10px 5px;
-    }
-    #edit-form #edit-submit:hover, #edit-form #edit-submit:focus {
-        box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
-    }
-
-
-
+#edit-form input {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2c3e50;
+  font-size: 13px;
+}
+#edit-form #edit-submit {
+  width: 100px;
+  background: #27ae60;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px 5px;
+}
+#edit-form #edit-submit:hover,
+#edit-form #edit-submit:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 3px #27ae60;
+}
 </style>
-
-
-

@@ -56,12 +56,13 @@
     <label for="email_input">Email</label>
     <input type="submit" id="user_submit" value="Get user by field" />
     <h2>Current User</h2>
-    <ul :key="user.id">
-      <li>{{ user.id }}</li>
-      <li>{{ user.username }}</li>
-      <li>{{ user.email }}</li>
-    </ul>
   </form>
+
+  <ul :key="currentUser.id">
+    <li>{{ currentUser.id }}</li>
+    <li>{{ currentUser.username }}</li>
+    <li>{{ currentUser.email }}</li>
+  </ul>
   <!-- <button @click="changeUpdate">{{ update ? "update" : "create" }}</button> -->
 </template>
 
@@ -75,11 +76,15 @@ export default {
   name: "user-vue",
   data() {
     return {
-      user: {
-        email: "",
-        username: "",
-        id: 0,
-      },
+      currentUser: localStorage.getItem("currentUser")
+        ? JSON.parse(localStorage.getItem("currentUser"))
+        : {
+            email: "",
+            username: "",
+            id: 0,
+          },
+      email: "",
+      username: "",
     };
   },
   methods: {
@@ -98,14 +103,14 @@ export default {
         )
         .then((res) => {
           localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
+          this.currentUser = res.data.data;
         });
     },
     getUserById(e) {
       e.preventDefault();
       axios.get(`/api/users/${this.userId}`).then((res) => {
         localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-        this.user = res.data.data;
+        this.currentUser = res.data.data;
       });
     },
     changeUpdate() {

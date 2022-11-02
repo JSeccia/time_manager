@@ -1,4 +1,9 @@
 <template>
+  <ul :key="currentUser.id">
+    <li>{{ currentUser.id }}</li>
+    <li>{{ currentUser.username }}</li>
+    <li>{{ currentUser.email }}</li>
+  </ul>
   <div>
     <div class="chart-wrap">
       <div id="chart">
@@ -30,6 +35,13 @@ export default {
   name: "ChartComponent",
   data() {
     return {
+      currentUser: localStorage.getItem("currentUser")
+        ? JSON.parse(localStorage.getItem("currentUser"))
+        : {
+            email: "",
+            username: "",
+            id: 0,
+          },
       series: [44, 55, 13, 33],
       chartOptions: {
         chart: {

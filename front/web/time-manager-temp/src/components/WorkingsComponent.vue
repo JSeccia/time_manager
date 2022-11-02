@@ -2,6 +2,11 @@
   <main>
     <h1>Check employee's working times</h1>
 
+    <ul :key="currentUser.id">
+      <li>{{ currentUser.id }}</li>
+      <li>{{ currentUser.username }}</li>
+      <li>{{ currentUser.email }}</li>
+    </ul>
     <!-- Search Employee Id form -->
 
     <section class="search-id">
@@ -95,6 +100,13 @@ export default {
   name: "WorkingsComponent",
   data() {
     return {
+      currentUser: localStorage.getItem("currentUser")
+        ? JSON.parse(localStorage.getItem("currentUser"))
+        : {
+            email: "",
+            username: "",
+            id: 0,
+          },
       userId: 0,
       workingTimes: {},
       currentUserId: "",
@@ -110,18 +122,20 @@ export default {
     // get working times from user id
     getWorkingTimes(submitNumber) {
       submitNumber.preventDefault();
-      if (this.userId === "") {
-        window.alert("Please enter an employee id");
+      if (!this.currentUser.id) {
+        window.alert("Please select an employee");
         return;
       }
-      axios.get(`/api/working_times/${this.userId}`).then((response) => {
-        if (response.data.data.length > 0) {
-          this.workingTimes = response.data.data;
-          this.currentUserId = this.$refs.userIdInput.value;
-        } else {
-          window.alert("No employee or working times found");
-        }
-      });
+      axios
+        .get(`/api/working_times/${this.currentUser.id}`)
+        .then((response) => {
+          if (response.data.data.length > 0) {
+            this.workingTimes = response.data.data;
+            // this.currentUserId = this.$refs.userIdInput.value; ??
+          } else {
+            window.alert("No employee or working times found");
+          }
+        });
     },
     // Select one working time
     goWorkingTime(e) {
@@ -145,8 +159,8 @@ export default {
     createWorkingTime(e) {
       e.preventDefault();
       console.log("create submit button clicked");
-      if (this.userId === "") {
-        window.alert("no employee id found");
+      if (!this.currentUser.id) {
+        window.alert("Please select an employee");
         return;
       }
       const body = {
@@ -157,7 +171,7 @@ export default {
         },
       };
       axios
-        .post(`/api/working_times/${this.userId}`, body, {
+        .post(`/api/working_times/${this.currentUser.id}`, body, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -172,7 +186,7 @@ export default {
     // Using moment library to format date
     format_date(value) {
       if (value) {
-        return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+        return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");
       }
     },
   },

@@ -1,4 +1,9 @@
 <template>
+  <ul :key="currentUser.id">
+    <li>{{ currentUser.id }}</li>
+    <li>{{ currentUser.username }}</li>
+    <li>{{ currentUser.email }}</li>
+  </ul>
   <div class="q-pa-md">
     <div class="q-gutter-md">
       <q-time v-model="time" />
@@ -112,7 +117,13 @@ export default {
 
   name: "DateComponent",
   data: () => ({
-    currentUser: JSON.parse(localStorage.getItem("currentUser")),
+    currentUser: localStorage.getItem("currentUser")
+      ? JSON.parse(localStorage.getItem("currentUser"))
+      : {
+          email: "",
+          username: "",
+          id: 0,
+        },
     date: "",
     time: "",
     year: "",
