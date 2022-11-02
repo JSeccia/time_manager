@@ -11,12 +11,14 @@
 
         <q-toolbar inset>
           <q-breadcrumbs active-color="white" style="font-size: 16px">
-            <q-breadcrumbs-el label="Profile" icon="home" to="/" />
+            <q-breadcrumbs-el label="Profile" icon="home" to="/profile" />
             <!-- <q-breadcrumbs-el label="WorkingTimes" icon="widgets" to="/workingtimes" />-->
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
             <q-breadcrumbs-el label="Workings" to="/workings" />
+            <q-breadcrumbs-el label="Users" to="/users" />
           </q-breadcrumbs>
+
         </q-toolbar>
       </div>
     </q-header>
@@ -32,7 +34,7 @@ import { defineComponent, ref } from 'vue'
 //import EssentialLink from 'components/EssentialLink.vue'
 //import User from 'components/User.vue'
 //import WorkingTimes from 'components/WorkingTimes.vue'
-  export default defineComponent({
-      'MainLayout',
-  })
+export default defineComponent({
+  name: 'MainLayout',
+})
 </script>
