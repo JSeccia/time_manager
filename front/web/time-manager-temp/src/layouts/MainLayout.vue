@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from "vue";
 //import LoginPageVue from 'src/pages/LoginPage.vue'
 //import EssentialLink from 'components/EssentialLink.vue'
 //import User from 'components/User.vue'
 //import WorkingTimes from 'components/WorkingTimes.vue'
-  export default defineComponent({
-      'MainLayout',
-  })
+export default defineComponent({
+  name: "MainLayout",
+});
 </script>
