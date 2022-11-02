@@ -29,12 +29,17 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from "vue";
 //import LoginPageVue from 'src/pages/LoginPage.vue'
 //import EssentialLink from 'components/EssentialLink.vue'
 //import User from 'components/User.vue'
 //import WorkingTimes from 'components/WorkingTimes.vue'
 export default defineComponent({
+<<<<<<< HEAD
   name: 'MainLayout',
 })
+=======
+  name: "MainLayout",
+});
+>>>>>>> e445c427d7282921aaec982755c0a6df3fd0c981
 </script>
