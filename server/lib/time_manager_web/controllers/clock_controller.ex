@@ -1,10 +1,12 @@
 defmodule TimeManagerWeb.ClockController do
   import Ecto.Query
+  use Timex
   use TimeManagerWeb, :controller
 
   alias TimeManager.Repo
   alias TimeManager.Api
   alias TimeManager.Api.Clock
+  alias TimeManager.Api.User
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -13,8 +15,13 @@ defmodule TimeManagerWeb.ClockController do
     render(conn, "index.json", clocks: clocks)
   end
 
-  def create_by_id(conn, %{"user_id" => user_id, "clock" => clock_params}) do
+  def create_by_id(conn, %{"username" => username}) do
+    user_id = Repo.one(from u in User, where: u.username == ^username).id
+    previous_clock = Repo.one(from c in Clock, where: c.user == ^user_id, order_by: [desc: c.id], limit: 1)
+    clock_params = %{}
+    clock_params = Map.put(clock_params, "status", (if previous_clock != nil, do: !previous_clock.status, else: true))
     clock_params = Map.put(clock_params, "user", user_id)
+    clock_params = Map.put(clock_params, "time", Timex.now())
     with {:ok, %Clock{} = clock} <- Api.create_clock(clock_params) do
       conn
       |> put_status(:created)

@@ -26,7 +26,7 @@
   <br /><br />
 
   <div class="clock">
-    <form @submit="getClock">
+    <!-- <form @submit="getClocks">
       <label for="get_user_clock" placeholder="enter employee id"></label>
       <input
         type="text"
@@ -36,24 +36,18 @@
         ref="userIdInput"
       />
       <input type="submit" value="click to display clock" />
-    </form>
+    </form> -->
 
     <!-- Display clock start userId-->
-    <!--
-        <form @submit="getClock">
-            <label for="get_user_clock" placeholder="enter start clock"></label>
-            <input
-            type="text"
-            id="get_user_clock"
-            v-model="userId"
-            placeholder="enter start clock"
-            ref="userIdInput"
-            />
-            <input type="submit" value="click to start clock" />
-        </form>
+    <button @click="getClocks">
+      Get clocks from user: {{ currentUser.id }}
+    </button>
 
+    <button @click="postClock">Click to clock in or out</button>
 
-         Display clock end userId-- >  
+    <div></div>
+
+    <!-- Display clock end userId-- >  
         <form @submit="getClock">
             <label for="get_user_clock" placeholder="enter end clock"></label>
             <input
@@ -64,16 +58,18 @@
             ref="userIdInput"
             />
             <input type="submit" value="click to end clock" />
-        </form> 
-    -->
+        </form>  -->
   </div>
   <br />
-  <h2>Employee {{ currentUserId }} CLOCK Times:</h2>
+  <h2>
+    Employee id: {{ currentUser.id }}, username:
+    {{ currentUser.username }} CLOCK Times:
+  </h2>
 
-  <ul class="WT_item" v-for="item in clock" :key="item.id">
-    <p>Working Times number {{ item.id }}</p>
-    <li>Start work time: {{ item.status }}</li>
-    <li>End work time:{{ item.time }}</li>
+  <ul class="WT_item" v-for="item in clocks" :key="item.id">
+    <p>Clock id: {{ item.id }}</p>
+    <li>Clocked in: {{ item.status }}</li>
+    <li>Clock time: {{ format_date(item.time) }}</li>
     <br />
   </ul>
 
@@ -102,6 +98,7 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import moment from "moment";
 
 export default {
   setup() {
@@ -111,44 +108,44 @@ export default {
     };
   },
 
-  data() {
-    return {
-      Clock: {
-        // userId: 0,
-      },
-      currentUserId: "",
-    };
-  },
-
   // afficher clock userId,
-  methods: {
-    getClock(submitNumber) {
-      submitNumber.preventDefault();
-
-      if (this.userId === "") {
-        window.alert("Please enter an employee id");
-        return;
-      }
-      axios.get(`/api/clocks/${this.userId}`).then((response) => {
-        if (response.data.data.length > 0) {
-          this.clock = response.data.data;
-          this.currentUserId = this.$refs.userIdInput.value;
-        } else {
-          window.alert("No employer or clocks times found");
-        }
-      });
-    },
-  },
 
   name: "DateComponent",
   data: () => ({
+    currentUser: JSON.parse(localStorage.getItem("currentUser")),
     date: "",
     time: "",
     year: "",
     timestamp: "",
     fulldatetime: "",
+    clocks: [],
   }),
   methods: {
+    format_date(value) {
+      if (value) {
+        return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");
+      }
+    },
+    postClock() {
+      axios.post(`/api/clocks/${this.currentUser.username}`);
+    },
+    getClocks(event) {
+      event.preventDefault();
+
+      if (this.userId === "") {
+        window.alert("Please enter an employee id");
+        return;
+      }
+      axios.get(`/api/clocks/${this.currentUser.id}`).then((response) => {
+        // this.currentUser = this.$refs.userIdInput.value;
+        console.log(response.data.data.length, "length");
+        if (response.data.data.length > 0) {
+          this.clocks = response.data.data;
+        } else {
+          window.alert("No employer or clocks times found");
+        }
+      });
+    },
     printDate: function () {
       return new Date().toLocaleDateString();
     },

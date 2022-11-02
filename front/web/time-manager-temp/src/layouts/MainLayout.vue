@@ -15,6 +15,7 @@
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
             <q-breadcrumbs-el label="Workings" to="/workings" />
+            <q-breadcrumbs-el label="User" to="/users" />
           </q-breadcrumbs>
         </q-toolbar>
       </div>
@@ -26,15 +27,13 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from "vue";
 //import LoginPageVue from 'src/pages/LoginPage.vue'
 //import EssentialLink from 'components/EssentialLink.vue'
 //import User from 'components/User.vue'
 //import WorkingTimes from 'components/WorkingTimes.vue'
 
 export default defineComponent({
-
-  name: 'MainLayout',
-
-})
+  name: "MainLayout",
+});
 </script>

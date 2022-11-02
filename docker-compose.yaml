@@ -19,7 +19,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    image: timemanagerjerome.azurecr.io/timemanager-back:0.1
+    image: timemanager-back:0.1
     environment:
       # Variables to connect to our Postgres server.
       PGUSER: postgres
@@ -39,7 +39,7 @@ services:
     build:
       context: ./front/web/time-manager-temp
       dockerfile: Dockerfile
-    image: timemanagerjerome.azurecr.io/timemanager-front:0.1
+    image: timemanager-front:0.1
     ports:
       - '80:80'
     depends_on:
