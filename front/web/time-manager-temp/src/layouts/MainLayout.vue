@@ -32,10 +32,7 @@ import { defineComponent, ref } from 'vue'
 //import EssentialLink from 'components/EssentialLink.vue'
 //import User from 'components/User.vue'
 //import WorkingTimes from 'components/WorkingTimes.vue'
-
-export default defineComponent({
-
-  name: 'MainLayout',
-
-})
+  export default defineComponent({
+      'MainLayout',
+  })
 </script>

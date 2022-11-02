@@ -72,7 +72,7 @@ import { defineComponent } from "vue";
 let update = false;
 
 export default {
-  name: "Create",
+  name: "user-vue",
   data() {
     return {
       user: {
