@@ -5,7 +5,7 @@
         <div class="avatar">
             
             <img class="avatar-img" src="../assets/images/avatar-manager.jpg" alt="user avatar"/>
-            <span>username</span>
+            <span>{{user.username}}</span>
 
             
         </div>
@@ -15,14 +15,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            email
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="edit-password">
-                                <p>password  <q-icon name="edit" /></p>
-                            </div>
+                            {{user.email}}
                         </td>
                     </tr>
                     <tr>
@@ -32,7 +25,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <span>Employee Numbers:  </span>
+                            <span>Employees Numbers:  {{users.length}}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -44,14 +37,51 @@
         </div>
 
     </div>
+ 
+
+    <ul>
+        <li>{{user}}</li>
+        <li>{{users.length}}</li>
+    </ul>
 </main>
 
 </template>
 
 <script>
+import axios from 'axios';
+
 
 export default {
     name: 'ProfileComponent',
+    data() {
+        return {
+            user: {},
+            currentUser: JSON.parse(localStorage.getItem("currentUser")),
+            users: [],
+        }
+    },
+    methods: {
+        getUser() {
+            axios
+            .get(`/api/users/${this.currentUser.id}`)
+            .then((response) => {
+                console.log(response);
+                this.user = response.data.data;
+            })
+        },
+        getUsers() {
+            axios
+            .get(`/api/users`)
+            .then((response) => {
+                console.log(response);
+                this.users = response.data.data;
+            })
+        },
+    },
+    mounted: function() {
+        this.getUser();
+        this.getUsers();
+    } 
 };
 </script>
 
