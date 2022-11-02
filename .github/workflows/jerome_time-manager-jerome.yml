@@ -23,10 +23,11 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/workspace/timemanager
-            docker compose down --rmi
+            docker compose down
             git checkout main
             git pull origin main
             docker compose up --build -d
+            docker system prune -f
 
 #       - name: Set environment variables
 #         run: |
