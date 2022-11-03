@@ -1,45 +1,21 @@
 <template>
 
-  <!-- clock time interactive-->
-  
-  <!-- <div class="q-pa-md">
-    <div class="q-gutter-md">
-      <q-time v-model="time" />
-
-      <q-time v-model="timeWithSeconds" with-seconds />
-    </div>
-  </div>
-  -->
-
   <main>
     <section class="section-clocks">
       <h1>See your employees last clock times:</h1>
       <div class="search-employee-id">
 
-      <form @submit="getAllClocksFromInput">
-      <label
-        for="get_this_employee_clocks"
+        <form @submit="getAllClocksFromInput">
+          <label for="get_this_employee_clocks"></label>
+          <input type="text" id="get_this_employee_clocks" v-model="userId" placeholder="enter employee id"
+            ref="userIdInput" />
+          <input type="submit" value="Get Employee last clocks" @click="handleGetAllClocksFromInput" />
+        </form>
 
-      ></label>
-      <input
-        type="text"
-        id="get_this_employee_clocks"
-        v-model="userId"
-        placeholder="enter employee id"
-        ref="userIdInput"
-      />
-      <input type="submit" value="Get Employee last clocks" @click="handleGetAllClocksFromInput"/>
-      </form>
+      </div>
 
-    </div>
-     
-      
-      <!--<button @click="getClocks">
-        Get clocks from employee: {{ currentUser.id }}
-      </button>-->
-
-      <div  v-if="isGetAllClocksFromInputButtonSelected">
-        <p>Details of {{userId}}</p>
+      <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
+        <p>Details of {{ userId }}</p>
         <table>
           <theader>
             <th>Employee ID</th>
@@ -49,20 +25,55 @@
           </theader>
           <tbody>
             <tr v-for="clock in employeeClocks" :key="clock.id">
-              <td>{{clock.user}}</td>
-              <td>{{clock.id}}</td>
-              <td>{{clock.status}}</td>
-              <td>{{format_date(clock.time)}}</td>
+              <td>{{ clock.user }}</td>
+              <td>{{ clock.id }}</td>
+              <td>{{ clock.status }}</td>
+              <td>{{ format_date(clock.time) }}</td>
             </tr>
           </tbody>
         </table>
-    </div>
+      </div>
     </section>
 
 
     <p>------------------------------------------------------------------------------------------</p>
 
+    GRAPH DES WORKING TIMES DE TOUS LES USERS SUR UNE semaine
+
+    1) array avec les 7 jours de la semaine
+    2) méthode qui détermine le jour d'aujourd'hui
     
+    3) méthode qui permet de récupérer les wt d'un user et directement de les convertir dans un array jour et un array heure 
+    4) méthode qui permet de convertir le temps de travail en heures et l'extraire
+
+    prendre un temps de travail et créer méthode pour soustraire end - start
+    3) calculer le temps de travail d'un utilisateur sur un jour
+    4) calculer le temps de travail d'un utilisateur sur une semaine
+
+     
+
+
+
+
+    <p>------------------------------------------------------------------------------------------</p>
+
+
+    <!-- clock time interactive-->
+
+    <!-- <div class="q-pa-md">
+    <div class="q-gutter-md">
+      <q-time v-model="time" />
+
+      <q-time v-model="timeWithSeconds" with-seconds />
+    </div>
+  </div>
+  -->
+
+    <!--<button @click="getClocks">
+        Get clocks from employee: {{ currentUser.id }}
+      </button>-->
+
+
     <!-- <p>display clock details of current user {{userId}}</p>
       <ul v-for="item in clocks" :key="item.id">
         <li>Clock n°: {{ item.id }}</li>
@@ -80,8 +91,8 @@
     -->
 
 
-      <br>
-      <!-- <p>button to see working times of one user for manager</p>
+    <br>
+    <!-- <p>button to see working times of one user for manager</p>
       <div class="workingtimes">
         <button @click="$router.push('/workingtimes')">
           Click to go on WorkingTimes
@@ -89,7 +100,7 @@
       </div> -->
 
   </main>
-  
+
   <!-- others codes test 
   <div class="chart">
     <button @click="$router.push('/chart')">Click to go to Chart</button>
@@ -112,18 +123,18 @@
       <input type="submit" value="click to display clock" />
     </form> -->
 
+
+
+
+    Template for one employee logged in
+    <button @click="postClock">Click to clock in or out</button>
+
+
+    <p>Your id number: {{ currentUser.id }}</p>
+    <p>Your username: {{ currentUser.username }} </p>
     
 
 
-    Template for one employee logged in 
-      <button @click="postClock">Click to clock in or out</button>
-
-      
-      <p>Your id number: {{ currentUser.id }}</p>
-      <p>Your username: {{ currentUser.username }} </p>
-      <p>Your CLOCK Times:</p>
-    
-  
 
     <!-- Display clock end userId-- >  
         <form @submit="getClock">
@@ -139,7 +150,7 @@
         </form>  -->
   </div>
   <br />
- <!-- date manipulate 
+  <!-- date manipulate 
   <div>
     <h2 class="text-center mb-3">CLOCK</h2>
     <ul class="list-group">
@@ -160,7 +171,7 @@
       </li>
     </ul>
   </div>-->
-  
+
 </template>
 
 <script>
@@ -191,7 +202,7 @@ export default {
     isGetAllClocksFromInputButtonSelected: false,
   }),
   methods: {
-    
+
     // allow current user to clock in
     postClock() {
       axios.post(`/api/clocks/${this.currentUser.username}`);
@@ -205,15 +216,15 @@ export default {
         return;
       }
       axios
-      .get(`/api/clocks/${this.currentUser.id}`)
-      .then((response) => {
-        console.log(response.data.data.length, "length");
-        if (response.data.data.length > 0) {
-          this.clocks = response.data.data;
-        } else {
-          window.alert("No employee or clocks times found");
-        }
-      });
+        .get(`/api/clocks/${this.currentUser.id}`)
+        .then((response) => {
+          console.log(response.data.data.length, "length");
+          if (response.data.data.length > 0) {
+            this.clocks = response.data.data;
+          } else {
+            window.alert("No employee or clocks times found");
+          }
+        });
     },
     // get all clock times from one employee with its id 
     getAllClocksFromInput(e) {
@@ -224,8 +235,8 @@ export default {
         return;
       }
       axios
-       .get(`api/clocks/${this.userId}`)
-       .then((response) => {
+        .get(`api/clocks/${this.userId}`)
+        .then((response) => {
           console.log("during axios call");
           console.log(response.data.data.length, "length");
           if (response.data.data.length > 0) {
@@ -237,6 +248,7 @@ export default {
           }
         });
     },
+    // handle gacfi button click
     handleGetAllClocksFromInput() {
       this.isGetAllClocksFromInputButtonSelected = true;
     },
