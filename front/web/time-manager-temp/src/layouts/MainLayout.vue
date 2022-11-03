@@ -14,7 +14,7 @@
             <q-breadcrumbs-el
               label="Profile"
               icon="home"
-              to="/profileprofile"
+              to="/profile"
             />
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
