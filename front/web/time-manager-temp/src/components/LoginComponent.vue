@@ -1,28 +1,21 @@
 <template>
-    <main class="main-profile">
-        <div class="profile-section">
-            <div class="login-section">
-                <div class="login-section__title">
-                    <h1>Time Manager</h1>
-                </div>
-                <div class="login-section__form">
-                    <form @submit.prevent="login">
-                        <div class="login-section__form__input">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" v-model="email" />
-                        </div>
-                        <div class="login-section__form__input">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" v-model="password" />
-                        </div>
-                        <div class="login-section__form__input">
-                            <button type="submit">Login</button>
-                        </div>
-                    </form>
+    <main class="main_login">
+        <div class="login_section">
+            <div class="login_title">
+                <p color="green-10">Welcome on Time Manager</p>
+            </div>
+            <div class="login_section__form">
+                <p>Connectez-vous en tant que Manager</p>
+                <q-input rounded outlined v-model="text" class="input_login" label="Username" color="green-10">
+                </q-input>
+                <q-input rounded outlined v-model="text" class="input_login" label="Password" color="green-10"
+                    type="password">
+                </q-input>
+                <q-btn class="input_btn" push color="green-10" label="Connect" />
+                <div class="oubli_psswd">
+                    <p>Forgot your password?</p>
                 </div>
             </div>
-
-
         </div>
     </main>
 </template>
@@ -38,7 +31,7 @@ export default {
 
 
 <style>
-.main-profile {
+.main_login {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,17 +39,58 @@ export default {
     height: 90vh;
 }
 
-
-.profile-section {
-    width: 30%;
-    height: 80%;
+.login_section {
+    width: 50%;
+    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     background-color: #9AE691;
     box-shadow: 0 0 0 2px white;
     border-radius: 8px;
 
+}
+
+.login_title {
+    font-size: 30px;
+    font-weight: bold;
+    border-bottom: 3px solid black;
+    margin-top: 13%;
+    display: flex;
+    align-items: center;
+    height: 5%;
+}
+
+
+.login_section__form {
+    color: black;
+    height: 55%;
+    width: 80%;
+    margin-bottom: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.input_login {
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 2%;
+}
+
+.input_btn {
+    margin: 1%;
+}
+
+.oubli_psswd {
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    height: 10%;
+    margin: 2%;
 }
 </style>
