@@ -170,8 +170,8 @@ export default {
       }
       const body = {
         working_time: {
-          start: this.StartDate,
-          end: this.EndDate,
+          start: moment.utc(moment(this.StartDate)).format("YYYY-MM-DD HH:mm"),
+          end: moment.utc(moment(this.EndDate)).format("YYYY-MM-DD HH:mm"),
           // user: this.currentUserId,
         },
       };
@@ -197,18 +197,12 @@ export default {
     // Using moment library to format date
     format_date(value) {
       if (value) {
-        return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");
+        return moment.utc(value).local().format("DD/MM/YYYY HH:mm");
       }
     },
   },
 };
 </script>
-
-<!-- 1) créer une méthode pour calculer le temps de travail à la journée (soustraction du start et du end) 
-     2) récupérer tous les working times d'un user get workingtimes method
-     3) convertir les working times en heures et au jour
-     4) calculer le temps de travail de la semaine (addition)     
--->
 
 <style>
 main {
