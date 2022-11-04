@@ -17,4 +17,21 @@ defmodule TimeManagerWeb.UserView do
       email: user.email
     }
   end
+
+  def render("success.json", %{message: message, token: token}) do
+    %{
+      ok: true,
+      status: 200,
+      message: message,
+      token: token
+    }
+  end
+
+  def render("failure.json", %{message: message}) do
+    %{
+      ok: false,
+      status: 200,
+      message: message
+    }
+  end
 end

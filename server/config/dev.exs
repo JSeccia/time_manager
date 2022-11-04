@@ -50,6 +50,8 @@ config :time_manager, TimeManagerWeb.Endpoint,
 # configured to run both http and https servers on
 # different ports.
 
+config :joken, default_signer: "token_secret"
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

@@ -1,20 +1,27 @@
 <template>
   <p>Page de connexion</p>
   <form @submit="onSubmitCreate">
+    <label for="username_input">Username</label>
     <input
       type="text"
       v-model="username"
       id="username_input"
       placeholder="Your username"
     />
-    <label for="username_input">Username</label>
+    <label for="email_input">Email</label>
     <input
       type="text"
       id="email_input"
       placeholder="Your email"
       v-model="email"
     />
-    <label for="email_input">Email</label>
+    <label for="password_input">Password</label>
+    <input
+      type="password"
+      id="password_input"
+      placeholder="Type a password"
+      v-model="password"
+    />
     <input type="submit" id="user_submit" value="Create" />
   </form>
   <form @submit="onSubmitUpdate">
@@ -85,6 +92,7 @@ export default {
           },
       email: "",
       username: "",
+      password: "",
     };
   },
   methods: {
@@ -149,7 +157,11 @@ export default {
     onSubmitCreate(e) {
       e.preventDefault();
       const body = {
-        user: { username: this.username, email: this.email },
+        user: {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        },
       };
       axios
         .post("/api/users", body, {

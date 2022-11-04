@@ -2,21 +2,22 @@ defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/api", TimeManagerWeb do
-    pipe_through :api
+    pipe_through(:api)
 
-    resources "/users", UserController
-    resources "/working_times", WorkingTimeController, only: [:update, :delete]
-    resources "/clocks", ClockController, only: [:update, :delete]
+    resources("/users", UserController)
+    resources("/working_times", WorkingTimeController, only: [:update, :delete])
+    resources("/clocks", ClockController, only: [:update, :delete])
 
-    get "/working_times/:user_id/:id", WorkingTimeController, :get_one
-    get "/working_times/:user_id", WorkingTimeController, :index
-    post "/working_times/:user_id", WorkingTimeController, :create_by_id
-    get "/clocks/:user_id", ClockController, :index
-    post "/clocks/:username", ClockController, :create_by_id
+    post("/users/login", UserController, :login)
+    get("/working_times/:user_id/:id", WorkingTimeController, :get_one)
+    get("/working_times/:user_id", WorkingTimeController, :index)
+    post("/working_times/:user_id", WorkingTimeController, :create_by_id)
+    get("/clocks/:user_id", ClockController, :index)
+    post("/clocks/:username", ClockController, :create_by_id)
   end
 
   # Enables LiveDashboard only for development
@@ -30,9 +31,9 @@ defmodule TimeManagerWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      pipe_through([:fetch_session, :protect_from_forgery])
 
-      live_dashboard "/dashboard", metrics: TimeManagerWeb.Telemetry
+      live_dashboard("/dashboard", metrics: TimeManagerWeb.Telemetry)
     end
   end
 
@@ -42,9 +43,9 @@ defmodule TimeManagerWeb.Router do
   # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      pipe_through([:fetch_session, :protect_from_forgery])
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end
