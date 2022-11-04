@@ -3,6 +3,7 @@ ENV MIX_ENV=prod
 ENV PORT=4000
 RUN mkdir /app
 COPY . /app
+ENV MIX_HOME=/app
 RUN apt-get update && \
   apt-get install -y postgresql-client
 RUN  apt-get install -y dos2unix
