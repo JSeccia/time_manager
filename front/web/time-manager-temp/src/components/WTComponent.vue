@@ -20,6 +20,7 @@
             <td> {{ workingTime.id }}</td>
             <td :key="workingTime.start">{{ format_date(workingTime.start) }} </td>
             <td :key="workingTime.end">{{ format_date(workingTime.end) }}</td>
+            <td>{{totalWt}}</td>
             <td>
               <!-- update working time -->
               <input class="edit-button" type="button" value="📝" @click="handleUpdate">
@@ -66,6 +67,7 @@ export default {
         StartDate: new Date().toLocaleString(),
         EndDate: new Date().toLocaleString(),
       },
+      totalWt: 0,
     };
   },
 
@@ -92,8 +94,8 @@ export default {
       const body = {
         working_time: {
           user: this.workingTime.user,
-          start: this.StartDate ?? null,
-          end: this.EndDate ?? null,
+          start: moment.utc(moment(this.StartDate)).format("YYYY-MM-DD HH:mm") ?? null,
+          end: moment(moment(this.EndDate)).format("YYYY-MM-DD HH:mm") ?? null,
         },
       }
       axios
@@ -107,7 +109,7 @@ export default {
           this.$router.push(`/workingtime/${this.userId}/${this.workingTimeId}`);
           this.$router.go(0);
         });
-      // console.log(body);
+      console.log(body.start);
     },
     // Delete working time
     deleteWorkingTime() {
@@ -121,7 +123,7 @@ export default {
     // Using moment library to retrieve the date in a readable format
     format_date(value) {
       if (value) {
-          return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+        return moment.utc(value).local().format("DD/MM/YYYY HH:mm");
       }
     },
     format_hours(value) {
@@ -130,122 +132,24 @@ export default {
     format_day(value) {
       return moment(String(value)).format("dddd");
     },
-    // calculate_hours() {
-    //   axios
-    //     .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
-    //     .then((response) => {
-    //       this.workingTime = response.data.data;
-    //       const w = this.workingTime;
-    //       console.log(w);
-    //       const end = moment(w.end).unix();
-    //       console.log(end, "end");
-    //       const start = moment(w.start);
-    //       console.log(start, "start");
-    //       // const hours = end.diff((start), "hours");
-    //       // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
-    //       console.log(hours);
-    //     });
-    //   // console.log(w);
-    //   // const start = moment(s);
-    //   // const end = moment(e);
-    //   // const end_hours = utc(e);
-    //   // console.log(end_hours, "end hours");
-    //   // const start_hours = moment().utc(s);
-    //   // console.log(start_hours, "start hours");
-    //   // const end_hours = moment().utc(this.workingTime.end);
-    //   // const duration = moment.duration(end_hours.diff(start_hours));
-    //   // console.log(duration);
-    //   // const hours = duration.asHours();
-    //   // console.log(hours);
-    //   // return hours;
-    // },
-    // console.log(w);
-      // const start = moment(s);
-      // const end = moment(e);
-      // const end_hours = utc(e);
-      // console.log(end_hours, "end hours");
-      // const start_hours = moment().utc(s);
-      // console.log(start_hours, "start hours");
-      // const end_hours = moment().utc(this.workingTime.end);
-      // const duration = moment.duration(end_hours.diff(start_hours));
-      // console.log(duration);
-      // const hours = duration.asHours();
-      // console.log(hours);
-      // return hours;
-    // calculate_TotalWorkingTime() {
-    //   axios
-    //     .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
-    //     .then((response) => {
-    //       this.workingTime = response.data.data;
-    //       const w = this.workingTime;
-    //       const end = moment(w.end).format("HH:mm").split(":");
-    //       // console.log(end, "end");
-    //       const start = moment(w.start).format("HH:mm").split(":");
-    //       // console.log(start, "start");
-    //       if (end[0] === "00") {
-    //         end[0] = "24";
-    //       }
-    //       const hours = end[0] - start[0];
-    //       const minutes = end[1] - start[1];
-
-    //       console.log("prout");
-
-    //       let totalWorkedtime = "";
-    //       if (hours < 0 && minutes < 0) {
-    //         let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
-    //         let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
-    //         totalWorkedtime = `${hoursTotal} hours and ${minutesTotal} minutes`;
-    //       } else if (hours < 0 && minutes > 0) {
-    //         let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
-    //         totalWorkedtime = `${hoursTotal} hours and ${minutes} minutes`;
-    //       } else if (minutes < 0 && hours > 0) {
-    //         let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
-    //         totalWorkedtime = `${hours} hours and ${minutesTotal} minutes`;
-    //       } else {
-    //         totalWorkedtime = `${hours} hours and ${minutes} minutes`;
-    //       }
-    //       console.log(totalWorkedtime);
-    //       return totalWorkedtime;
-    //       // const hours = end.diff((start), "hours");
-    //       // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
-    //     });
-    // },
+    
+    // computed the total result of working time
+    
     calculate_TotalWorkingTime() {
       axios
-        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
-        .then((response) => {
-          this.workingTime = response.data.data;
-          const w = this.workingTime;
-          const end = moment(w.end).format("HH:mm").split(":");
-          // console.log(end, "end");
-          const start = moment(w.start).format("HH:mm").split(":");
-          // console.log(start, "start");
-          if (end[0] === "00") {
-            end[0] = "24";
-          }
-          const hours = end[0] - start[0];
-          const minutes = end[1] - start[1];
-
-          console.log("prout");
-
-          let totalWorkedtime = "";
-          if (hours < 0 && minutes < 0) {
-            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
-            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
-            totalWorkedtime = `${hoursTotal} hours and ${minutesTotal} minutes`;
-          } else if (hours < 0 && minutes > 0) {
-            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
-            totalWorkedtime = `${hoursTotal} hours and ${minutes} minutes`;
-          } else if (minutes < 0 && hours > 0) {
-            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
-            totalWorkedtime = `${hours} hours and ${minutesTotal} minutes`;
-          } else {
-            totalWorkedtime = `${hours} hours and ${minutes} minutes`;
-          }
-          console.log(totalWorkedtime);
-          document.querySelector(".totalWorkedTime").innerHTML = totalWorkedtime;
-          // const hours = end.diff((start), "hours");
-          // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
+      .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
+      .then((response) => {
+        const w = response.data.data;
+        console.log(w);
+        const start = moment(w.start);
+        const end = moment(w.end);
+        const duration = moment.duration(end.diff(start));
+        const totalDurationInMinutes = duration.asMinutes();
+        const hours = Math.floor(totalDurationInMinutes / 60);
+        const minutes = totalDurationInMinutes % 60;
+        console.log(hours, minutes);
+        const totalWorkedtime = `${hours} hours and ${minutes} minutes`;
+        this.totalWt = totalWorkedtime;
         });
     },
   },
@@ -259,124 +163,132 @@ export default {
 </script>
 
 <style>
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 
 /* Display working time details*/
-.show-table {
-  margin-top: 100px;
-  background-color: rgba(76, 175, 80, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 70%;
-  height: 45vh;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);}
+  .show-table {
+    margin-top: 100px;
+    background-color: rgba(76, 175, 80, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    height: 45vh;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  }
   .show-table h1 {
     margin-top: 20px;
     font-size: 2rem;
     font-weight: 900;
     text-shadow: -1px -1px 0px rgba(76, 175, 80, 0.2);
-    color: #f5f8f5; }
-  .show-table thead{
+    color: #f5f8f5;
+  }
+    
+  .show-table thead {
     font-weight: bolder;
     font-size: 1rem;
   }
-  .show-table td{
+
+  .show-table td {
     font-size: .8rem;
     font-weight: 500;
     color: #6d6e6e;
   }
-.show-table th:nth-child(1) {
-  width: 20px;}
-.show-table td:nth-last-child(1) {
-  display: flex;
-}
-.show-table td:nth-last-child(1) input {
-  width: 50px;
-  padding: 0;
-}
-.show-table td:nth-last-child(1) .delete-button {
-  color: aliceblue;
-  font-size: 20px;
-}
 
-h1 {
-  text-align: center;
-  width: 70%;
-  border-radius: 10px;
-  color: black;
-  font-size: 24px;
-  font-weight: 700;
-}
+  .show-table th:nth-child(1) {
+    width: 20px;
+  }
 
-.display-data {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
+  .show-table td:nth-last-child(1) {
+    display: flex;
+  }
+  .show-table td:nth-last-child(1) input {
+    width: 50px;
+    padding: 0;
+  }
+  .show-table td:nth-last-child(1) .delete-button {
+    color: aliceblue;
+    font-size: 20px;
+  }
 
-.display-data h2 {
-  font-size: 20px;
-  font-weight: bold;
-}
+  h1 {
+    text-align: center;
+    width: 70%;
+    border-radius: 10px;
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+  }
 
-table {
-  width: 80%;
-  font-weight: 700;
-  text-align: center;
-}
+  .display-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
 
-table th {
-  padding: 4px;
-  text-align: center;
-  color: black;
-  background-color: none;
-}
+  .display-data h2 {
+    font-size: 20px;
+    font-weight: bold;
+  }
 
-tbody tr {
-  border-bottom: 1px solid rgb(236, 231, 231);
-  margin: 0 50px;
-}
+  table {
+    width: 80%;
+    font-weight: 700;
+    text-align: center;
+  }
 
-.edit-button, .delete-button {
-  display: inline-block;
-  outline: 0;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  border-radius: 4px;
-  font-size: 13px;
-  height: 30px;
-  color: white;
-  padding: 0 20px;
-}
+  table th {
+    padding: 4px;
+    text-align: center;
+    color: black;
+    background-color: none;
+  }
 
-.edit-button {
-  background-color: #6ccd6f;
-  margin-right: 10px;
-  color: #62632b;
+  tbody tr {
+    border-bottom: 1px solid rgb(236, 231, 231);
+    margin: 0 50px;
+  }
 
-}
-.edit-button:hover {
-  background-color: #adaf4cc0;
-}
+  .edit-button, .delete-button {
+    display: inline-block;
+    outline: 0;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 4px;
+    font-size: 13px;
+    height: 30px;
+    color: white;
+    padding: 0 20px;
+  }
 
-.delete-button {
-  background-color: #EB5757;
-  color: darkred;
-}
+  .edit-button {
+    background-color: #6ccd6f;
+    margin-right: 10px;
+    color: #62632b;
 
-.delete-button:hover {
-  background-color: #eb575793;
-}
+  }
+  .edit-button:hover {
+    background-color: #adaf4cc0;
+  }
+
+  .delete-button {
+    background-color: #EB5757;
+    color: darkred;
+  }
+
+  .delete-button:hover {
+    background-color: #eb575793;
+  }
 
 /* Update form */
 

@@ -37,10 +37,11 @@
             <th>Number</th>
             <th>Start Time</th>
             <th>End Time</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="WTs_items" v-for="item in workingTimes" :key="item.id">
+          <tr class="WTs_items" v-for="item in totalWt" :key="item.id">
             <td class="WTs_item">
               <input
                 class="select-wt"
@@ -51,6 +52,7 @@
             </td>
             <td class="WTs_item">{{ format_date(item.start) }}</td>
             <td class="WTs_item">{{ format_date(item.end) }}</td>
+            <td class="WTs_item">{{item.total}}</td>
           </tr>
         </tbody>
       </table>
@@ -91,6 +93,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import {calculateTotalWorkingTime} from "../utils/utils";
 
 export default {
   name: "WorkingsComponent",
@@ -105,48 +108,10 @@ export default {
         EndDate: new Date().toLocaleString(),
       },
       isAddButtonSelected: false,
+      totalWt: [],
     };
   },
   methods: {
-
-    calculate_TotalWorkingTime() {
-      axios
-        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
-        .then((response) => {
-          this.workingTime = response.data.data;
-          const w = this.workingTime;
-          const end = moment(w.end).format("HH:mm").split(":");
-          // console.log(end, "end");
-          const start = moment(w.start).format("HH:mm").split(":");
-          // console.log(start, "start");
-          if (end[0] === "00") {
-            end[0] = "24";
-          }
-          const hours = end[0] - start[0];
-          const minutes = end[1] - start[1];
-
-          console.log("prout");
-
-          let totalWorkedtime = "";
-          if (hours < 0 && minutes < 0) {
-            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
-            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
-            totalWorkedtime = `${hoursTotal} hours and ${minutesTotal} minutes`;
-          } else if (hours < 0 && minutes > 0) {
-            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
-            totalWorkedtime = `${hoursTotal} hours and ${minutes} minutes`;
-          } else if (minutes < 0 && hours > 0) {
-            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
-            totalWorkedtime = `${hours} hours and ${minutesTotal} minutes`;
-          } else {
-            totalWorkedtime = `${hours} hours and ${minutes} minutes`;
-          }
-          console.log(totalWorkedtime);
-          document.querySelector(".totalWorkedTime").innerHTML = totalWorkedtime;
-          // const hours = end.diff((start), "hours");
-          // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
-        });
-    },
     // get working times from user id
     getWorkingTimes(submitNumber) {
       submitNumber.preventDefault();
@@ -157,6 +122,9 @@ export default {
       axios.get(`/api/working_times/${this.userId}`).then((response) => {
         if (response.data.data.length > 0) {
           this.workingTimes = response.data.data;
+          this.totalWt = this.workingTimes.map((wt) => {
+           return {...wt, total: calculateTotalWorkingTime(wt)}
+          })
           this.currentUserId = this.$refs.userIdInput.value;
         } else {
           window.alert("No employee or working times found");
@@ -218,7 +186,7 @@ export default {
     // Using moment library to format date
     format_date(value) {
       if (value) {
-        return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+        return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");
       }
     },
   },
