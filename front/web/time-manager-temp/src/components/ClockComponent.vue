@@ -1,29 +1,21 @@
 <template>
   <main>
-    <section class="section-clocks">
-      <h1>See your employees last clock times:</h1>
+    <section class="section_clocks">
+      <h1 class="title_clocks">Employees Clocks Trend</h1>
       <div class="search-employee-id">
         <form @submit="getAllClocksFromInput">
-          <label for="get_this_employee_clocks"></label>
-          <input
-            type="text"
-            id="get_this_employee_clocks"
-            v-model="userId"
-            placeholder="enter employee id"
-            ref="userIdInput"
-          />
-          <input
-            type="submit"
-            value="Get Employee last clocks"
-            @click="handleGetAllClocksFromInput"
-          />
+          <!-- <label for="get_this_employee_clocks"></label> -->
+          <q-input rounded outlined v-model="text" class="input_clocks" label="Employee ID" ref="userID"
+            color="green-10">
+          </q-input>
+          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks" />
+          <!-- <input type="text" id="get_this_employee_clocks" v-model="userId" placeholder="enter employee id"
+            ref="userIdInput" />
+          <input type="submit" value="Get Employee last clocks" @click="handleGetAllClocksFromInput" /> -->
         </form>
       </div>
 
-      <div
-        class="display-employee-clocks"
-        v-if="isGetAllClocksFromInputButtonSelected"
-      >
+      <!-- <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
         <p>Details of {{ userId }}</p>
         <table>
           <thead>
@@ -46,25 +38,10 @@
         <button @click="reloadPage">
           Refresh to search other employee clocks
         </button>
-      </div>
+      </div> -->
     </section>
 
-    <p>
-      ------------------------------------------------------------------------------------------
-    </p>
 
-    GRAPH DES WORKING TIMES DE TOUS LES USERS SUR UNE semaine 1) array avec les
-    7 jours de la semaine 2) méthode qui détermine le jour d'aujourd'hui 3)
-    méthode qui permet de récupérer les wt d'un user et directement de les
-    convertir dans un array jour et un array heure 4) méthode qui permet de
-    convertir le temps de travail en heures et l'extraire prendre un temps de
-    travail et créer méthode pour soustraire end - start 3) calculer le temps de
-    travail d'un utilisateur sur un jour 4) calculer le temps de travail d'un
-    utilisateur sur une semaine
-
-    <p>
-      ------------------------------------------------------------------------------------------
-    </p>
 
     <!-- clock time interactive-->
 
@@ -188,10 +165,10 @@ export default {
     currentUser: localStorage.getItem("currentUser")
       ? JSON.parse(localStorage.getItem("currentUser"))
       : {
-          email: "",
-          username: "",
-          id: 0,
-        },
+        email: "",
+        username: "",
+        id: 0,
+      },
     date: "",
     time: "",
     year: "",
@@ -309,5 +286,35 @@ table th {
 tbody tr {
   border-bottom: 1px solid rgb(236, 231, 231);
   margin: 0 50px;
+}
+
+.section_clocks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 85%;
+  border: 1px solid red;
+}
+
+.title_clocks {
+  font-size: 25px;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+  height: 10%;
+}
+
+
+.input_clocks {
+  margin: 3%;
+  width: 100%;
+  border: 1px solid yellow;
+  height: 15%;
+}
+
+.input_btn_clocks {
+  margin: 3%;
+  height: 10%;
+  width: 100%;
 }
 </style>
