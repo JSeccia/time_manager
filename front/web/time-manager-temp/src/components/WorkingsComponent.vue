@@ -36,17 +36,18 @@
 
     <section class="display-data">
       <h2>Employee n° {{ currentUserId }} Working Times:</h2>
-      <table>
+      <table class="WTs_table">
         <thead>
           <tr>
             <th>Number</th>
             <th>Start Time</th>
             <th>End Time</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="WT_items" v-for="item in workingTimes" :key="item.id">
-            <td>
+          <tr class="WTs_items" v-for="item in totalWt" :key="item.id">
+            <td class="WTs_item">
               <input
                 class="select-wt"
                 type="button"
@@ -54,8 +55,9 @@
                 @click="goWorkingTime"
               />
             </td>
-            <td>{{ format_date(item.start) }}</td>
-            <td>{{ format_date(item.end) }}</td>
+            <td class="WTs_item">{{ format_date(item.start) }}</td>
+            <td class="WTs_item">{{ format_date(item.end) }}</td>
+            <td class="WTs_item">{{ item.total }}</td>
           </tr>
         </tbody>
       </table>
@@ -95,6 +97,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import { calculateTotalWorkingTime } from "../utils/utils";
 
 export default {
   name: "WorkingsComponent",
@@ -116,6 +119,7 @@ export default {
         EndDate: new Date().toLocaleString(),
       },
       isAddButtonSelected: false,
+      totalWt: [],
     };
   },
   methods: {
@@ -126,16 +130,17 @@ export default {
         window.alert("Please select an employee");
         return;
       }
-      axios
-        .get(`/api/working_times/${this.currentUser.id}`)
-        .then((response) => {
-          if (response.data.data.length > 0) {
-            this.workingTimes = response.data.data;
-            // this.currentUserId = this.$refs.userIdInput.value; ??
-          } else {
-            window.alert("No employee or working times found");
-          }
-        });
+      axios.get(`/api/working_times/${this.userId}`).then((response) => {
+        if (response.data.data.length > 0) {
+          this.workingTimes = response.data.data;
+          this.totalWt = this.workingTimes.map((wt) => {
+            return { ...wt, total: calculateTotalWorkingTime(wt) };
+          });
+          this.currentUserId = this.$refs.userIdInput.value;
+        } else {
+          window.alert("No employee or working times found");
+        }
+      });
     },
     // Select one working time
     goWorkingTime(e) {
@@ -183,6 +188,12 @@ export default {
         });
       console.log(body);
     },
+    format_hours(value) {
+      return moment(String(value)).format("hh:mm");
+    },
+    format_day(value) {
+      return moment(String(value)).format("dddd");
+    },
     // Using moment library to format date
     format_date(value) {
       if (value) {
@@ -192,6 +203,12 @@ export default {
   },
 };
 </script>
+
+<!-- 1) créer une méthode pour calculer le temps de travail à la journée (soustraction du start et du end) 
+     2) récupérer tous les working times d'un user get workingtimes method
+     3) convertir les working times en heures et au jour
+     4) calculer le temps de travail de la semaine (addition)     
+-->
 
 <style>
 main {
@@ -260,7 +277,7 @@ h1 {
   font-weight: bold;
 }
 
-table {
+.WTs_table {
   border-collapse: collapse;
   width: 50%;
   border: 1px solid black;
@@ -268,14 +285,14 @@ table {
   font-weight: 700;
   text-align: center;
 }
-table th {
+.WTs_table th {
   padding: 4px;
   text-align: center;
   color: white;
   background-color: #4caf50;
 }
 
-tbody tr {
+.WTs_table .WTs_items .WTs_item {
   border-bottom: 1px solid rgb(236, 231, 231);
   margin: 0 50px;
 }

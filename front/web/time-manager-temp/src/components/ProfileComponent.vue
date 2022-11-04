@@ -1,6 +1,6 @@
 <template>
-  <main class="main-profile">
-    <div class="profile-section">
+  <main class="main_profile">
+    <div class="profile_section">
       <div class="avatar">
         <img
           class="avatar-img"
@@ -9,9 +9,8 @@
         />
         <span>{{ user.username }}</span>
       </div>
-
       <div class="profile-info">
-        <table>
+        <table class="profile_table">
           <tbody>
             <tr>
               <td>
@@ -25,28 +24,21 @@
             </tr>
             <tr>
               <td>
-                <span>Number of employees: {{ users.length }}</span>
+                <span>Employee Numbers: {{ users.length }}</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
       <div class="logout-button">
         <q-btn style="background-color: #4caf50; color: white" label="Logout" />
       </div>
     </div>
-
-    <ul>
-      <li>{{ user }}</li>
-      <li>{{ users.length }}</li>
-    </ul>
   </main>
 </template>
 
 <script>
 import axios from "axios";
-
 export default {
   name: "ProfileComponent",
   data() {
@@ -62,6 +54,7 @@ export default {
       users: [],
     };
   },
+
   methods: {
     getUser() {
       axios.get(`/api/users/${this.currentUser.id}`).then((response) => {
@@ -70,7 +63,7 @@ export default {
       });
     },
     getUsers() {
-      axios.get(`/api/users`).then((response) => {
+      axios.get(`/api/users/`).then((response) => {
         console.log(response);
         this.users = response.data.data;
       });
@@ -84,16 +77,17 @@ export default {
 </script>
 
 <style>
-.main-profile {
+.main_profile {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 90vh;
 }
-.profile-section {
+
+.profile_section {
   width: 30%;
-  height: 60%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -105,15 +99,24 @@ export default {
 
 .avatar {
   width: 30%;
-  height: 35%;
+  height: 25%;
   text-align: center;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+.avatar span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #4caf50;
+}
+
 .avatar-img {
   height: 135px;
   width: 100%;
   border-radius: 50%;
 }
+
 .profile-info {
   display: flex;
   flex-direction: column;
@@ -129,5 +132,9 @@ export default {
   border-collapse: collapse;
   border: none;
   font-weight: 400;
+  border-bottom: none;
+}
+.profile_table td {
+  border-style: hidden;
 }
 </style>
