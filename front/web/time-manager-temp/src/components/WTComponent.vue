@@ -11,6 +11,7 @@
             <th>Number</th>
             <th>Start Time</th>
             <th>End Time</th>
+            <th>Total</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -20,10 +21,10 @@
             <td :key="workingTime.start">{{ format_date(workingTime.start) }} </td>
             <td :key="workingTime.end">{{ format_date(workingTime.end) }}</td>
             <td>
-              <input class="edit-button" type="button" value="update" @click="handleUpdate">
-              
+              <!-- update working time -->
+              <input class="edit-button" type="button" value="📝" @click="handleUpdate">
               <!-- Delete working time -->
-              <input class="delete-button" type="button" value="delete" @click="deleteWorkingTime">
+              <input class="delete-button" type="button" value="🗑" @click="deleteWorkingTime">
             </td>
           </tr>
         </tbody>
@@ -75,7 +76,7 @@ export default {
         .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
         .then((response) => {
           this.workingTime = response.data.data;
-          console.log(this.workingTime);
+          // console.log(this.workingTime);
         });
     },
     // Handle update working time button condition
@@ -102,11 +103,11 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           this.$router.push(`/workingtime/${this.userId}/${this.workingTimeId}`);
           this.$router.go(0);
         });
-      console.log(body);
+      // console.log(body);
     },
     // Delete working time
     deleteWorkingTime() {
@@ -119,14 +120,140 @@ export default {
     },
     // Using moment library to retrieve the date in a readable format
     format_date(value) {
-            if (value) {
-                return moment(String(value)).format("MM/DD/YYYY  hh:mm");
-            }
-        },
+      if (value) {
+          return moment(String(value)).format("MM/DD/YYYY  hh:mm");
+      }
+    },
+    format_hours(value) {
+      return moment(String(value)).format("hh:mm");
+    },
+    format_day(value) {
+      return moment(String(value)).format("dddd");
+    },
+    // calculate_hours() {
+    //   axios
+    //     .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
+    //     .then((response) => {
+    //       this.workingTime = response.data.data;
+    //       const w = this.workingTime;
+    //       console.log(w);
+    //       const end = moment(w.end).unix();
+    //       console.log(end, "end");
+    //       const start = moment(w.start);
+    //       console.log(start, "start");
+    //       // const hours = end.diff((start), "hours");
+    //       // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
+    //       console.log(hours);
+    //     });
+    //   // console.log(w);
+    //   // const start = moment(s);
+    //   // const end = moment(e);
+    //   // const end_hours = utc(e);
+    //   // console.log(end_hours, "end hours");
+    //   // const start_hours = moment().utc(s);
+    //   // console.log(start_hours, "start hours");
+    //   // const end_hours = moment().utc(this.workingTime.end);
+    //   // const duration = moment.duration(end_hours.diff(start_hours));
+    //   // console.log(duration);
+    //   // const hours = duration.asHours();
+    //   // console.log(hours);
+    //   // return hours;
+    // },
+    // console.log(w);
+      // const start = moment(s);
+      // const end = moment(e);
+      // const end_hours = utc(e);
+      // console.log(end_hours, "end hours");
+      // const start_hours = moment().utc(s);
+      // console.log(start_hours, "start hours");
+      // const end_hours = moment().utc(this.workingTime.end);
+      // const duration = moment.duration(end_hours.diff(start_hours));
+      // console.log(duration);
+      // const hours = duration.asHours();
+      // console.log(hours);
+      // return hours;
+    // calculate_TotalWorkingTime() {
+    //   axios
+    //     .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
+    //     .then((response) => {
+    //       this.workingTime = response.data.data;
+    //       const w = this.workingTime;
+    //       const end = moment(w.end).format("HH:mm").split(":");
+    //       // console.log(end, "end");
+    //       const start = moment(w.start).format("HH:mm").split(":");
+    //       // console.log(start, "start");
+    //       if (end[0] === "00") {
+    //         end[0] = "24";
+    //       }
+    //       const hours = end[0] - start[0];
+    //       const minutes = end[1] - start[1];
+
+    //       console.log("prout");
+
+    //       let totalWorkedtime = "";
+    //       if (hours < 0 && minutes < 0) {
+    //         let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
+    //         let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
+    //         totalWorkedtime = `${hoursTotal} hours and ${minutesTotal} minutes`;
+    //       } else if (hours < 0 && minutes > 0) {
+    //         let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
+    //         totalWorkedtime = `${hoursTotal} hours and ${minutes} minutes`;
+    //       } else if (minutes < 0 && hours > 0) {
+    //         let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
+    //         totalWorkedtime = `${hours} hours and ${minutesTotal} minutes`;
+    //       } else {
+    //         totalWorkedtime = `${hours} hours and ${minutes} minutes`;
+    //       }
+    //       console.log(totalWorkedtime);
+    //       return totalWorkedtime;
+    //       // const hours = end.diff((start), "hours");
+    //       // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
+    //     });
+    // },
+    calculate_TotalWorkingTime() {
+      axios
+        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
+        .then((response) => {
+          this.workingTime = response.data.data;
+          const w = this.workingTime;
+          const end = moment(w.end).format("HH:mm").split(":");
+          // console.log(end, "end");
+          const start = moment(w.start).format("HH:mm").split(":");
+          // console.log(start, "start");
+          if (end[0] === "00") {
+            end[0] = "24";
+          }
+          const hours = end[0] - start[0];
+          const minutes = end[1] - start[1];
+
+          console.log("prout");
+
+          let totalWorkedtime = "";
+          if (hours < 0 && minutes < 0) {
+            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
+            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
+            totalWorkedtime = `${hoursTotal} hours and ${minutesTotal} minutes`;
+          } else if (hours < 0 && minutes > 0) {
+            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
+            totalWorkedtime = `${hoursTotal} hours and ${minutes} minutes`;
+          } else if (minutes < 0 && hours > 0) {
+            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
+            totalWorkedtime = `${hours} hours and ${minutesTotal} minutes`;
+          } else {
+            totalWorkedtime = `${hours} hours and ${minutes} minutes`;
+          }
+          console.log(totalWorkedtime);
+          document.querySelector(".totalWorkedTime").innerHTML = totalWorkedtime;
+          // const hours = end.diff((start), "hours");
+          // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
+        });
+    },
   },
+  
   // Calling get working time method when the component is created
   mounted() {
     this.getWorkingTime();
+    this.calculate_TotalWorkingTime(this.workingTime);
   },
 };
 </script>
@@ -142,14 +269,42 @@ main {
 /* Display working time details*/
 .show-table {
   margin-top: 100px;
-  background-color: rgba(76, 175, 80, 0.2);
+  background-color: rgba(76, 175, 80, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 60%;
+  width: 70%;
   height: 45vh;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);}
+  .show-table h1 {
+    margin-top: 20px;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: -1px -1px 0px rgba(76, 175, 80, 0.2);
+    color: #f5f8f5; }
+  .show-table thead{
+    font-weight: bolder;
+    font-size: 1rem;
+  }
+  .show-table td{
+    font-size: .8rem;
+    font-weight: 500;
+    color: #6d6e6e;
+  }
+.show-table th:nth-child(1) {
+  width: 20px;}
+.show-table td:nth-last-child(1) {
+  display: flex;
+}
+.show-table td:nth-last-child(1) input {
+  width: 50px;
+  padding: 0;
+}
+.show-table td:nth-last-child(1) .delete-button {
+  color: aliceblue;
+  font-size: 20px;
+}
 
 h1 {
   text-align: center;
@@ -205,7 +360,7 @@ tbody tr {
 }
 
 .edit-button {
-  background-color: #ADAF4C;
+  background-color: #6ccd6f;
   margin-right: 10px;
   color: #62632b;
 

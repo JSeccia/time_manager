@@ -17,21 +17,25 @@
       <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
         <p>Details of {{ userId }}</p>
         <table>
-          <theader>
+          <thead>
             <th>Employee ID</th>
             <th>Clock Number</th>
             <th>clock status</th>
-            <th>clock time</th>
-          </theader>
+            <th>day</th>
+            <th>time</th>
+          </thead>
           <tbody>
             <tr v-for="clock in employeeClocks" :key="clock.id">
               <td>{{ clock.user }}</td>
               <td>{{ clock.id }}</td>
               <td>{{ clock.status }}</td>
-              <td>{{ format_date(clock.time) }}</td>
+              <td>{{ format_day(clock.time) }}</td>
+              <td>{{format_hours(clock.time)}}</td>
             </tr>
           </tbody>
         </table>
+        <button @click="reloadPage">Refresh to search other employee clocks </button>
+
       </div>
     </section>
 
@@ -252,6 +256,9 @@ export default {
     handleGetAllClocksFromInput() {
       this.isGetAllClocksFromInputButtonSelected = true;
     },
+    reloadPage() {
+      window.location.reload();
+    },
 
     // manipulate date 
     printDate: function () {
@@ -269,7 +276,12 @@ export default {
     printFullDate: function () {
       return new Date();
     },
-
+    format_hours(value) {
+      return moment(String(value)).format("hh:mm");
+    },
+    format_day(value) {
+      return moment(String(value)).format("dddd");
+    },
     format_date(value) {
       if (value) {
         return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");

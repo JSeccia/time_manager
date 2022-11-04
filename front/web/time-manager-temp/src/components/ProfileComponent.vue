@@ -6,7 +6,7 @@
                 <span>{{user.username}}</span>
             </div>
             <div class="profile-info">
-                <table>
+                <table class="profile_table">
                     <tbody>
                         <tr>
                             <td>
@@ -128,7 +128,7 @@ export default {
         font-weight: 400;
         border-bottom: none;
     } 
-    td {
-        border-style : hidden!important;
+    .profile_table td {
+        border-style: hidden;
     }
 </style>

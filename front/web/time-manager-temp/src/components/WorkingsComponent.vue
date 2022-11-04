@@ -31,7 +31,7 @@
 
     <section class="display-data">
       <h2>Employee n° {{ currentUserId }} Working Times:</h2>
-      <table>
+      <table class="WTs_table">
         <thead>
           <tr>
             <th>Number</th>
@@ -40,8 +40,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="WT_items" v-for="item in workingTimes" :key="item.id">
-            <td>
+          <tr class="WTs_items" v-for="item in workingTimes" :key="item.id">
+            <td class="WTs_item">
               <input
                 class="select-wt"
                 type="button"
@@ -49,8 +49,8 @@
                 @click="goWorkingTime"
               />
             </td>
-            <td>{{ format_date(item.start) }}</td>
-            <td>{{ format_date(item.end) }}</td>
+            <td class="WTs_item">{{ format_date(item.start) }}</td>
+            <td class="WTs_item">{{ format_date(item.end) }}</td>
           </tr>
         </tbody>
       </table>
@@ -108,6 +108,45 @@ export default {
     };
   },
   methods: {
+
+    calculate_TotalWorkingTime() {
+      axios
+        .get(`/api/working_times/${this.userId}/${this.workingTimeId}`)
+        .then((response) => {
+          this.workingTime = response.data.data;
+          const w = this.workingTime;
+          const end = moment(w.end).format("HH:mm").split(":");
+          // console.log(end, "end");
+          const start = moment(w.start).format("HH:mm").split(":");
+          // console.log(start, "start");
+          if (end[0] === "00") {
+            end[0] = "24";
+          }
+          const hours = end[0] - start[0];
+          const minutes = end[1] - start[1];
+
+          console.log("prout");
+
+          let totalWorkedtime = "";
+          if (hours < 0 && minutes < 0) {
+            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
+            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
+            totalWorkedtime = `${hoursTotal} hours and ${minutesTotal} minutes`;
+          } else if (hours < 0 && minutes > 0) {
+            let hoursTotal = 24 - parseInt(start[0]) + parseInt(end[0]);
+            totalWorkedtime = `${hoursTotal} hours and ${minutes} minutes`;
+          } else if (minutes < 0 && hours > 0) {
+            let minutesTotal = 60 - parseInt(start[1]) + parseInt(end[1]);
+            totalWorkedtime = `${hours} hours and ${minutesTotal} minutes`;
+          } else {
+            totalWorkedtime = `${hours} hours and ${minutes} minutes`;
+          }
+          console.log(totalWorkedtime);
+          document.querySelector(".totalWorkedTime").innerHTML = totalWorkedtime;
+          // const hours = end.diff((start), "hours");
+          // const hours = moment().duration(moment(end).diff(moment(start))).asHours();
+        });
+    },
     // get working times from user id
     getWorkingTimes(submitNumber) {
       submitNumber.preventDefault();
@@ -169,6 +208,12 @@ export default {
           this.$router.go();
         });
       console.log(body);
+    },
+    format_hours(value) {
+      return moment(String(value)).format("hh:mm");
+    },
+    format_day(value) {
+      return moment(String(value)).format("dddd");
     },
     // Using moment library to format date
     format_date(value) {
@@ -253,7 +298,7 @@ export default {
     font-weight: bold;
   }
 
-  table {
+  .WTs_table {
     border-collapse: collapse;
     width: 50%;
     border: 1px solid black;
@@ -261,14 +306,14 @@ export default {
     font-weight: 700;
     text-align: center;
   }
-  table th {
+  .WTs_table th {
     padding: 4px;
     text-align: center;
     color: white;
     background-color: #4caf50;
   }
 
-  tbody tr {
+  .WTs_table .WTs_items .WTs_item {
     border-bottom: 1px solid rgb(236, 231, 231);
     margin: 0 50px;
   }
