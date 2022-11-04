@@ -2,25 +2,26 @@
 
     <main class="main_charts">
         <div class="title_chart">
-            <h1>Latest employees Activity</h1>
+            <h1>CHART ACTIVITY</h1>
         </div>
 
 
         <div class="Global_charts">
             <div class="WT_charts">
-                <apexchart type="donut" width="380" :options="chartOptions" :series="series"></apexchart>
+
+                <apexchart type="pie" :options="Optionschart" :series="donnee"></apexchart>
+
             </div>
             <div class="hours_charts">
 
-                <apexchart type="bar" height="350" :options="Optionschart" :series="seefojf"></apexchart>
-
+                <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
             </div>
         </div>
 
 
         <div class="btn_charts">
-            <q-btn class="WT_button" push color="green-10" label="Working Times" />
-            <q-btn class="Hours_button" push color="green-10" label="Hours declared" />
+            <q-btn class="WT_button" push color="green-10" label="Chart Times" />
+            <q-btn class="Hours_button" push color="green-10" label="Chart Hours" />
         </div>
     </main>
 
@@ -40,52 +41,89 @@ export default defineComponent({
     name: 'ChartComponent',
     data() {
         return {
-            series: [44, 55, 41, 17, 15],
-            chartOptions: {
-                chart: {
-                    type: 'donut',
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }]
+            series: [{
+                name: 'Hours Worked',
+                data: [126, 85, 111, 148, 127, 135, 91, 144, 94]
             },
-        }
-    },
-    data() {
-        return {
-            seefojf: [{
-                data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+            {
+                name: 'Working Hours',
+                data: [150, 150, 150, 150, 150, 150, 150, 150, 150]
             }],
-            Optionschart: {
+            chartOptions: {
                 chart: {
                     type: 'bar',
                     height: 350
                 },
                 plotOptions: {
                     bar: {
-                        borderRadius: 4,
-                        horizontal: true,
-                    }
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
                 },
                 dataLabels: {
                     enabled: false
                 },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
                 xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                        'United States', 'China', 'Germany'
-                    ],
+                    categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                },
+                yaxis: {
+                    title: {
+                        text: 'h (hours)'
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return "H " + val + " Hours worked"
+                        }
+                    }
                 }
             },
+            donnee: [25, 15, 44, 55, 41],
+            Optionschart: {
+                chart: {
+                    width: '100%',
+                    type: 'pie',
+                },
+                labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                theme: {
+                    monochrome: {
+                        enabled: true
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            offset: -5
+                        }
+                    }
+                },
+                title: {
+                    text: "Taux de présence par jours de travail"
+                },
+                dataLabels: {
+                    formatter(val, opts) {
+                        const name = opts.w.globals.labels[opts.seriesIndex]
+                        return [name, val.toFixed(1) + '%']
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            },
+
         }
-    }
+    },
+
 });
 
 </script>
