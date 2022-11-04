@@ -35,7 +35,11 @@ defmodule TimeManagerWeb.UserController do
     if !user || !Bcrypt.verify_pass(password, user.password_hash) do
       render(conn, "failure.json", message: "Wrong email or password")
     else
-      token = TimeManager.Token.generate_and_sign!(%{"user_id" => user.id})
+      token =
+        TimeManager.Token.generate_and_sign!(
+          %{"user_id" => user.id},
+          Joken.Signer.create("HS512", "token_secret")
+        )
 
       render(conn, "success.json", %{message: "ok", token: token})
     end
