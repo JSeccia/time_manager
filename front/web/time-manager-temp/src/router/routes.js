@@ -5,6 +5,7 @@ import WTPage from "../pages/WTPage.vue";
 import ProfilePage from "../pages/ProfilePage.vue";
 import User from "../pages/User.vue";
 import LoginPage from "../pages/LoginPage.vue";
+import SignInPage from "../pages/SignInPage.vue";
 
 const routes = [
   {
@@ -25,6 +26,7 @@ const routes = [
       },
       { path: "users", component: User },
       { path: "login", component: LoginPage },
+      { path: "signin", component: SignInPage },
     ],
   },
 
