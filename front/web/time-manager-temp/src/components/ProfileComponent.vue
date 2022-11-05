@@ -31,7 +31,8 @@
         </table>
       </div>
       <div class="logout-button">
-        <q-btn style="background-color: #4caf50; color: white" label="Logout" />
+        <q-btn push color="green-10" label="Logout" />
+
       </div>
     </div>
   </main>

@@ -66,7 +66,8 @@
           name="end_date_input"
         />
         <br />
-        <input type="submit" id="edit-submit" value="edit" />
+        <q-btn id="edit-submit" type="submit" push color="green-10" label="edit" />
+
       </fieldset>
     </form>
   </main>
@@ -417,8 +418,8 @@ tbody tr {
 }
 
 #edit-form fieldset {
-  background: white;
   border: 0 none;
+  background-color: rgba(76, 175, 80, 0.14);
   border-radius: 3px;
   box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
   padding: 20px 30px;
@@ -440,8 +441,6 @@ tbody tr {
 }
 #edit-form #edit-submit {
   width: 100px;
-  background: #27ae60;
-  font-weight: bold;
   color: white;
   border: 0 none;
   border-radius: 1px;
@@ -451,6 +450,6 @@ tbody tr {
 }
 #edit-form #edit-submit:hover,
 #edit-form #edit-submit:focus {
-  box-shadow: 0 0 0 2px white, 0 0 0 3px #27ae60;
+  box-shadow: 0 0 0 2px white;
 }
 </style>

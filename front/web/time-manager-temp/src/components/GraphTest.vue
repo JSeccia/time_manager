@@ -14,10 +14,10 @@
           ref="userIdInput"
         />
         <input type="submit" value="Get working times" />
-      </form>
+      </form> 
     </section>
-    <div>
-        <apexchart width="500" type="bar" :options="options" :series="series"></apexchart>
+    <div class="bar-chart">
+        <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
     </div>
 </template>
 
@@ -30,22 +30,43 @@ export default {
     name: 'GraphTest',
     data: function () {
         return {
-            userId: 0,
-            currentUserId: "",
             wtGraph: {
-                day: 1,
+                day: "",
                 total: 0,
             },
             options: {
                 chart: {
-                    id: 'vuechart-example'
+                    id: 'barchart-example'
                 },
+                title: {
+                    text: 'Working times by date',
+                    align: 'left'
+                },
+                fill: {
+                    colors: ['#4CAF50']
+                },
+                yaxis: {
+                    min: 0,
+                    max: 10,
+                    title: {
+                        text: 'Working time (hours)'
+                    },
+                    // labels: {
+                    //     formatter: function (val) {
+                    //         return val + "h";
+                    //     }
+                    // }
+                },
+
                 xaxis: {
-                    categories: []
+                    categories: [],
+                    title: {
+                        text: 'working time (date)'
+                    }  
                 }
             },
             series: [{
-                name: 'series-1',
+                name: '1',
                 data: []
             }],
             noData: {
@@ -55,6 +76,7 @@ export default {
     },
     
     methods: {
+
         async getWorkingTime() {
             if (this.userId === "") {
                 window.alert("Please enter an employee id");
@@ -72,7 +94,6 @@ export default {
                     return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
                 })
                 console.log(this.wtGraph, "wtGraph");
-                this.currentUserId = this.$refs.userIdInput.value;
                 } 
         ;
 
@@ -96,3 +117,18 @@ export default {
 }
 
 </script>
+
+<style>
+
+.bar-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+#barchart-example {
+    max-width: 500px;
+    margin: 35px auto;
+}
+
+</style>
