@@ -41,7 +41,7 @@
 
 <script>
 import axios from "axios";
-import { Cookies } from "quasar";
+import { LocalStorage } from "quasar";
 
 export default {
   name: "LoginComponent",
@@ -59,7 +59,7 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          Cookies.set("jwt_token", res.data.token);
+          LocalStorage.set("token", res.data.token);
         });
     },
   },
