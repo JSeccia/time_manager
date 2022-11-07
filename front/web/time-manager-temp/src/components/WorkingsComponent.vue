@@ -1,6 +1,8 @@
 <template>
-  <main class="main-wworkingtimes">
-    <h1>Check employee's working times</h1>
+
+  <!-- Manager Web Working Times -->
+  <main class="main-workingtimes">
+    <h1>Check working times</h1>
 
     <ul :key="currentUser.id">
       <li>{{ currentUser.id }}</li>
@@ -96,6 +98,8 @@
 
 
   </main>
+
+  <!-- Employee web WorkingTimes -->
 </template>
 
 <script>
@@ -272,9 +276,10 @@ export default {
 }
 
 .main-workingtimes h1 {
-  text-align: center;
-  font-size: 24px;
+  font-size: 25px;
   font-weight: bold;
+  border-bottom: 2px solid black;
+  height: 10%;
 }
 /* search section */
 .search-wt-id {

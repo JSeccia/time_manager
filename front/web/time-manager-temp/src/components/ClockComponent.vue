@@ -3,19 +3,18 @@
     <section class="section_clocks">
       <h1 class="title_clocks">Employees Clocks Trend</h1>
       <div class="search-employee-id">
-        <form @submit="getAllClocksFromInput">
-          <!-- <label for="get_this_employee_clocks"></label> -->
-          <q-input rounded outlined v-model="text" class="input_clocks" label="Employee ID" ref="userID"
+        <form @submit.prevent="getAllClocksFromInput">
+          <q-input rounded outlined v-model="userId" class="input_clocks" label="Employee ID" ref="userClockInput"
             color="green-10">
           </q-input>
-          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks" />
+          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks" @click="handleGetAllClocksFromInput" />
           <!-- <input type="text" id="get_this_employee_clocks" v-model="userId" placeholder="enter employee id"
             ref="userIdInput" />
           <input type="submit" value="Get Employee last clocks" @click="handleGetAllClocksFromInput" /> -->
         </form>
       </div>
 
-      <!-- <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
+      <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
         <p>Details of {{ userId }}</p>
         <table>
           <thead>
@@ -38,7 +37,7 @@
         <button @click="reloadPage">
           Refresh to search other employee clocks
         </button>
-      </div> -->
+      </div>
     </section>
 
 
@@ -202,8 +201,7 @@ export default {
       });
     },
     // get all clock times from one employee with its id
-    getAllClocksFromInput(e) {
-      e.preventDefault();
+    getAllClocksFromInput() {
       console.log("before axios call");
       if (this.userId === "") {
         window.alert("Please enter an employee id");
@@ -214,7 +212,7 @@ export default {
         console.log(response.data.data.length, "length");
         if (response.data.data.length > 0) {
           this.employeeClocks = response.data.data;
-          this.employeeToGetClocks = this.$refs.userIdInput.value;
+          this.employeeToGetClocks = this.$refs.userClockInput.value;
           console.log(this.employeeClocks, "employeeClocks");
         } else {
           window.alert("No employee or clocks times found");

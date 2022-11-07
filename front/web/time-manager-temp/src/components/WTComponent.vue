@@ -219,9 +219,10 @@ h1 {
   text-align: center;
   width: 70%;
   border-radius: 10px;
-  color: black;
   font-size: 24px;
   font-weight: 700;
+  border-bottom: 2px solid black;
+  height: 25%;
 }
 
 .display-data {
