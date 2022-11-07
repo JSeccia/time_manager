@@ -107,8 +107,10 @@ import axios from "axios";
 import moment from "moment";
 import { calculateTotalWorkingTime } from "../utils/utils";
 
+
 export default {
   name: "WorkingsComponent",
+
   data() {
     return {
       currentUser: localStorage.getItem("currentUser")
