@@ -23,6 +23,7 @@
       
       <!-- add working times button -->
       <q-btn
+        href="#create-form"
         id="add-button"
         type="button"
         label="Add working times"
@@ -135,6 +136,12 @@ export default {
           chart: {
               id: 'barchart-example'
           },
+          plotOptions: {
+              bar: {
+                  columnWidth: '50%',
+                  endingShape: 'rounded'
+              },
+          },
           title: {
               text: 'Working times by date',
               align: 'left'
@@ -144,7 +151,7 @@ export default {
           },
           yaxis: {
               min: 0,
-              max: 10,
+              max: 24,
               title: {
                   text: 'Working time (hours)'
               },
