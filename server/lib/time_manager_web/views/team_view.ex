@@ -1,0 +1,27 @@
+defmodule TimeManagerWeb.TeamView do
+  use TimeManagerWeb, :view
+  alias TimeManagerWeb.TeamView
+
+  def render("index.json", %{teams: teams}) do
+    %{data: render_many(teams, TeamView, "team.json")}
+  end
+
+  def render("show.json", %{team: team}) do
+    %{data: render_one(team, TeamView, "team.json")}
+  end
+
+  def render("team.json", %{team: team}) do
+    %{
+      id: team.id,
+      manager: team.manager
+    }
+  end
+
+  def render("failure.json", %{message: message}) do
+    %{
+      ok: false,
+      status: 200,
+      message: message
+    }
+  end
+end

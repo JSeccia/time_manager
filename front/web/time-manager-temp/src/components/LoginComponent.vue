@@ -59,7 +59,9 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          LocalStorage.set("token", res.data.token);
+          if (res.data.token) {
+            LocalStorage.set("token", res.data.token);
+          }
         });
     },
   },
