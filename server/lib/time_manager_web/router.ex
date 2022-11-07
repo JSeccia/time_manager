@@ -6,7 +6,7 @@ defmodule TimeManagerWeb.Router do
   end
 
   scope "/api", TimeManagerWeb do
-    pipe_through(:api)
+    pipe_through([:api])
 
     resources("/users", UserController)
     resources("/working_times", WorkingTimeController, only: [:update, :delete])
