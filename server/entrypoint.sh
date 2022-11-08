@@ -10,7 +10,7 @@ do
   sleep 2
 done
 
-mix ecto.drop
+exec mix ecto.drop
 
 # Create, migrate, and seed database if it doesn't exist.
 if [ ! `psql -Atqc "\\list $PGDATABASE"` ]; then
