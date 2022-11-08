@@ -42,7 +42,8 @@ defmodule TimeManagerWeb.UserView do
         token: token,
         id: id,
         username: username,
-        email: email
+        email: email,
+        role: role
       }) do
     %{
       ok: true,
@@ -51,7 +52,8 @@ defmodule TimeManagerWeb.UserView do
       token: token,
       id: id,
       username: username,
-      email: email
+      email: email,
+      role: role
     }
   end
 

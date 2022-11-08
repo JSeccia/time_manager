@@ -8,6 +8,7 @@ defmodule TimeManager.Api.User do
     field(:password, :string, virtual: true)
     field(:password_hash, :string)
     field(:team, :id)
+    field(:role, :string)
     timestamps()
   end
 

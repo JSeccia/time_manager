@@ -19,7 +19,7 @@
             </tr>
             <tr>
               <td>
-                <span>Role : Manager</span>
+                <span>Role : {{ user.role }}</span>
               </td>
             </tr>
             <tr>
@@ -32,7 +32,6 @@
       </div>
       <div class="logout-button">
         <q-btn push color="green-10" label="Logout" @click="logout" />
-
       </div>
     </div>
   </main>
@@ -51,33 +50,25 @@ export default {
   },
   data() {
     return {
-      user: {},
-      currentUser: this.store.user,
-      users: []
+      user: this.store.user,
+      users: [],
     };
   },
 
   methods: {
-    getUser() {
-      axios.get(`/api/users/${this.currentUser.id}`).then((response) => {
-        console.log(response);
-        this.user = response.data.data;
-      });
-    },
     getUsers() {
       axios.get(`/api/users/`).then((response) => {
         console.log(response);
         this.users = response.data.data;
       });
     },
-    logout(){
-      localStorage.removeItem("currentUser")
-      localStorage.removeItem("token")
-      this.$router.push("/login")
-    }
+    logout() {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
   },
   mounted: function () {
-    this.getUser();
     this.getUsers();
   },
 };
