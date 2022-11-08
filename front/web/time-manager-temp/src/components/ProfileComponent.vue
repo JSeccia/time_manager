@@ -31,7 +31,7 @@
         </table>
       </div>
       <div class="logout-button">
-        <q-btn push color="green-10" label="Logout" />
+        <q-btn push color="green-10" label="Logout" @click="logout" />
 
       </div>
     </div>
@@ -69,6 +69,11 @@ export default {
         this.users = response.data.data;
       });
     },
+    logout(){
+      localStorage.removeItem("currentUser")
+      localStorage.removeItem("token")
+      this.$router.push("/login")
+    }
   },
   mounted: function () {
     this.getUser();
