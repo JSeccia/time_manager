@@ -5,12 +5,17 @@ import { LocalStorage } from 'quasar';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-   
+    user: [],
   }),
- 
   actions: {
-    CreateNewUser (userDetails) {
-      console.log(userDetails);
+    CreateNewUser: () => {
+      axios
+      .post('/api/users', users)
+      .then((response) => {
+        console.log(response);
+        u
+      })
+      console.log(users);
     },
   }
 });

@@ -49,7 +49,7 @@
 
       <!-- sign up -->
       <q-form
-        @submit.prevent="store.CreateNewUser"
+        @submit.prevent="CreateNewUser"
         class="signup_section__form"
         v-if="mode === 'signup'"
       >
@@ -92,7 +92,6 @@
         <span @click="handleSignIn">Already have an account, Sign in </span>
       </q-form>
     </div>
-    <button @click="CreateNewUser">fdsfdsdsfsdf</button>
   </main>
 </template>
 
@@ -179,7 +178,7 @@ export default {
     //     });
     // }
     CreateNewUser() {
-      this.store.CreateNewUser("toto", {
+      this.store.CreateNewUser( {
         username: this.username,
         email: this.email,
         password: this.password,
