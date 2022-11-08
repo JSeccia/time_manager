@@ -112,18 +112,10 @@ export default {
   },
   data() {
     return {
-      // currentUser: localStorage.getItem("currentUser")
-      //   ? JSON.parse(localStorage.getItem("currentUser"))
-      //   : {
-      //       email: "",
-      //       username: "",
-      //       id: 0,
-      //     },
       email: "",
       password: "",
       username: "",
       mode: "signin",
-      curentUser: {},
     };
   },
 
@@ -135,16 +127,21 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          // console.log(res.data);
           this.user = res.data;
-          // console.log(this.user);
+
           if (res.data.token) {
             LocalStorage.set("token", res.data.token);
             localStorage.setItem(
               "currenUser",
               JSON.stringify(this.email, this.password, res.data.token)
             );
-            // localStorage.setItem("currentUser", JSON.stringify(res.data.token));
+            console.log(res.data.email);
+            this.setUser({
+              id: res.data.id,
+              username: res.data.username,
+              email: res.data.email,
+              team: res.data.team,
+            });
           } else {
             console.log("error");
           }
@@ -156,33 +153,10 @@ export default {
     handleSignIn() {
       this.mode = "signin";
     },
-    // create() {
-    //   const body = {
-    //     user: {
-    //       username: this.username,
-    //       email: this.email,
-    //       password: this.password,
-    //     },
-    //   };
-    //   axios
-    //     .post("/api/users", body, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((res) => {
-    //       localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-    //       this.user = res.data.data;
-    //       alert("User created");
-    //       this.$router.push("/profile");
-    //     });
-    // }
-    CreateNewUser() {
-      this.store.CreateNewUser( {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      });
+
+    setUser({ id, username, email, team }) {
+      console.log(id, username, email, team);
+      this.store.setUser({ id, username, email, team });
     },
   },
 };

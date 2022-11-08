@@ -95,6 +95,10 @@ defmodule TimeManager.Api do
     |> Repo.update()
   end
 
+  def is_user_admin?(%User{} = user) do
+    user.role == "admin"
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
   

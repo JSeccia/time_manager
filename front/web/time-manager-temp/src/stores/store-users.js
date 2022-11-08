@@ -1,21 +1,12 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
-import { api } from 'boot/axios';
-import { LocalStorage } from 'quasar';
+import { defineStore } from "pinia";
 
-export const useUserStore = defineStore('user', {
+export const useUserStore = defineStore("user", {
   state: () => ({
-    user: [],
+    user: { id: 0, username: "", email: "", team: null },
   }),
   actions: {
-    CreateNewUser: () => {
-      axios
-      .post('/api/users', users)
-      .then((response) => {
-        console.log(response);
-        u
-      })
-      console.log(users);
+    setUser({ id, username, email, team }) {
+      this.user = { id, username, email, team };
     },
-  }
+  },
 });
