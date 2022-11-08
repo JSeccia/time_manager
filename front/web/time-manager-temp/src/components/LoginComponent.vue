@@ -92,7 +92,6 @@
         <span @click="handleSignIn">Already have an account, Sign in </span>
       </q-form>
     </div>
-    <button @click="CreateNewUser">fdsfdsdsfsdf</button>
   </main>
 </template>
 
