@@ -45,6 +45,27 @@ defmodule TimeManagerWeb.TeamController do
     end
   end
 
+  def add_manager(conn, %{"team_id" => team_id, "user_id" => user_id}) do
+    try do
+      team = Api.get_team!(team_id)
+      user = Api.get_user!(user_id)
+
+      if Map.has_key?(team, :manager) && team.manager == String.to_integer(user_id) do
+        conn
+        |> put_status(:bad_request)
+        |> render("failure.json", message: "Already manager of team")
+      else
+        team = Api.change_team(team, %{manager: user_id})
+        render(conn, "show.json", team: team)
+      end
+    rescue
+      e in Ecto.NoResultsError ->
+        conn
+        |> put_status(:not_found)
+        |> render("failure.json", message: "Team or user not found")
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     team = Api.get_team!(id)
     render(conn, "show.json", team: team)

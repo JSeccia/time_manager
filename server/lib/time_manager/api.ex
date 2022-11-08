@@ -73,12 +73,6 @@ defmodule TimeManager.Api do
     |> Repo.update()
   end
 
-  def update_user_team(%User{} = user, attrs) do
-    user
-    |> User.changeset_team(attrs)
-    |> Repo.update()
-  end
-
   @doc """
   Deletes a user.
   

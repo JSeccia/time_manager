@@ -14,6 +14,7 @@ defmodule TimeManagerWeb.Router do
     pipe_through([:api, :auth])
     resources("/teams", TeamController)
     post("/teams/:team_id/users/:user_id", TeamController, :add_user)
+    put("/teams/:team_id/users/:user_id", TeamController, :add_manager)
   end
 
   scope "/api", TimeManagerWeb do
