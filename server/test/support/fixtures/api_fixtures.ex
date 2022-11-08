@@ -48,4 +48,18 @@ defmodule TimeManager.ApiFixtures do
 
     clock
   end
+
+  @doc """
+  Generate a team.
+  """
+  def team_fixture(attrs \\ %{}) do
+    {:ok, team} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> TimeManager.Api.create_team()
+
+    team
+  end
 end

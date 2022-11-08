@@ -1,16 +1,20 @@
 <template>
-  {{store}}
+  <!-- {{ store }} -->
   <main class="main_login">
     <div class="login_section">
       <div class="login_title">
         <p color="green-10">Welcome on Time Manager</p>
       </div>
-      
+
       <p v-if="mode === 'signin'">Sign in below</p>
       <p v-else>Create your account here</p>
 
       <!-- sign in (login) -->
-      <q-form v-if="mode === 'signin'" class="signin_section__form" @submit.prevent="login">
+      <q-form
+        v-if="mode === 'signin'"
+        class="signin_section__form"
+        @submit.prevent="login"
+      >
         <q-input
           rounded
           outlined
@@ -41,11 +45,14 @@
           <p>Forgot your password?</p>
           <span @click="handleSignUp">Sign up</span>
         </div>
-        
       </q-form>
-      
+
       <!-- sign up -->
-      <q-form @submit.prevent="store.CreateNewUser" class="signup_section__form" v-if="mode === 'signup'">
+      <q-form
+        @submit.prevent="store.CreateNewUser"
+        class="signup_section__form"
+        v-if="mode === 'signup'"
+      >
         <q-input
           rounded
           outlined
@@ -75,34 +82,33 @@
         >
         </q-input>
         <q-btn
-            type="submit"
-            class="input_btn"
-            push
-            color="green-10"
-            label="Sign up"
-          />
+          type="submit"
+          class="input_btn"
+          push
+          color="green-10"
+          label="Sign up"
+        />
 
-          <span @click="handleSignIn">Already have an account, Sign in </span>
-
+        <span @click="handleSignIn">Already have an account, Sign in </span>
       </q-form>
-      
     </div>
+    <button @click="CreateNewUser">fdsfdsdsfsdf</button>
   </main>
 </template>
 
 <script>
 import axios from "axios";
-import { Cookies } from "quasar";
 import { LocalStorage } from "quasar";
-import { store } from "quasar/wrappers";
+// import { store } from "quasar/wrappers";
 import { useUserStore } from "src/stores/store-users";
 
 export default {
   name: "LoginComponent",
-  setup () {
-    const store = useUserStore()
+  setup() {
+    const store = useUserStore();
     return {
       store
+
     }
   },
   data() {
@@ -135,20 +141,21 @@ export default {
           console.log(this.user);
           if (res.data.token) {
             LocalStorage.set("token", res.data.token);
-            localStorage.setItem("currenUser", JSON.stringify(this.email, this.password, res.data.token));
+            localStorage.setItem(
+              "currenUser",
+              JSON.stringify(this.email, this.password, res.data.token)
+            );
             // localStorage.setItem("currentUser", JSON.stringify(res.data.token));
-
           } else {
             console.log("error");
           }
         });
-      
     },
-    handleSignUp () {
-      this.mode = 'signup'
+    handleSignUp() {
+      this.mode = "signup";
     },
     handleSignIn() {
-      this.mode = "signin"
+      this.mode = "signin";
     },
     // create() {
     //   const body = {
@@ -172,13 +179,11 @@ export default {
     //     });
     // }
     CreateNewUser() {
-      this.store.dispatch('CreateNewUser',
-       {
+      this.store.CreateNewUser("toto", {
         username: this.username,
         email: this.email,
         password: this.password,
-      }
-      )
+      });
     },
   },
 };
@@ -215,7 +220,8 @@ export default {
   height: 5%;
 }
 
-.signin_section__form, .signup_section__form {
+.signin_section__form,
+.signup_section__form {
   color: black;
   height: 55%;
   width: 80%;

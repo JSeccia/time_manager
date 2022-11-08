@@ -7,18 +7,25 @@ defmodule TimeManager.Api.User do
     field(:username, :string)
     field(:password, :string, virtual: true)
     field(:password_hash, :string)
+    field(:team, :id)
     timestamps()
   end
 
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password])
+    |> cast(attrs, [:username, :email, :password, :team])
     |> validate_required([:username, :email, :password])
     |> validate_format(:email, ~r/\S+@\S+\.\S+/)
     |> unique_constraint(:email, message: "mail already taken")
     |> unique_constraint(:username, message: "username already taken")
     |> put_pass_hash()
+  end
+
+  def changeset_team(user, attrs) do
+    user
+    |> cast(attrs, [:team])
+    |> validate_required([:team])
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
