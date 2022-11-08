@@ -5,13 +5,12 @@ import { LocalStorage } from 'quasar';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    userDetails: {},
-    truc: 'machin',
+   
   }),
+ 
   actions: {
-    CreateNewUser: (userDetails, truc) => {
+    CreateNewUser (userDetails) {
       console.log(userDetails);
-      console.log(truc)
     },
   }
 });

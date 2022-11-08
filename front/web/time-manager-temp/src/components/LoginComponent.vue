@@ -103,7 +103,6 @@ export default {
     const store = useUserStore()
     return {
       store
-
     }
   },
   data() {
@@ -173,7 +172,7 @@ export default {
     //     });
     // }
     CreateNewUser() {
-      this.$store.dispatch(CreateNewUser,
+      this.store.dispatch('CreateNewUser',
        {
         username: this.username,
         email: this.email,
