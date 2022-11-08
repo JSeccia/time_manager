@@ -89,6 +89,12 @@ defmodule TimeManager.Api do
     Repo.delete(user)
   end
 
+  def update_user_team(%User{} = user, attrs) do
+    user
+    |> User.changeset_team(attrs)
+    |> Repo.update()
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
   

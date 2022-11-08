@@ -1,6 +1,8 @@
 <template>
-  <main>
-    <h1>Check employee's working times</h1>
+
+  <!-- Manager Web Working Times -->
+  <main class="main-workingtimes">
+    <h1>Check working times</h1>
 
     <ul :key="currentUser.id">
       <li>{{ currentUser.id }}</li>
@@ -9,33 +11,33 @@
     </ul>
     <!-- Search Employee Id form -->
 
-    <section class="search-id">
-      <form @submit="getWorkingTimes">
+    <section class="search-wt-id">
+      <form @submit.prevent="getWorkingTimes">
         <label
           for="get_user_working_times"
-          placeholder="enter employee id"
         ></label>
-        <input
-          type="text"
-          id="get_user_working_times"
-          v-model="userId"
-          placeholder="enter employee id"
-          ref="userIdInput"
-        />
-        <input type="submit" value="Get working times" />
+        <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter employee id" ref="userIdInput" id="get_user_working_times"
+            color="green-10">
+        </q-input>
+        <q-btn id="add-button" type="submit" class="search_wt_btn" push color="green-10" label="Get working times" />
+
       </form>
-      <input
+      
+      <!-- add working times button -->
+      <q-btn
+        href="#create-form"
         id="add-button"
         type="button"
-        value="Add working times"
+        label="Add working times"
+        push color="green-10"
         @click="handleAddWorkingTime"
       />
     </section>
 
     <!-- Display Employee's Working Times from its ID -->
 
-    <section class="display-data">
-      <h2>Employee n° {{ currentUserId }} Working Times:</h2>
+    <section class="display-wt-data" v-if="isSubmitButtonSelected">
+      <h2>Employee n° {{ userId }} Working Times:</h2>
       <table class="WTs_table">
         <thead>
           <tr>
@@ -46,7 +48,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="WTs_items" v-for="item in totalWt" :key="item.id">
+          <tr class="WTs_items" v-for="item in wtGraph" :key="item.id">
             <td class="WTs_item">
               <input
                 class="select-wt"
@@ -61,14 +63,16 @@
           </tr>
         </tbody>
       </table>
+      <div class="bar-chart">
+          <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
+      </div>
     </section>
-
     <!-- Create form -->
 
     <form
       id="create-form"
       v-if="isAddButtonSelected"
-      @submit="createWorkingTime"
+      @submit.prevent="createWorkingTime"
     >
       <fieldset>
         <h2 class="fs-title">Add working times</h2>
@@ -88,10 +92,14 @@
           name="end_date_input"
         />
         <br />
-        <input type="submit" id="create-submit" value="create" />
+        <q-btn id="create-submit" type="submit" class="create_wt_btn" push color="green-10" label="create" />
       </fieldset>
     </form>
+
+
   </main>
+
+  <!-- Employee web WorkingTimes -->
 </template>
 
 <script>
@@ -99,8 +107,10 @@ import axios from "axios";
 import moment from "moment";
 import { calculateTotalWorkingTime } from "../utils/utils";
 
+
 export default {
   name: "WorkingsComponent",
+
   data() {
     return {
       currentUser: localStorage.getItem("currentUser")
@@ -110,7 +120,6 @@ export default {
             username: "",
             id: 0,
           },
-      userId: 0,
       workingTimes: {},
       currentUserId: "",
       currentWorkingTimeId: "",
@@ -119,29 +128,89 @@ export default {
         EndDate: new Date().toLocaleString(),
       },
       isAddButtonSelected: false,
-      totalWt: [],
+      isSubmitButtonSelected: false,
+
+
+      // Inplemented wtGraph to display working times in a chart
+
+
+      wtGraph: {
+          day: "",
+          total: 0,
+      },
+      options: {
+          chart: {
+              id: 'barchart-example'
+          },
+          plotOptions: {
+              bar: {
+                  columnWidth: '50%',
+                  endingShape: 'rounded'
+              },
+          },
+          title: {
+              text: 'Working times by date',
+              align: 'left'
+          },
+          fill: {
+              colors: ['#4CAF50']
+          },
+          yaxis: {
+              min: 0,
+              max: 24,
+              title: {
+                  text: 'Working time (hours)'
+              },
+          },
+          xaxis: {
+              categories: [],
+              title: {
+                  text: 'working time (date)'
+              }  
+          }
+      },
+      series: [{
+          name: '1',
+          data: []
+      }],
+      noData: {
+          text: 'Loading...'
+      },
+  
     };
   },
   methods: {
     // get working times from user id
-    getWorkingTimes(submitNumber) {
-      submitNumber.preventDefault();
+    async getWorkingTimes() {
       if (!this.currentUser.id) {
         window.alert("Please select an employee");
         return;
       }
-      axios.get(`/api/working_times/${this.userId}`).then((response) => {
-        if (response.data.data.length > 0) {
-          this.workingTimes = response.data.data;
-          this.totalWt = this.workingTimes.map((wt) => {
-            return { ...wt, total: calculateTotalWorkingTime(wt) };
-          });
-          this.currentUserId = this.$refs.userIdInput.value;
-        } else {
-          window.alert("No employee or working times found");
+      const response = await axios.get(`/api/working_times/${this.userId}`)
+      if (response.data.data.length > 0) {
+        this.workingTimes = response.data.data;
+        this.currentUserId = this.$refs.userIdInput.value;
+        this.wtGraph = this.workingTimes.map((wt) => {
+          return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
+        })
+      } 
+
+      let formattedWtGraph = this.wtGraph.map(({day, total}) => {
+        return {
+          x: day,
+          y: total,
         }
-      });
+      })
+      this.series =  [
+        {
+          name: "series-2",
+          data: formattedWtGraph,
+        },
+      ]
+      console.log(this.series, "series");
+      this.isSubmitButtonSelected = true;
     },
+  
     // Select one working time
     goWorkingTime(e) {
       axios.get(`/api/working_times/${this.userId}`).then((response) => {
@@ -150,7 +219,7 @@ export default {
           this.currentWorkingTimeId = e.target.value;
           console.log(`current workingtime id : ${this.currentWorkingTimeId}`);
           this.$router.push(
-            `/workings/${this.currentUserId}/${this.currentWorkingTimeId}`
+            `/workings/${this.userId}/${this.currentWorkingTimeId}`
           );
         }
       });
@@ -188,12 +257,6 @@ export default {
         });
       console.log(body);
     },
-    format_hours(value) {
-      return moment(String(value)).format("hh:mm");
-    },
-    format_day(value) {
-      return moment(String(value)).format("dddd");
-    },
     // Using moment library to format date
     format_date(value) {
       if (value) {
@@ -201,55 +264,69 @@ export default {
       }
     },
   },
+  mounted() {
+    this.getWorkingTimes();
+  },
 };
 </script>
 
 <style>
-main {
+.main-workingtimes {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100vw;
 }
 
-h1 {
-  text-align: center;
-  font-size: 24px;
+.main-workingtimes h1 {
+  font-size: 25px;
   font-weight: bold;
+  border-bottom: 2px solid black;
+  height: 10%;
 }
 /* search section */
-.search-id {
-  margin-left: 50px;
+.search-wt-id {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 80%;
+  width: 85%;
   height: 10%;
 }
 
-.search-id form {
+.search-wt-id form {
   display: flex;
+  justify-content: center;
   align-items: center;
-  height: 100%;
-  widows: 30%;
 }
 
-.search-id form input {
-  height: 30px;
+.search-wt-id form .search_wt_input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 45%;
-  text-align: center;
-  text-decoration: none;
+  height: 30px;
+  margin: 2%;
 }
 
-.search-id form input:focus-visible {
-  outline: none;
+.search-wt-id form .search_wt_input .self-stretch {
+  align-self: center;
 }
 
-.search-id input[type="submit"]:hover,
+.search-wt-id form .search_wt_input .q-field__control {
+ height: 40px;
+}
+
+.search-wt-id form .search_wt_input .q-field__control .q-field__native {
+  font-size: 15px;
+}
+
+.search-wt-id input[type="submit"]:hover,
 #add-button:hover {
   border-color: #4caf50;
   color: #4caf50;
   background-color: white;
 }
+
+
 #add-button {
   height: 30px;
   width: 190px;
@@ -258,7 +335,7 @@ h1 {
 }
 
 /*display table*/
-.display-data {
+.display-wt-data {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,7 +343,7 @@ h1 {
   height: 75%;
 }
 
-.display-data h2 {
+.display-wt-data h2 {
   font-size: 20px;
   font-weight: bold;
 }
@@ -315,7 +392,7 @@ h1 {
 }
 
 #create-form fieldset {
-  background: white;
+  background-color: rgba(76, 175, 80, 0.14);
   border: 0 none;
   border-radius: 3px;
   box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
@@ -349,6 +426,6 @@ h1 {
 }
 #create-form #create-submit:hover,
 #create-form #create-submit:focus {
-  box-shadow: 0 0 0 2px white, 0 0 0 3px #27ae60;
+  box-shadow: 0 0 0 2px white;
 }
 </style>

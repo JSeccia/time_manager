@@ -1,21 +1,20 @@
 <template>
   <main>
+
+    <!-- Manager Web clocks page -->
     <section class="section_clocks">
       <h1 class="title_clocks">Employees Clocks Trend</h1>
       <div class="search-employee-id">
-        <form @submit="getAllClocksFromInput">
-          <!-- <label for="get_this_employee_clocks"></label> -->
-          <q-input rounded outlined v-model="text" class="input_clocks" label="Employee ID" ref="userID"
+        <form @submit.prevent="getAllClocksFromInput">
+          <q-input rounded outlined v-model="userId" class="input_clocks" label="Employee ID" ref="userClockInput"
             color="green-10">
           </q-input>
-          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks" />
-          <!-- <input type="text" id="get_this_employee_clocks" v-model="userId" placeholder="enter employee id"
-            ref="userIdInput" />
-          <input type="submit" value="Get Employee last clocks" @click="handleGetAllClocksFromInput" /> -->
+          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks" @click="handleGetAllClocksFromInput" />
+         
         </form>
       </div>
 
-      <!-- <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
+      <div class="display-employee-clocks" v-if="isGetAllClocksFromInputButtonSelected">
         <p>Details of {{ userId }}</p>
         <table>
           <thead>
@@ -38,92 +37,32 @@
         <button @click="reloadPage">
           Refresh to search other employee clocks
         </button>
-      </div> -->
+      </div>
     </section>
-
-
-
-    <!-- clock time interactive-->
-
-    <!-- <div class="q-pa-md">
-    <div class="q-gutter-md">
-      <q-time v-model="time" />
-
-      <q-time v-model="timeWithSeconds" with-seconds />
-    </div>
-  </div>
-  -->
-
-    <!--<button @click="getClocks">
-        Get clocks from employee: {{ currentUser.id }}
-      </button>-->
-
-    <!-- <p>display clock details of current user {{userId}}</p>
-      <ul v-for="item in clocks" :key="item.id">
-        <li>Clock n°: {{ item.id }}</li>
-        <li>Clocked in: {{ item.status }}</li>
-        <li>Clock time: {{ format_date(item.time) }}</li>
-        <br />
-      </ul> -->
-
-    <!-- Display clock start ofuserId
-
-    <p>Your id number: {{ currentUser.id }}</p>
-    <p>Your username: {{ currentUser.username }} </p>
-    <p>Your CLOCK Times:</p>
-    -->
-
-    <br />
-    <!-- <p>button to see working times of one user for manager</p>
-      <div class="workingtimes">
-        <button @click="$router.push('/workingtimes')">
-          Click to go on WorkingTimes
-        </button>
-      </div> -->
   </main>
 
-  <!-- others codes test 
-  <div class="chart">
-    <button @click="$router.push('/chart')">Click to go to Chart</button>
-  </div>
-  <div class="home">
-    <button @click="$router.push('/')">Click to go to Home</button>
-  </div>
-  -->
-
   <div class="clock">
-    <!-- <form @submit="getClocks">
-      <label for="get_user_clock" placeholder="enter employee id"></label>
-      <input
-        type="text"
-        id="get_user_clock"
-        v-model="userId"
-        placeholder="enter employee id"
-        ref="userIdInput"
-      />
-      <input type="submit" value="click to display clock" />
-    </form> -->
 
-    Template for one employee logged in
-    <button @click="postClock">Click to clock in or out</button>
+    <!-- Employee web clocks page -->
 
-    <p>Your id number: {{ currentUser.id }}</p>
-    <p>Your username: {{ currentUser.username }}</p>
+    <div class="q-pa-md">
+      <div class="q-gutter-md">
+        <q-time v-model="clockIn" with-seconds />
+      </div>
+    </div>
 
-    <!-- Display clock end userId-- >  
-        <form @submit="getClock">
-            <label for="get_user_clock" placeholder="enter end clock"></label>
-            <input
-            type="text"
-            id="get_user_clock"
-            v-model="userId"
-            placeholder="enter end clock"
-            ref="userIdInput"
-            />
-            <input type="submit" value="click to end clock" />
-        </form>  -->
+
+    <h1>Welcome back, {{currentUser.username}}</h1>
+    <input type="button" value="click to clock in" @click.prevent="postClock">
+
+    <button @click="getClocks">
+        See your clock details:
+    </button>
+    <ul>
+      <li>{{currentUser.username}}</li>
+      <li>Clock time: {{ format_date(employeeClocks[-1].time) }}</li>
+    </ul>
   </div>
-  <br />
   <!-- date manipulate 
   <div>
     <h2 class="text-center mb-3">CLOCK</h2>
@@ -155,8 +94,7 @@ import moment from "moment";
 export default {
   setup() {
     return {
-      timee: ref("10:56"),
-      timeWithSeconds: ref("09:24:10"),
+      clockIn: ref("10:56"),
     };
   },
 
@@ -202,8 +140,7 @@ export default {
       });
     },
     // get all clock times from one employee with its id
-    getAllClocksFromInput(e) {
-      e.preventDefault();
+    getAllClocksFromInput() {
       console.log("before axios call");
       if (this.userId === "") {
         window.alert("Please enter an employee id");
@@ -214,7 +151,7 @@ export default {
         console.log(response.data.data.length, "length");
         if (response.data.data.length > 0) {
           this.employeeClocks = response.data.data;
-          this.employeeToGetClocks = this.$refs.userIdInput.value;
+          this.employeeToGetClocks = this.$refs.userClockInput.value;
           console.log(this.employeeClocks, "employeeClocks");
         } else {
           window.alert("No employee or clocks times found");
