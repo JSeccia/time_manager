@@ -29,8 +29,7 @@
               <td>{{ clock.user }}</td>
               <td>{{ clock.id }}</td>
               <td>{{ clock.status }}</td>
-              <td>{{ format_day(clock.time) }}</td>
-              <td>{{ format_hours(clock.time) }}</td>
+              
             </tr>
           </tbody>
         </table>
@@ -60,7 +59,6 @@
     </button>
     <ul>
       <li>{{currentUser.username}}</li>
-      <li>Clock time: {{ format_date(employeeClocks[-1].time) }}</li>
     </ul>
   </div>
   <!-- date manipulate 

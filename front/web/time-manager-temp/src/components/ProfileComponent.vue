@@ -40,19 +40,20 @@
 
 <script>
 import axios from "axios";
+import { useUserStore } from "src/stores/store-users";
 export default {
   name: "ProfileComponent",
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    };
+  },
   data() {
     return {
       user: {},
-      currentUser: localStorage.getItem("currentUser")
-        ? JSON.parse(localStorage.getItem("currentUser"))
-        : {
-            email: "",
-            username: "",
-            id: 0,
-          },
-      users: [],
+      currentUser: this.store.user,
+      users: []
     };
   },
 

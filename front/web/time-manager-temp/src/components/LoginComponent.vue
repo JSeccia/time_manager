@@ -1,5 +1,5 @@
 <template>
-  <!-- {{ store }} -->
+  {{ store }}
   <main class="main_login">
     <div class="login_section">
       <div class="login_title">
@@ -49,7 +49,7 @@
 
       <!-- sign up -->
       <q-form
-        @submit.prevent="CreateNewUser"
+        @submit.prevent="signUp"
         class="signup_section__form"
         v-if="mode === 'signup'"
       >
@@ -98,7 +98,6 @@
 <script>
 import axios from "axios";
 import { LocalStorage } from "quasar";
-// import { store } from "quasar/wrappers";
 import { useUserStore } from "src/stores/store-users";
 
 export default {
@@ -107,7 +106,6 @@ export default {
     const store = useUserStore();
     return {
       store
-
     }
   },
   data() {
@@ -135,13 +133,13 @@ export default {
               "currenUser",
               JSON.stringify(this.email, this.password, res.data.token)
             );
-            console.log(res.data.email);
             this.setUser({
               id: res.data.id,
               username: res.data.username,
               email: res.data.email,
               team: res.data.team,
             });
+            this.$router.push("/profile");
           } else {
             console.log("error");
           }
@@ -155,9 +153,43 @@ export default {
     },
 
     setUser({ id, username, email, team }) {
-      console.log(id, username, email, team);
       this.store.setUser({ id, username, email, team });
     },
+
+    signUp() {
+      const body = {
+        user: {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        },
+      }
+      axios.post("/api/users", body, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      .then((res) => {
+        // localStorage.setItem("currenUser", JSON.stringify(res.data));
+        this.user = res.data;
+        console.log(res.data);
+
+        this.createUser({
+          username: res.data.username,
+          email: res.data.email,
+          team: res.data.team,
+        })
+        console.log(this.createUser);
+      })
+    
+      alert("Your account has been created");
+      this.$router.push("/");
+    },
+    
+    createUser({username, email, team }) {
+      this.store.createUser({username, email, team });
+    }
+
   },
 };
 </script>

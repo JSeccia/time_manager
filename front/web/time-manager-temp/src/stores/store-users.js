@@ -8,5 +8,8 @@ export const useUserStore = defineStore("user", {
     setUser({ id, username, email, team }) {
       this.user = { id, username, email, team };
     },
+    createUser({ username, email, team }) {
+      this.user = {username, email, team};
+    },
   },
 });
