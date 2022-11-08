@@ -37,12 +37,21 @@ defmodule TimeManagerWeb.UserView do
   #   }
   # end
 
-  def render("success.json", %{message: message, token: token}) do
+  def render("success.json", %{
+        message: message,
+        token: token,
+        id: id,
+        username: username,
+        email: email
+      }) do
     %{
       ok: true,
       status: 200,
       message: message,
-      token: token
+      token: token,
+      id: id,
+      username: username,
+      email: email
     }
   end
 
