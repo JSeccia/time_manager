@@ -135,9 +135,9 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.user = res.data;
-          console.log(this.user);
+          // console.log(this.user);
           if (res.data.token) {
             LocalStorage.set("token", res.data.token);
             localStorage.setItem(

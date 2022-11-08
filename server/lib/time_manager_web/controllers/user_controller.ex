@@ -37,7 +37,13 @@ defmodule TimeManagerWeb.UserController do
     else
       token = TimeManager.Token.generate_and_sign!(%{"user_id" => user.id})
 
-      render(conn, "success.json", %{message: "ok", token: token})
+      render(conn, "success.json", %{
+        message: "ok",
+        token: token,
+        id: user.id,
+        username: user.username,
+        email: user.email
+      })
     end
   end
 
