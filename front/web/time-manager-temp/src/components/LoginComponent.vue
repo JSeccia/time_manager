@@ -46,6 +46,7 @@ import { useUserStore } from "src/stores/store-users";
 
 export default {
   name: "LoginComponent",
+  
   setup() {
     const store = useUserStore();
     return {

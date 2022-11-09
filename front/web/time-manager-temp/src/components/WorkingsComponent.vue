@@ -1,7 +1,7 @@
 <template>
 
   <!-- Manager Web Working Times -->
-  <main class="main-workingtimes">
+  <main v-if="currentUser.role === 'manager'" class="main-workingtimes">
     <h1>Check working times</h1>
 
     <ul :key="currentUser.id">
@@ -99,6 +99,7 @@
   </main>
 
   <!-- Employee web WorkingTimes -->
+  
 </template>
 
 <script>

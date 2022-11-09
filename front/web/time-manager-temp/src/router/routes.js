@@ -9,25 +9,17 @@ import SignInPage from "../pages/SignInPage.vue";
 import GraphTestPage from "../pages/GraphTestPage.vue";
 import AdminPage from "../pages/AdminPage.vue";
 
-
-
-
-
 const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      // {
-      //   path: "workingtimes",
-      //   component: WorkingTimesPages,
-      // },
       { path: "profile", component: ProfilePage },
       { path: "clocks", component: ClockPage },
       { path: "charts", component: ChartsPages },
       { path: "workingtimes", component: WorkingPage },
       {
-        path: "workings/:userId/:id",
+        path: "workings/:userId/:id", 
         component: WTPage,
       },
       { path: "users", component: User },
@@ -36,8 +28,7 @@ const routes = [
       { path: "graphtest", component: GraphTestPage},
 
       { path: "admin", component: AdminPage, meta: {requiresAuth: true},
-    
-      },
+    },
       
 
     ],
