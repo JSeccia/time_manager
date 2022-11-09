@@ -15,8 +15,6 @@ defmodule TimeManagerWeb.TeamController do
       from(t in Team, inner_join: u in User, as: :user, on: u.team_id == t.id, preload: [users: u])
 
     teams = Repo.all(query)
-
-    IO.inspect(teams)
     render(conn, "teams.json", teams: teams)
   end
 

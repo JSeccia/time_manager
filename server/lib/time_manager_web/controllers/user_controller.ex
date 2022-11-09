@@ -20,6 +20,20 @@ defmodule TimeManagerWeb.UserController do
     render(conn, "show.json", user: user)
   end
 
+  def wt_by_team(conn, %{"team_id" => team_id, "start" => start, "end" => end_}) do
+    users =
+      Repo.all(
+        from(u in User,
+          join: w in WorkingTime,
+          on: w.user_id == u.id,
+          where: u.team_id == ^team_id and w.start >= ^start and w.end <= ^end_,
+          preload: [working_times: w]
+        )
+      )
+
+    render(conn, "users_working_times.json", users: users)
+  end
+
   def wt_by_team(conn, %{"team_id" => team_id}) do
     users =
       Repo.all(
