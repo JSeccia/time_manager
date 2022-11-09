@@ -10,6 +10,12 @@ defmodule TimeManagerWeb.Router do
     plug(TimeManager.Plug.Auth)
   end
 
+  pipeline :manager do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.Manager)
+  end
+
   pipeline :admin do
     plug(:accepts, ["json"])
     plug(TimeManager.Plug.Admin)
@@ -17,13 +23,17 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :auth])
-    resources("/teams", TeamController, only: [:update, :index, :show])
     post("/teams/:team_id/users/:user_id", TeamController, :add_user)
   end
 
   scope "/api", TimeManagerWeb do
-    pipe_through([:api, :admin, :auth])
-    resources("/teams", TeamController, only: [:create])
+    pipe_through([:api, :manager])
+    resources("/teams", TeamController, only: [:show])
+  end
+
+  scope "/api", TimeManagerWeb do
+    pipe_through([:api, :auth, :admin])
+    resources("/teams", TeamController, only: [:create, :update, :index, :delete])
   end
 
   scope "/api", TimeManagerWeb do

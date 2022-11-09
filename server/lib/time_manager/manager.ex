@@ -1,6 +1,5 @@
-defmodule TimeManager.Plug.Admin do
+defmodule TimeManager.Plug.Manager do
   import Plug.Conn
-
   use TimeManagerWeb, :controller
   require Logger
 
@@ -9,7 +8,7 @@ defmodule TimeManager.Plug.Admin do
   end
 
   def call(conn, _opts) do
-    if conn.assigns.current_user.role == "admin" do
+    if conn.assigns.current_user.role == "manager" || conn.assigns.current_user.role == "admin" do
       conn
     else
       conn
