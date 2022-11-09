@@ -23,17 +23,18 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :auth])
-    post("/teams/:team_id/users/:user_id", TeamController, :add_user)
   end
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :manager])
     resources("/teams", TeamController, only: [:show])
+    get("/working_times/teams/:team_id", UserController, :wt_by_team)
   end
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :auth, :admin])
     resources("/teams", TeamController, only: [:create, :update, :index, :delete])
+    post("/teams/:team_id/users/:user_id", TeamController, :add_user)
   end
 
   scope "/api", TimeManagerWeb do

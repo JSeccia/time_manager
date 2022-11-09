@@ -1,6 +1,8 @@
 defmodule TimeManagerWeb.TeamController do
   use TimeManagerWeb, :controller
+  import Ecto.Query
 
+  alias TimeManager.Repo
   alias TimeManager.Api
   alias TimeManager.Api.Team
   alias TimeManager.Api.User
@@ -9,8 +11,11 @@ defmodule TimeManagerWeb.TeamController do
   action_fallback(TimeManagerWeb.FallbackController)
 
   def index(conn, _params) do
-    teams = Api.list_teams()
-    render(conn, "index.json", teams: teams)
+    query =
+      from(t in Team, inner_join: u in User, as: :user, on: u.team_id == t.id, preload: [users: u])
+
+    teams = Repo.all(query)
+    render(conn, "teams.json", teams: teams)
   end
 
   def create(conn, %{"team" => team_params}) do
@@ -38,7 +43,7 @@ defmodule TimeManagerWeb.TeamController do
         render(conn, "show.json", team: team)
       end
     rescue
-      e in Ecto.NoResultsError ->
+      _e in Ecto.NoResultsError ->
         conn
         |> put_status(:not_found)
         |> render("failure.json", message: "Team or user not found")
@@ -46,8 +51,16 @@ defmodule TimeManagerWeb.TeamController do
   end
 
   def show(conn, %{"id" => id}) do
-    team = Api.get_team!(id)
-    render(conn, "show.json", team: team)
+    query =
+      from(t in Team,
+        inner_join: u in User,
+        on: u.team_id == t.id,
+        where: t.id == ^id,
+        preload: [users: u]
+      )
+
+    team = Repo.one(query)
+    render(conn, "team.json", team: team)
   end
 
   def update(conn, %{"id" => id, "team" => team_params}) do
