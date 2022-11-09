@@ -50,7 +50,7 @@ defmodule TimeManagerWeb.TeamController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"team_id" => id}) do
     query =
       from(t in Team,
         inner_join: u in User,

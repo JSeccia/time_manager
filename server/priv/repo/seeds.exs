@@ -89,11 +89,6 @@ Repo.insert!(%User{
   team_id: 2
 })
 
-IO.inspect(to_string(Timex.today()) <> " 08:00:00")
-IO.inspect(NaiveDateTime.truncate(Timex.to_naive_datetime(DateTime.utc_now()), :second))
-IO.inspect(NaiveDateTime.new!(Timex.today(), ~T[08:00:00]))
-# IO.inspect(Timex.Date.today())
-
 Repo.insert!(%WorkingTime{
   id: 1,
   user_id: 3,

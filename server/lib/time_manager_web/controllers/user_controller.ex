@@ -45,8 +45,6 @@ defmodule TimeManagerWeb.UserController do
         )
       )
 
-    IO.inspect(users)
-
     render(conn, "users_working_times.json", users: users)
   end
 

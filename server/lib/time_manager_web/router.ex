@@ -10,10 +10,28 @@ defmodule TimeManagerWeb.Router do
     plug(TimeManager.Plug.Auth)
   end
 
+  pipeline :team_manager do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.TeamManager)
+  end
+
+  pipeline :user_manager do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.UserManager)
+  end
+
   pipeline :manager do
     plug(:accepts, ["json"])
     plug(TimeManager.Plug.Auth)
     plug(TimeManager.Plug.Manager)
+  end
+
+  pipeline :clock_auth do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.ClockAuth)
   end
 
   pipeline :admin do
@@ -26,9 +44,22 @@ defmodule TimeManagerWeb.Router do
   end
 
   scope "/api", TimeManagerWeb do
-    pipe_through([:api, :manager])
-    resources("/teams", TeamController, only: [:show])
+    pipe_through([:api, :auth, :clock_auth])
+    post("/clocks/:username", ClockController, :create_by_username)
+  end
+
+  scope "/api", TimeManagerWeb do
+    pipe_through([:api, :team_manager])
+    get("/teams/:team_id", TeamController, :show)
     get("/working_times/teams/:team_id", UserController, :wt_by_team)
+  end
+
+  scope "/api", TimeManagerWeb do
+    pipe_through([:api, :user_manager])
+    get("/working_times/:user_id/:id", WorkingTimeController, :get_one)
+    get("/working_times/:user_id", WorkingTimeController, :index)
+    post("/working_times/:user_id", WorkingTimeController, :create_by_id)
+    get("/clocks/:user_id", ClockController, :index)
   end
 
   scope "/api", TimeManagerWeb do
@@ -39,17 +70,10 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api])
-
     resources("/users", UserController)
     resources("/working_times", WorkingTimeController, only: [:update, :delete])
     resources("/clocks", ClockController, only: [:update, :delete])
-
     post("/users/login", UserController, :login)
-    get("/working_times/:user_id/:id", WorkingTimeController, :get_one)
-    get("/working_times/:user_id", WorkingTimeController, :index)
-    post("/working_times/:user_id", WorkingTimeController, :create_by_id)
-    get("/clocks/:user_id", ClockController, :index)
-    post("/clocks/:username", ClockController, :create_by_id)
   end
 
   # Enables LiveDashboard only for development
