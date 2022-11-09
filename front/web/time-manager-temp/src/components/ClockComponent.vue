@@ -40,27 +40,45 @@
     </section>
   </main>
 
+  <section class="section_clocks2">
   <div class="clock">
 
-    <!-- Employee web clocks page -->
+    <div>
+      <h2 class="text-center mb-3">CLOCK TODAY</h2>
+      <ul class="list-group">
+        <li class="list-group-item" v-show="date">
+          <strong>Date:</strong> {{ date }}
+        </li>
+        <li class="list-group-item" v-show="time">
+          <strong>Time:</strong> {{ time }}
+        </li>
+        <li class="list-group-item" v-show="year">
+          <strong>Current Year:</strong> {{ year }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Employee web clocks page 
 
     <div class="q-pa-md">
       <div class="q-gutter-md">
         <q-time v-model="clockIn" with-seconds />
       </div>
-    </div>
+    </div> -->
 
 
-    <h1>Welcome back, {{currentUser.username}}</h1>
-    <input type="button" value="click to clock in" @click.prevent="postClock">
+    <h1 class="title_clocks2">Welcome back, {{currentUser.username}}</h1>
+    <input class="input_btn_clocks" type="button" value="click to clock in" @click.prevent="postClock">
 
-    <button @click="getClocks">
+    <button class="input_btn_clocks" @click="getClocks">
         See your clock details:
     </button>
     <ul>
       <li>{{currentUser.username}}</li>
     </ul>
   </div>
+</section>
+
   <!-- date manipulate 
   <div>
     <h2 class="text-center mb-3">CLOCK</h2>
@@ -92,7 +110,7 @@ import moment from "moment";
 export default {
   setup() {
     return {
-      clockIn: ref("10:56"),
+      clockIn:"",
     };
   },
 
@@ -251,5 +269,25 @@ tbody tr {
   margin: 3%;
   height: 10%;
   width: 100%;
+}
+
+
+
+
+.section_clocks2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border: 1px solid red;
+}
+
+.title_clocks2 {
+  font-size: 21px;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+  height: 10%;
+
 }
 </style>
