@@ -19,7 +19,7 @@
             </tr>
             <tr>
               <td>
-                <span>Role : Manager</span>
+                <span>Role : {{ user.role }}</span>
               </td>
             </tr>
             <tr>
@@ -31,7 +31,7 @@
         </table>
       </div>
       <div class="logout-button">
-        <q-btn style="background-color: #4caf50; color: white" label="Logout" />
+        <q-btn push color="green-10" label="Logout" @click="logout" />
       </div>
     </div>
   </main>
@@ -39,38 +39,36 @@
 
 <script>
 import axios from "axios";
+import { useUserStore } from "src/stores/store-users";
 export default {
   name: "ProfileComponent",
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    };
+  },
   data() {
     return {
-      user: {},
-      currentUser: localStorage.getItem("currentUser")
-        ? JSON.parse(localStorage.getItem("currentUser"))
-        : {
-            email: "",
-            username: "",
-            id: 0,
-          },
+      user: this.store.user,
       users: [],
     };
   },
 
   methods: {
-    getUser() {
-      axios.get(`/api/users/${this.currentUser.id}`).then((response) => {
-        console.log(response);
-        this.user = response.data.data;
-      });
-    },
     getUsers() {
       axios.get(`/api/users/`).then((response) => {
         console.log(response);
         this.users = response.data.data;
       });
     },
+    logout() {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
   },
   mounted: function () {
-    this.getUser();
     this.getUsers();
   },
 };

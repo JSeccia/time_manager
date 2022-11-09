@@ -5,7 +5,7 @@
                 <p color="green-10">Welcome on Time Manager</p>
             </div>
             <div class="login_section__form">
-                <p>Create your account now !</p>
+                z<p>Create your account now !</p>
                 <q-input rounded outlined v-model="text" class="input_login" label="Username" color="green-10">
                 </q-input>
                 <q-input rounded outlined v-model="text" class="input_login" label="Password" color="green-10"

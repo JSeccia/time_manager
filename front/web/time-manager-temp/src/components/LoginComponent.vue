@@ -4,7 +4,16 @@
       <div class="login_title">
         <p color="green-10">Welcome on Time Manager</p>
       </div>
-      <q-form class="login_section__form" @submit.prevent="login">
+
+      <p v-if="mode === 'signin'">Sign in below</p>
+      <p v-else>Create your account here</p>
+
+      <!-- sign in (login) -->
+      <q-form
+        v-if="mode === 'signin'"
+        class="signin_section__form"
+        @submit.prevent="login"
+      >
         <q-input
           rounded
           outlined
@@ -31,9 +40,55 @@
           color="green-10"
           label="Connect"
         />
-        <div class="oubli_psswd">
+        <div class="forgot_password">
           <p>Forgot your password?</p>
+          <span @click="handleSignUp">Sign up</span>
         </div>
+      </q-form>
+
+      <!-- sign up -->
+      <q-form
+        @submit.prevent="signUp"
+        class="signup_section__form"
+        v-if="mode === 'signup'"
+      >
+        <q-input
+          rounded
+          outlined
+          v-model="username"
+          class="input_login"
+          label="Username"
+          color="green-10"
+        >
+        </q-input>
+        <q-input
+          rounded
+          outlined
+          v-model="email"
+          class="input_login"
+          label="Email"
+          color="green-10"
+        >
+        </q-input>
+        <q-input
+          rounded
+          outlined
+          v-model="password"
+          class="input_login"
+          label="Password"
+          color="green-10"
+          type="password"
+        >
+        </q-input>
+        <q-btn
+          type="submit"
+          class="input_btn"
+          push
+          color="green-10"
+          label="Sign up"
+        />
+
+        <span @click="handleSignIn">Already have an account, Sign in </span>
       </q-form>
     </div>
   </main>
@@ -41,16 +96,26 @@
 
 <script>
 import axios from "axios";
-import { Cookies } from "quasar";
+import { LocalStorage } from "quasar";
+import { useUserStore } from "src/stores/store-users";
 
 export default {
   name: "LoginComponent",
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    };
+  },
   data() {
     return {
       email: "",
       password: "",
+      username: "",
+      mode: "signin",
     };
   },
+
   methods: {
     login() {
       axios
@@ -59,8 +124,75 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          Cookies.set("jwt_token", res.data.token);
+          this.user = res.data;
+
+          if (res.data.token) {
+            LocalStorage.set("token", res.data.token);
+            localStorage.setItem(
+              "currenUser",
+              JSON.stringify(this.email, this.password, res.data.token)
+            );
+            this.setUser({
+              id: res.data.id,
+              username: res.data.username,
+              email: res.data.email,
+              team: res.data.team,
+              role: res.data.role,
+            });
+            this.$router.push("/profile");
+          } else {
+            console.log("error");
+          }
         });
+    },
+    handleSignUp() {
+      this.mode = "signup";
+    },
+    handleSignIn() {
+      this.mode = "signin";
+    },
+
+    setUser({ id, username, email, team, role }) {
+      this.store.setUser({ id, username, email, team, role });
+    },
+
+    signUp() {
+      const body = {
+        user: {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        },
+      };
+      axios
+        .post("/api/users", body, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          if (res.status === 201) {
+            alert("Your account has been created");
+          } else {
+            alert("Error");
+            return;
+          }
+          // localStorage.setItem("currenUser", JSON.stringify(res.data));
+          this.user = res.data;
+          console.log(res.data);
+
+          this.createUser({
+            username: res.data.username,
+            email: res.data.email,
+          });
+          console.log(this.createUser);
+        });
+
+      this.$router.push("/");
+    },
+
+    createUser({ username, email, team }) {
+      this.store.createUser({ username, email, team });
     },
   },
 };
@@ -97,7 +229,8 @@ export default {
   height: 5%;
 }
 
-.login_section__form {
+.signin_section__form,
+.signup_section__form {
   color: black;
   height: 55%;
   width: 80%;
@@ -119,7 +252,7 @@ export default {
   margin: 1%;
 }
 
-.oubli_psswd {
+.forgot_password {
   font-size: 15px;
   font-weight: bold;
   color: black;
