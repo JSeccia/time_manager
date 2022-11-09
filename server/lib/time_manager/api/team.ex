@@ -3,7 +3,8 @@ defmodule TimeManager.Api.Team do
   import Ecto.Changeset
 
   schema "teams" do
-    field(:manager, :id)
+    belongs_to(:user, TimeManager.Api.User, foreign_key: :manager, references: :id)
+    has_many(:users, TimeManager.Api.User, foreign_key: :team, references: :id)
 
     timestamps()
   end
@@ -12,6 +13,7 @@ defmodule TimeManager.Api.Team do
   def changeset(team, attrs) do
     team
     |> cast(attrs, [:manager])
+    |> cast_assoc(:users)
     |> validate_required([:manager])
   end
 end
