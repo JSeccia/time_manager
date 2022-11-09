@@ -8,6 +8,8 @@ defmodule TimeManager.Api do
 
   alias TimeManager.Api.User
 
+  require Logger
+
   @doc """
   Returns the list of users.
   
@@ -96,6 +98,7 @@ defmodule TimeManager.Api do
   end
 
   def is_user_admin?(%User{} = user) do
+    Logger.info(user)
     user.role == "admin"
   end
 
