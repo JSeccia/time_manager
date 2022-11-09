@@ -3,7 +3,7 @@ defmodule TimeManager.Repo.Migrations.AddTeamToUser do
 
   def change do
     alter table("users") do
-      add(:team_id, references(:teams, on_delete: :nilify_all))
+      add(:team, references(:teams, on_delete: :nilify_all))
     end
   end
 end

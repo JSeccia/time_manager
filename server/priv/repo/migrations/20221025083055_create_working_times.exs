@@ -3,13 +3,13 @@ defmodule TimeManager.Repo.Migrations.CreateWorkingTimes do
 
   def change do
     create table(:working_times) do
-      add(:start, :naive_datetime, null: false)
-      add(:end, :naive_datetime, null: false)
-      add(:user_id, references(:users, on_delete: :delete_all), null: false)
+      add :start, :naive_datetime, null: false
+      add :end, :naive_datetime, null: false
+      add :user, references(:users, on_delete: :delete_all), null: false
 
       timestamps()
     end
 
-    create(index(:working_times, [:user_id]))
+    create index(:working_times, [:user])
   end
 end

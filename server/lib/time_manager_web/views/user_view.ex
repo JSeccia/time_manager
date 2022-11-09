@@ -1,7 +1,6 @@
 defmodule TimeManagerWeb.UserView do
   use TimeManagerWeb, :view
   alias TimeManagerWeb.UserView
-  alias TimeManagerWeb.WorkingTimeView
 
   def render("index.json", %{users: users}) do
     %{data: render_many(users, UserView, "user.json")}
@@ -16,26 +15,11 @@ defmodule TimeManagerWeb.UserView do
       id: user.id,
       username: user.username,
       email: user.email,
-      team_id:
-        if(Map.has_key?(user, :team_id),
-          do: user.team_id,
+      team:
+        if(Map.has_key?(user, :team),
+          do: user.team,
           else: nil
         )
-    }
-  end
-
-  def render("users_working_times.json", %{users: users}) do
-    %{
-      data: render_many(users, UserView, "user_working_times.json")
-    }
-  end
-
-  def render("user_working_times.json", %{user: user}) do
-    %{
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      working_times: render_many(user.working_times, WorkingTimeView, "working_time.json")
     }
   end
 
