@@ -20,7 +20,7 @@ const routes = [
       { path: "profile", component: ProfilePage },
       { path: "clocks", component: ClockPage },
       { path: "charts", component: ChartsPages },
-      { path: "workings", component: WorkingPage },
+      { path: "workingtimes", component: WorkingPage },
       {
         path: "workings/:userId/:id",
         component: WTPage,

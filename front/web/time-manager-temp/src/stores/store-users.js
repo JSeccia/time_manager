@@ -21,8 +21,8 @@ export const useUserStore = defineStore("user", {
       );
       this.user = { id, username, email, team, role };
     },
-    createUser({ username, email, team, role }) {
-      this.user = { username, email, team, role };
-    },
+    // createUser({ username, email, team, role }) {
+    //   this.user = { username, email, team, role };
+    // },
   },
 });

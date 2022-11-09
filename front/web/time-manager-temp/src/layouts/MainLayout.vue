@@ -14,12 +14,14 @@
             <q-breadcrumbs-el label="Profile" icon="home" to="/profile" />
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
-            <q-breadcrumbs-el label="Workings" to="/workings" />
+            <q-breadcrumbs-el label="Working times" to="/workingtimes" />
             <q-breadcrumbs-el label="User" to="/users" />
             <!-- test graph -->
             <q-breadcrumbs-el label="GraphTest" to="/graphtest" />
             <!-- test graph -->
-          </q-breadcrumbs>
+          <q-breadcrumbs-el label="Admin" to="/admin" />
+          
+        </q-breadcrumbs>
         </q-toolbar>
       </div>
     </q-header>

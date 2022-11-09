@@ -62,9 +62,12 @@ export default {
         this.users = response.data.data;
       });
     },
+    
     logout() {
-      localStorage.removeItem("currentUser");
+      
+      localStorage.removeItem("currenUser", this.user);
       localStorage.removeItem("token");
+      console.log("logout", this.user);  
       this.$router.push("/login");
     },
   },

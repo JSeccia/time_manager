@@ -33,6 +33,11 @@ defmodule TimeManagerWeb.WorkingTimeController do
     render(conn, "show.json", working_time: working_time)
   end
 
+  def get_all_working_times(conn, _params) do
+    working_times = Repo.all(from w in WorkingTime)
+    render(conn, "index.json", working_times: working_times)
+  end
+
   def show(conn, %{"id" => id}) do
     working_time = Api.get_working_time!(id)
     render(conn, "show.json", working_time: working_time)

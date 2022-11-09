@@ -39,6 +39,7 @@ defmodule TimeManagerWeb.Router do
     post("/working_times/:user_id", WorkingTimeController, :create_by_id)
     get("/clocks/:user_id", ClockController, :index)
     post("/clocks/:username", ClockController, :create_by_id)
+    get("/working_times", WorkingTimeController, :get_all_working_times)
   end
 
   # Enables LiveDashboard only for development

@@ -177,23 +177,23 @@ export default {
             alert("Error");
             return;
           }
-          // localStorage.setItem("currenUser", JSON.stringify(res.data));
+          localStorage.setItem("currenUser", JSON.stringify(res.data));
           this.user = res.data;
           console.log(res.data);
 
-          this.createUser({
-            username: res.data.username,
-            email: res.data.email,
-          });
-          console.log(this.createUser);
+          // this.createUser({
+          //   username: res.data.username,
+          //   email: res.data.email,
+          // });
+          // console.log(this.createUser);
         });
 
       this.$router.push("/");
     },
 
-    createUser({ username, email, team }) {
-      this.store.createUser({ username, email, team });
-    },
+    // createUser({ username, email, team }) {
+    //   this.store.createUser({ username, email, team });
+    // },
   },
 };
 </script>
