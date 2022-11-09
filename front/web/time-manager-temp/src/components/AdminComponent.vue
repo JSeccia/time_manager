@@ -1,4 +1,5 @@
 <template>
+    <main v-if="currentUser.role === 'admin'">
     <h1>Admin Dashboard Page</h1>
     <div class="managing_users">
         {{users}}
@@ -12,7 +13,8 @@
 
     </div>
 
-
+    </main>
+    <h1 class="unauthorize" v-else>You are not authorized to view this page !</h1>
 </template>
 
 <script>
@@ -54,6 +56,18 @@ export default {
             }
         }
     },
+    
 
 }
 </script>
+<style>
+.unauthorize {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    border-bottom: none;
+    color: red;
+}
+</style>

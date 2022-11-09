@@ -1,5 +1,5 @@
 <template>
-  <p>Page de connexion</p>
+  <!-- <p>Page de connexion</p>
   <form @submit="onSubmitCreate">
     <label for="username_input">Username</label>
     <input
@@ -70,7 +70,8 @@
     <li>{{ currentUser.username }}</li>
     <li>{{ currentUser.email }}</li>
   </ul>
-  <!-- <button @click="changeUpdate">{{ update ? "update" : "create" }}</button> -->
+  <button @click="changeUpdate">{{ update ? "update" : "create" }}</button> -->
+-->
 </template>
 
 <script>
@@ -83,13 +84,13 @@ export default {
   name: "user-vue",
   data() {
     return {
-      currentUser: localStorage.getItem("currentUser")
-        ? JSON.parse(localStorage.getItem("currentUser"))
-        : {
-            email: "",
-            username: "",
-            id: 0,
-          },
+      // currentUser: localStorage.getItem("currentUser")
+      //   ? JSON.parse(localStorage.getItem("currentUser"))
+      //   : {
+      //       email: "",
+      //       username: "",
+      //       id: 0,
+      //     },
       email: "",
       username: "",
       password: "",

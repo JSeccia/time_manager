@@ -6,7 +6,7 @@
           <q-btn flat round dense icon="assignment_ind" to="/login" />
 
           <q-space />
-          <q-btn flat round dense icon="search" class="q-mr-xs" />
+          <q-btn v-if="currentUser.role === 'admin'" flat round dense icon="lock" to="/admin" @click="handleAdminButton" class="q-mr-xs" />
         </q-toolbar>
 
         <q-toolbar inset>
@@ -26,7 +26,6 @@
       </div>
     </q-header>
     <q-page-container>
-      <LoginComponent v-if="!currentUser"/>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -35,13 +34,10 @@
 <script>
 import { defineComponent, ref } from "vue";
 import { useUserStore } from "src/stores/store-users";
-import LoginComponent from 'src/components/LoginComponent.vue';
 
 export default defineComponent({
   name: "MainLayout",
-  components: {
-    LoginComponent,
-},
+  
   setup() {
     const store = useUserStore();
     return {
@@ -53,6 +49,14 @@ export default defineComponent({
       currentUser: this.store.user,
     };
   },
+  methods: {
+    handleAdminButton() {
+      if(this.currentUser.role === 'admin') {
+        this.$router.push({ path: '/admin' });
+      }
+    },
+  },
+    
 
   
 });

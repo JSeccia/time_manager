@@ -31,21 +31,12 @@ const routes = [
         component: WTPage,
       },
       { path: "users", component: User },
-      { path: "login", component: LoginPage},
       { path: "signin", component: SignInPage},
+      { path: "login", component: LoginPage},
       { path: "graphtest", component: GraphTestPage},
 
       { path: "admin", component: AdminPage, meta: {requiresAuth: true},
-        beforEnter: (to, from, next) => {
-          let currentUser = JSON.parse(window.localStorage.currentUser);
-          if (currentUser && currentUser.role === 'admin') {
-            console.log(currentUser.role);
-            next();
-          } else {
-            next('/profile');
-          }
-
-        }
+    
       },
       
 
