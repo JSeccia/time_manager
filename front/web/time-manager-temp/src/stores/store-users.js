@@ -12,8 +12,15 @@ export const useUserStore = defineStore("user", {
           team: null,
           role: "user",
         },
+        userIsAuthorized: false,
+        
   }),
+ 
+    
   actions: {
+    isUserAuthorized() {
+      return !this.userIsAuthorized;
+    },
     setUser({ id, username, email, team, role }) {
       LocalStorage.set(
         "currentUser",

@@ -9,37 +9,13 @@
       <p v-else>Create your account here</p>
 
       <!-- sign in (login) -->
-      <q-form
-        v-if="mode === 'signin'"
-        class="signin_section__form"
-        @submit.prevent="login"
-      >
-        <q-input
-          rounded
-          outlined
-          v-model="email"
-          class="input_login"
-          label="Email"
-          color="green-10"
-        >
+      <q-form v-if="mode === 'signin'" class="signin_section__form" @submit.prevent="login">
+        <q-input rounded outlined v-model="email" class="input_login" label="Email" color="green-10">
         </q-input>
-        <q-input
-          rounded
-          outlined
-          v-model="password"
-          class="input_login"
-          label="Password"
-          color="green-10"
-          type="password"
-        >
+        <q-input rounded outlined v-model="password" class="input_login" label="Password" color="green-10"
+          type="password">
         </q-input>
-        <q-btn
-          type="submit"
-          class="input_btn"
-          push
-          color="green-10"
-          label="Connect"
-        />
+        <q-btn type="submit" class="input_btn" push color="green-10" label="Connect" />
         <div class="forgot_password">
           <p>Forgot your password?</p>
           <span @click="handleSignUp">Sign up</span>
@@ -47,46 +23,15 @@
       </q-form>
 
       <!-- sign up -->
-      <q-form
-        @submit.prevent="signUp"
-        class="signup_section__form"
-        v-if="mode === 'signup'"
-      >
-        <q-input
-          rounded
-          outlined
-          v-model="username"
-          class="input_login"
-          label="Username"
-          color="green-10"
-        >
+      <q-form @submit.prevent="signUp" class="signup_section__form" v-if="mode === 'signup'">
+        <q-input rounded outlined v-model="username" class="input_login" label="Username" color="green-10">
         </q-input>
-        <q-input
-          rounded
-          outlined
-          v-model="email"
-          class="input_login"
-          label="Email"
-          color="green-10"
-        >
+        <q-input rounded outlined v-model="email" class="input_login" label="Email" color="green-10">
         </q-input>
-        <q-input
-          rounded
-          outlined
-          v-model="password"
-          class="input_login"
-          label="Password"
-          color="green-10"
-          type="password"
-        >
+        <q-input rounded outlined v-model="password" class="input_login" label="Password" color="green-10"
+          type="password">
         </q-input>
-        <q-btn
-          type="submit"
-          class="input_btn"
-          push
-          color="green-10"
-          label="Sign up"
-        />
+        <q-btn type="submit" class="input_btn" push color="green-10" label="Sign up" />
 
         <span @click="handleSignIn">Already have an account, Sign in </span>
       </q-form>
@@ -113,6 +58,9 @@ export default {
       password: "",
       username: "",
       mode: "signin",
+      userIsAuthorized: this.store.userIsAuthorized,
+      currentUser: this.store.user,
+
     };
   },
 
@@ -139,7 +87,16 @@ export default {
               team: res.data.team,
               role: res.data.role,
             });
-            this.$router.push("/profile");
+            if (res.data.role === "admin") {
+              this.$router
+                .push({ path: '/admin' })
+                .then(() => { this.$router.go() })
+            } else {
+              this.$router.push("/profile");
+            }
+
+
+
           } else {
             console.log("error");
           }
@@ -191,9 +148,7 @@ export default {
       this.$router.push("/");
     },
 
-    // createUser({ username, email, team }) {
-    //   this.store.createUser({ username, email, team });
-    // },
+
   },
 };
 </script>

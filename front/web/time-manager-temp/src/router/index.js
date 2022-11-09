@@ -1,7 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
-
+import {useUserStore} from '../stores/store-users'
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -10,8 +10,7 @@ import routes from './routes'
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
-
-export default route(function (/* { store, ssrContext } */) {
+export default (function ({ store, /* ssrContext */ }) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
@@ -23,8 +22,33 @@ export default route(function (/* { store, ssrContext } */) {
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
-    history: createHistory(process.env.VUE_ROUTER_BASE)
-  })
+    history: createHistory(process.env.VUE_ROUTER_BASE),
+
+
+    })
+    // Router.beforeEach((to, from, next) => {
+    //   let routerAuthCheck = false;
+      
+    //   if (to.matched.some(record => record.meta.requiresAuth)) {
+    //     // check user is authenticated
+    //     if (routerAuthCheck) {
+    //       store.isUserAuthorized = true;
+    //     }
+    //     if (routerAuthCheck) {
+    //       // user is authenticated
+    //       // commit to store that the user is authenticated
+    //       next();
+    //     } else {
+    //       // user is not authenticated
+    //       Router.push('/login')
+    //     }
+    //   } 
+    //   // Allow access
+    //   else {
+    //     next();
+    //   }
+    // })
 
   return Router
 })
+

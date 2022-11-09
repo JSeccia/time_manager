@@ -7,6 +7,11 @@ import User from "../pages/User.vue";
 import LoginPage from "../pages/LoginPage.vue";
 import SignInPage from "../pages/SignInPage.vue";
 import GraphTestPage from "../pages/GraphTestPage.vue";
+import AdminPage from "../pages/AdminPage.vue";
+
+
+
+
 
 const routes = [
   {
@@ -30,6 +35,20 @@ const routes = [
       { path: "signin", component: SignInPage},
       { path: "graphtest", component: GraphTestPage},
 
+      { path: "admin", component: AdminPage, meta: {requiresAuth: true},
+        beforEnter: (to, from, next) => {
+          let currentUser = JSON.parse(window.localStorage.currentUser);
+          if (currentUser && currentUser.role === 'admin') {
+            console.log(currentUser.role);
+            next();
+          } else {
+            next('/profile');
+          }
+
+        }
+      },
+      
+
     ],
   },
 
@@ -40,5 +59,9 @@ const routes = [
     component: () => import("pages/ErrorNotFound.vue"),
   },
 ];
+
+
+
+
 
 export default routes;

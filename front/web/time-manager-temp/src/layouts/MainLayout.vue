@@ -19,13 +19,14 @@
             <!-- test graph -->
             <q-breadcrumbs-el label="GraphTest" to="/graphtest" />
             <!-- test graph -->
-          <q-breadcrumbs-el label="Admin" to="/admin" />
+          <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="Admin" to="/admin" />
           
         </q-breadcrumbs>
         </q-toolbar>
       </div>
     </q-header>
     <q-page-container>
+      <LoginComponent v-if="!currentUser"/>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -33,12 +34,26 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-//import LoginPageVue from 'src/pages/LoginPage.vue'
-//import EssentialLink from 'components/EssentialLink.vue'
-//import User from 'components/User.vue'
-//import WorkingTimes from 'components/WorkingTimes.vue'
+import { useUserStore } from "src/stores/store-users";
+import LoginComponent from 'src/components/LoginComponent.vue';
 
 export default defineComponent({
   name: "MainLayout",
+  components: {
+    LoginComponent,
+},
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    };
+  },
+  data() {
+    return {
+      currentUser: this.store.user,
+    };
+  },
+
+  
 });
 </script>

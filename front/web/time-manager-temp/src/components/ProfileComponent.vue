@@ -1,4 +1,5 @@
 <template>
+  <p id="hidden">&#x1F5D8;</p> 
   <main class="main_profile">
     <div class="profile_section">
       <div class="avatar">
@@ -64,11 +65,14 @@ export default {
     },
     
     logout() {
-      
       localStorage.removeItem("currenUser", this.user);
+      localStorage.removeItem("currentUser");
       localStorage.removeItem("token");
-      console.log("logout", this.user);  
-      this.$router.push("/login");
+      localStorage.clear();
+      this.$router
+          .push({ path: '/login' })
+          .then(() => { this.$router.go() })
+      
     },
   },
   mounted: function () {
@@ -137,5 +141,9 @@ export default {
 }
 .profile_table td {
   border-style: hidden;
+}
+
+#hidden {
+  display: none;
 }
 </style>

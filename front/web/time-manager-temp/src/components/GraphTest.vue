@@ -353,7 +353,7 @@ export default {
     const hours = Math.floor(sum / 60);
     const minutes = (sum % 60).toFixed(0);
     const averageWorkedtime = `${hours}h: ${minutes}m`;
-    // console.log(averageWorkedtime, "averageworkedtime");
+    console.log(averageWorkedtime, "averageworkedtime");
     return averageWorkedtime;
 
 
@@ -384,15 +384,6 @@ export default {
         }
 
     },
-        
-        
-// recupere les working times 
-// on map dessur pour
-// recupere le start et le end de tous les wt des users 
-// on les convertis en moment et en minutes
-// on les additionne
-// on divise par le nombre de wt
-// on retourne le resultat
 
     },
     mounted() {
