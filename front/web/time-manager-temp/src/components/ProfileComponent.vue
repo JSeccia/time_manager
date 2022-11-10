@@ -25,7 +25,7 @@
             </tr>
             <tr>
               <td>
-                <span>Employee Numbers: {{ users.length }}</span>
+                <span>Team Number: </span>
               </td>
             </tr>
           </tbody>

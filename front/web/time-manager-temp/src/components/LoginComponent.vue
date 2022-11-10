@@ -93,7 +93,9 @@ export default {
                 .push({ path: '/admin' })
                 .then(() => { this.$router.go() })
             } else {
-              this.$router.push("/profile");
+              this.$router
+                .push({ path: '/profile' })
+                .then(() => { this.$router.go() })
             }
 
 
@@ -115,6 +117,10 @@ export default {
     },
 
     signUp() {
+      if(currentUser) {
+        alert("You are already logged in");
+        return;
+      }
       const body = {
         user: {
           username: this.username,
