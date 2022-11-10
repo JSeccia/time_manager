@@ -14,6 +14,5 @@ defmodule TimeManager.Api.Team do
     team
     |> cast(attrs, [:manager])
     |> cast_assoc(:users)
-    |> validate_required([:manager])
   end
 end

@@ -56,6 +56,8 @@ defmodule TimeManagerWeb.ClockController do
 
   def show(conn, %{"id" => id}) do
     clock = Api.get_clock!(id)
+    IO.inspect("qsdqsdsd")
+    IO.inspect(clock)
     render(conn, "show.json", clock: clock)
   end
 

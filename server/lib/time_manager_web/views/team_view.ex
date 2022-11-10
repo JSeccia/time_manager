@@ -15,6 +15,14 @@ defmodule TimeManagerWeb.TeamView do
     }
   end
 
+  def render("empty_team.json", %{team: team}) do
+    %{
+      id: team.id,
+      manager: team.manager,
+      users: []
+    }
+  end
+
   def render("teams.json", %{teams: teams}) do
     %{
       data: render_many(teams, TeamView, "team.json")
@@ -32,7 +40,7 @@ defmodule TimeManagerWeb.TeamView do
       email: user.email,
       team:
         if(Map.has_key?(user, :team),
-          do: user.team,
+          do: user.team_id,
           else: nil
         )
     }

@@ -1,7 +1,6 @@
 defmodule TimeManagerWeb.ClockView do
   use TimeManagerWeb, :view
   alias TimeManagerWeb.ClockView
-  alias TimeManagerWeb.WorkingTimeView
 
   def render("index.json", %{clocks: clocks}) do
     %{data: render_many(clocks, ClockView, "clock.json")}

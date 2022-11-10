@@ -76,18 +76,24 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import { useUserStore } from "src/stores/store-users";
 
 export default {
   name: "WTComponent",
+  setup() {
+    const store = useUserStore();
+    return { store };
+  },
   data() {
     return {
-      currentUser: localStorage.getItem("currentUser")
-        ? JSON.parse(localStorage.getItem("currentUser"))
-        : {
-            email: "",
-            username: "",
-            id: 0,
-          },
+      // currentUser: localStorage.getItem("currentUser")
+      //   ? JSON.parse(localStorage.getItem("currentUser"))
+      //   : {
+      //       email: "",
+      //       username: "",
+      //       id: 0,
+      //     },
+      currentUser: this.store.user,
       workingTime: {},
       userId: this.$route.params.userId,
       workingTimeId: this.$route.params.id,
@@ -126,7 +132,7 @@ export default {
           start:
             moment.utc(moment(this.StartDate)).format("YYYY-MM-DD HH:mm") ??
             null,
-          end: moment(moment(this.EndDate)).format("YYYY-MM-DD HH:mm") ?? null,
+          end: moment.utc(moment(this.EndDate)).format("YYYY-MM-DD HH:mm") ?? null,
         },
       };
       axios

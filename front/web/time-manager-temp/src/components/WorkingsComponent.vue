@@ -1,13 +1,12 @@
 <template>
 
   <!-- Manager Web Working Times -->
-  <main class="main-workingtimes">
+  <main v-if="currentUser.role === 'manager'" class="main-workingtimes">
     <h1>Check working times</h1>
 
     <ul :key="currentUser.id">
       <li>{{ currentUser.id }}</li>
       <li>{{ currentUser.username }}</li>
-      <li>{{ currentUser.email }}</li>
     </ul>
     <!-- Search Employee Id form -->
 
@@ -17,7 +16,7 @@
           for="get_user_working_times"
         ></label>
         <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter employee id" ref="userIdInput" id="get_user_working_times"
-            color="green-10">
+            color="green-10" >
         </q-input>
         <q-btn id="add-button" type="submit" class="search_wt_btn" push color="green-10" label="Get working times" />
 
@@ -100,26 +99,35 @@
   </main>
 
   <!-- Employee web WorkingTimes -->
+  
 </template>
 
 <script>
 import axios from "axios";
 import moment from "moment";
 import { calculateTotalWorkingTime } from "../utils/utils";
+import { useUserStore } from "src/stores/store-users";
 
 
 export default {
   name: "WorkingsComponent",
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    };
+  },
 
   data() {
     return {
-      currentUser: localStorage.getItem("currentUser")
-        ? JSON.parse(localStorage.getItem("currentUser"))
-        : {
-            email: "",
-            username: "",
-            id: 0,
-          },
+      // currentUser: localStorage.getItem("currentUser")
+      //   ? JSON.parse(localStorage.getItem("currentUser"))
+      //   : {
+      //       email: "",
+      //       username: "",
+      //       id: 0,
+      //     },
+      currentUser: this.store.user,
       workingTimes: {},
       currentUserId: "",
       currentWorkingTimeId: "",

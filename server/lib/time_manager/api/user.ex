@@ -26,9 +26,9 @@ defmodule TimeManager.Api.User do
 
   def changeset_team(user, attrs) do
     user
-    |> cast(attrs, [:team])
+    |> cast(attrs, [:team_id])
     |> cast_assoc(:working_times)
-    |> validate_required([:team])
+    |> validate_required([:team_id])
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do

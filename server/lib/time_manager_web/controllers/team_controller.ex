@@ -25,21 +25,43 @@ defmodule TimeManagerWeb.TeamController do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.team_path(conn, :show, team))
-      |> render("show.json", team: team)
+      |> render("empty_team.json", team: team)
     end
   end
 
   def add_user(conn, %{"team_id" => team_id, "user_id" => user_id}) do
     try do
-      team = Api.get_team!(team_id)
+      team =
+        Repo.one(
+          from(t in Team,
+            left_join: u in User,
+            on: u.team_id == t.id,
+            where: t.id == ^team_id,
+            preload: [users: u]
+          )
+        )
+
+      # team = Api.get_team!(team_id, preload: [:users])
       user = Api.get_user!(user_id)
 
-      if Map.has_key?(user, :team) && user.team == String.to_integer(team_id) do
+      if Map.has_key?(user, :team_id) && user.team_id == String.to_integer(team_id) do
         conn
         |> put_status(:bad_request)
         |> render("failure.json", message: "User already in team")
       else
-        user = Api.update_user_team(user, %{team: team_id})
+        Api.update_user_team(user, %{team_id: team_id})
+
+        team =
+          Repo.one(
+            from(t in Team,
+              inner_join: u in User,
+              as: :user,
+              on: u.team_id == t.id,
+              where: t.id == ^team_id,
+              preload: [users: u]
+            )
+          )
+
         render(conn, "show.json", team: team)
       end
     rescue
@@ -64,10 +86,19 @@ defmodule TimeManagerWeb.TeamController do
   end
 
   def update(conn, %{"id" => id, "team" => team_params}) do
-    team = Api.get_team!(id)
+    team =
+      Repo.one(
+        from(t in Team,
+          inner_join: u in User,
+          as: :user,
+          on: u.team_id == t.id,
+          where: t.id == ^id,
+          preload: [users: u]
+        )
+      )
 
     with {:ok, %Team{} = team} <- Api.update_team(team, team_params) do
-      render(conn, "show.json", team: team)
+      render(conn, "team.json", team: team)
     end
   end
 

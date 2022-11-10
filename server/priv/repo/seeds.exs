@@ -176,10 +176,3 @@ Repo.insert!(%WorkingTime{
 Repo.query("ALTER SEQUENCE users_id_seq RESTART WITH 8")
 Repo.query("ALTER SEQUENCE teams_id_seq RESTART WITH 3")
 Repo.query("ALTER SEQUENCE working_times_id_seq RESTART WITH 13")
-
-# def get_next_week_day(dow) do
-#   Timex.today()
-#   |> Timex.shift(days: 7)
-#   |> Timex.beginning_of_week(:mon)
-#   |> Timex.shift(days: dow)
-# end

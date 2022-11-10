@@ -7,28 +7,29 @@ import User from "../pages/User.vue";
 import LoginPage from "../pages/LoginPage.vue";
 import SignInPage from "../pages/SignInPage.vue";
 import GraphTestPage from "../pages/GraphTestPage.vue";
+import AdminPage from "../pages/AdminPage.vue";
 
 const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      // {
-      //   path: "workingtimes",
-      //   component: WorkingTimesPages,
-      // },
       { path: "profile", component: ProfilePage },
       { path: "clocks", component: ClockPage },
       { path: "charts", component: ChartsPages },
-      { path: "workings", component: WorkingPage },
+      { path: "workingtimes", component: WorkingPage },
       {
-        path: "workings/:userId/:id",
+        path: "workings/:userId/:id", 
         component: WTPage,
       },
       { path: "users", component: User },
-      { path: "login", component: LoginPage},
       { path: "signin", component: SignInPage},
+      { path: "login", component: LoginPage},
       { path: "graphtest", component: GraphTestPage},
+
+      { path: "admin", component: AdminPage, meta: {requiresAuth: true},
+    },
+      
 
     ],
   },
@@ -40,5 +41,9 @@ const routes = [
     component: () => import("pages/ErrorNotFound.vue"),
   },
 ];
+
+
+
+
 
 export default routes;

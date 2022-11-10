@@ -39,20 +39,6 @@ defmodule TimeManagerWeb.UserView do
     }
   end
 
-  # def render("internal_user.json", %{user: user}) do
-  #   %{
-  #     id: user.id,
-  #     username: user.username,
-  #     email: user.email,
-  #     password: user.password_hash
-  #     team:
-  #       if(Map.has_key?(user, :team),
-  #         do: user.team,
-  #         else: nil
-  #       )
-  #   }
-  # end
-
   def render("success.json", %{
         message: message,
         token: token,

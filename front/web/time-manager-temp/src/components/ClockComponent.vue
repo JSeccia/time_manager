@@ -2,7 +2,7 @@
   <main>
 
     <!-- Manager Web clocks page -->
-    <section class="section_clocks">
+    <section v-if="currentUser.role === 'manager'" class="section_clocks">
       <h1 class="title_clocks">Employees Clocks Trend</h1>
       <div class="search-employee-id">
         <form @submit.prevent="getAllClocksFromInput">
@@ -40,9 +40,9 @@
     </section>
   </main>
 
-  <div class="clock">
+  <!-- Employee web clocks page -->
+  <div v-if="currentUser.role === 'user'" class="clock">
 
-    <!-- Employee web clocks page -->
 
     <div class="q-pa-md">
       <div class="q-gutter-md">
@@ -88,23 +88,20 @@
 import { ref } from "vue";
 import axios from "axios";
 import moment from "moment";
+import { useUserStore } from "src/stores/store-users";
 
 export default {
   setup() {
+    const store = useUserStore();
     return {
-      clockIn: ref("10:56"),
+      store,
     };
   },
 
-  name: "DateComponent",
-  data: () => ({
-    currentUser: localStorage.getItem("currentUser")
-      ? JSON.parse(localStorage.getItem("currentUser"))
-      : {
-        email: "",
-        username: "",
-        id: 0,
-      },
+  name: "ClockComponent",
+  data() {
+    return {
+      currentUser: this.store.user,
     date: "",
     time: "",
     year: "",
@@ -114,7 +111,8 @@ export default {
     employeeClocks: {},
     employeeToGetClocks: "",
     isGetAllClocksFromInputButtonSelected: false,
-  }),
+    }
+  },
   methods: {
     // allow current user to clock in
     postClock() {
