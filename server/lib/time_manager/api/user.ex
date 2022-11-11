@@ -24,6 +24,22 @@ defmodule TimeManager.Api.User do
     |> put_pass_hash()
   end
 
+  def changeset_update(user, attrs) do
+    user
+    |> cast(attrs, [:username, :email, :role, :team_id])
+    |> validate_required([:username, :email])
+    |> validate_format(:email, ~r/\S+@\S+\.\S+/)
+    |> unique_constraint(:email, message: "mail already taken")
+    |> unique_constraint(:username, message: "username already taken")
+  end
+
+  def changeset_password(user, attrs) do
+    user
+    |> cast(attrs, [:password])
+    |> validate_required([:password])
+    |> put_pass_hash()
+  end
+
   def changeset_team(user, attrs) do
     user
     |> cast(attrs, [:team_id])

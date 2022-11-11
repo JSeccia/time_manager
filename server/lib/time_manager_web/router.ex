@@ -22,6 +22,24 @@ defmodule TimeManagerWeb.Router do
     plug(TimeManager.Plug.UserManager)
   end
 
+  pipeline :user_id_auth do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.UserIdAuth)
+  end
+
+  pipeline :working_time_id_auth do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.WorkingTimeIdAuth)
+  end
+
+  pipeline :clock_id_auth do
+    plug(:accepts, ["json"])
+    plug(TimeManager.Plug.Auth)
+    plug(TimeManager.Plug.ClockIdAuth)
+  end
+
   pipeline :manager do
     plug(:accepts, ["json"])
     plug(TimeManager.Plug.Auth)
@@ -41,7 +59,7 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :auth])
-    post("/teams/:team_id/users/:user_id", TeamController, :add_user)
+    resources("/users", UserController)
   end
 
   scope "/api", TimeManagerWeb do
@@ -56,24 +74,36 @@ defmodule TimeManagerWeb.Router do
   end
 
   scope "/api", TimeManagerWeb do
-    pipe_through([:api, :user_manager])
+    pipe_through([:api, :user_id_auth])
     get("/working_times/:user_id/:id", WorkingTimeController, :get_one)
     get("/working_times/:user_id", WorkingTimeController, :index)
+  end
+
+  scope "/api", TimeManagerWeb do
+    pipe_through([:api, :user_manager])
     post("/working_times/:user_id", WorkingTimeController, :create_by_id)
     get("/clocks/:user_id", ClockController, :index)
   end
 
   scope "/api", TimeManagerWeb do
+    pipe_through([:api, :working_time_id_auth])
+    resources("/working_times", WorkingTimeController, only: [:update, :delete])
+  end
+
+  scope "/api", TimeManagerWeb do
+    pipe_through([:api, :clock_id_auth])
+    resources("/clocks", ClockController, only: [:update, :delete])
+  end
+
+  scope "/api", TimeManagerWeb do
     pipe_through([:api, :auth, :admin])
     get("/working_times", WorkingTimeController, :get_all_working_times)
+    post("/teams/:team_id/users/:user_id", TeamController, :add_user)
     resources("/teams", TeamController, only: [:create, :update, :index, :delete])
   end
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api])
-    resources("/users", UserController)
-    resources("/working_times", WorkingTimeController, only: [:update, :delete])
-    resources("/clocks", ClockController, only: [:update, :delete])
     post("/users/login", UserController, :login)
   end
 

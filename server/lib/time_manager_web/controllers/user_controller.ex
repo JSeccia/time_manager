@@ -99,6 +99,14 @@ defmodule TimeManagerWeb.UserController do
     end
   end
 
+  def update_password(conn, %{"id" => id, "user" => user_params}) do
+    user = Api.get_user!(id)
+
+    with {:ok, %User{} = user} <- Api.change_user_password(user, user_params) do
+      render(conn, "show.json", user: user)
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
     user = Api.get_user!(id)
 

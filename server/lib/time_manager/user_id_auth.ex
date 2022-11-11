@@ -1,4 +1,4 @@
-defmodule TimeManager.Plug.ClockAuth do
+defmodule TimeManager.Plug.UserIdAuth do
   import Plug.Conn
 
   import Ecto.Query
@@ -13,7 +13,7 @@ defmodule TimeManager.Plug.ClockAuth do
   end
 
   def call(conn, _opts) do
-    user = Repo.one(from(u in User, where: u.username == ^conn.params["username"]))
+    user = Repo.one(from(u in User, where: u.username == ^conn.params["user_id"]))
 
     case conn.assigns.current_user.role do
       "admin" ->
