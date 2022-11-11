@@ -18,7 +18,7 @@
             <q-breadcrumbs-el label="Clocks" to="/clocks" />
             <q-breadcrumbs-el label="Charts" to="/charts" />
             <q-breadcrumbs-el label="Working times" to="/workingtimes" />
-            <q-breadcrumbs-el label="User" to="/users" />
+            <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="User" to="/users" />
             <!-- test graph -->
             <q-breadcrumbs-el label="GraphTest" to="/graphtest" />
             <!-- test graph -->
