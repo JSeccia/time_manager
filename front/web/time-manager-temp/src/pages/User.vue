@@ -1,4 +1,5 @@
 <template>
+  <UserComponent />
   <!-- <p>Page de connexion</p>
   <form @submit="onSubmitCreate">
     <label for="username_input">Username</label>
@@ -76,106 +77,102 @@
 
 <script>
 import axios from "axios";
+import UserComponent from "src/components/UserComponent.vue";
 import { defineComponent } from "vue";
 
 let update = false;
 
 export default {
-  name: "user-vue",
-  data() {
-    return {
-      // currentUser: localStorage.getItem("currentUser")
-      //   ? JSON.parse(localStorage.getItem("currentUser"))
-      //   : {
-      //       email: "",
-      //       username: "",
-      //       id: 0,
-      //     },
-      email: "",
-      username: "",
-      password: "",
-    };
-  },
-  methods: {
-    getUserByFields(e) {
-      e.preventDefault();
-      if (!this.username && !this.email) {
-        window.alert("no params");
-        return;
-      }
-      axios
-        .get(
-          `/api/users/?${this.email ? `email=${this.email}` : ""}${
-            this.email && this.username ? "&" : ""
-          }${this.username ? `username=${this.username}` : ""}
-        `
-        )
-        .then((res) => {
-          localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.currentUser = res.data.data;
-        });
+    name: "user-vue",
+    components: {
+        UserComponent,
     },
-    getUserById(e) {
-      e.preventDefault();
-      axios.get(`/api/users/${this.userId}`).then((res) => {
-        localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-        this.currentUser = res.data.data;
-      });
+    data() {
+        return {
+            // currentUser: localStorage.getItem("currentUser")
+            //   ? JSON.parse(localStorage.getItem("currentUser"))
+            //   : {
+            //       email: "",
+            //       username: "",
+            //       id: 0,
+            //     },
+            email: "",
+            username: "",
+            password: "",
+        };
     },
-    changeUpdate() {
-      if (update) {
-        update = false;
-      } else {
-        update = true;
-      }
-      console.log(update);
-    },
-
-    onSubmitUpdate(e) {
-      e.preventDefault();
-      if (this.username === null || this.email === null) {
-        window.alert("Missing field");
-        return;
-      }
-      const body = {
-        user: { username: this.username, email: this.email },
-      };
-      axios
-        .put(
-          `/api/users/${JSON.parse(localStorage.getItem("currentUser")).id}`,
-          body,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
-        });
-    },
-    onSubmitCreate(e) {
-      e.preventDefault();
-      const body = {
-        user: {
-          username: this.username,
-          email: this.email,
-          password: this.password,
+    methods: {
+        getUserByFields(e) {
+            e.preventDefault();
+            if (!this.username && !this.email) {
+                window.alert("no params");
+                return;
+            }
+            axios
+                .get(`/api/users/?${this.email ? `email=${this.email}` : ""}${this.email && this.username ? "&" : ""}${this.username ? `username=${this.username}` : ""}
+        `)
+                .then((res) => {
+                localStorage.setItem("currentUser", JSON.stringify(res.data.data));
+                this.currentUser = res.data.data;
+            });
         },
-      };
-      axios
-        .post("/api/users", body, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          localStorage.setItem("currentUser", JSON.stringify(res.data.data));
-          this.user = res.data.data;
-        });
-      // window.alert(this.username, this.email);
+        getUserById(e) {
+            e.preventDefault();
+            axios.get(`/api/users/${this.userId}`).then((res) => {
+                localStorage.setItem("currentUser", JSON.stringify(res.data.data));
+                this.currentUser = res.data.data;
+            });
+        },
+        changeUpdate() {
+            if (update) {
+                update = false;
+            }
+            else {
+                update = true;
+            }
+            console.log(update);
+        },
+        onSubmitUpdate(e) {
+            e.preventDefault();
+            if (this.username === null || this.email === null) {
+                window.alert("Missing field");
+                return;
+            }
+            const body = {
+                user: { username: this.username, email: this.email },
+            };
+            axios
+                .put(`/api/users/${JSON.parse(localStorage.getItem("currentUser")).id}`, body, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                localStorage.setItem("currentUser", JSON.stringify(res.data.data));
+                this.user = res.data.data;
+            });
+        },
+        onSubmitCreate(e) {
+            e.preventDefault();
+            const body = {
+                user: {
+                    username: this.username,
+                    email: this.email,
+                    password: this.password,
+                },
+            };
+            axios
+                .post("/api/users", body, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                localStorage.setItem("currentUser", JSON.stringify(res.data.data));
+                this.user = res.data.data;
+            });
+            // window.alert(this.username, this.email);
+        },
     },
-  },
 };
 </script>

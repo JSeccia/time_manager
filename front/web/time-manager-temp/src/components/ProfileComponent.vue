@@ -8,24 +8,24 @@
           src="../assets/images/avatar-manager.jpg"
           alt="user avatar"
         />
-        <span>{{ user.username }}</span>
+        <span> {{ currentUser.username }}</span>
       </div>
       <div class="profile-info">
         <table class="profile_table">
           <tbody>
             <tr>
               <td>
-                {{ user.email }}
+                email: {{ currentUser.email }}
               </td>
             </tr>
             <tr>
               <td>
-                <span>Role : {{ user.role }}</span>
+                <span>Role: {{ currentUser.role }}</span>
               </td>
             </tr>
             <tr>
               <td>
-                <span>Team Number: </span>
+                <span> Team n°{{ user.team_id }}</span>
               </td>
             </tr>
           </tbody>
@@ -51,16 +51,22 @@ export default {
   },
   data() {
     return {
-      user: this.store.user,
+      currentUser: this.store.user,
       users: [],
+      user: {},
     };
   },
 
   methods: {
     getUsers() {
       axios.get(`/api/users/`).then((response) => {
-        console.log(response);
         this.users = response.data.data;
+      });
+    },
+
+    getUserTeam() {
+      axios.get(`/api/users/${this.currentUser.id}`).then((response) => {
+        this.user = response.data.data;
       });
     },
     
@@ -77,6 +83,7 @@ export default {
   },
   mounted: function () {
     this.getUsers();
+    this.getUserTeam();
   },
 };
 </script>

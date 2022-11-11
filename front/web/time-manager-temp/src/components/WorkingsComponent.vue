@@ -1,7 +1,7 @@
 <template>
 
   <!-- Manager Web Working Times -->
-  <main v-if="currentUser.role === 'manager'" class="main-workingtimes">
+  <main v-if="currentUser.role === 'manager' || currentUser.role === 'admin'" class="main-workingtimes">
     <h1>Check working times</h1>
 
     <ul :key="currentUser.id">
@@ -11,7 +11,7 @@
     <!-- Search Employee Id form -->
 
     <section class="search-wt-id">
-      <form @submit.prevent="getWorkingTimes">
+      <form @submit.prevent="getWorkingTimesByUserId">
         <label
           for="get_user_working_times"
         ></label>
@@ -99,6 +99,40 @@
   </main>
 
   <!-- Employee web WorkingTimes -->
+
+  <section class="display-wt-data" v-if="currentUser.role === 'user' || currentUser.role === 'admin'">
+      <h2> {{ currentUser.username }} Working Times:</h2>
+      <table class="WTs_table">
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="WTs_items" v-for="item in myWorkingTimesGraph" :key="item.id">
+            <td class="WTs_item">
+              <input
+                class="select-wt"
+                type="button"
+                :value="item.id"
+                @click="goWorkingTime"
+              />
+            </td>
+            <td class="WTs_item">{{ format_date(item.start) }}</td>
+            <td class="WTs_item">{{ format_date(item.end) }}</td>
+            <td class="WTs_item">{{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="bar-chart">
+        <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
+      </div>
+      
+    </section>
+
   
 </template>
 
@@ -120,13 +154,6 @@ export default {
 
   data() {
     return {
-      // currentUser: localStorage.getItem("currentUser")
-      //   ? JSON.parse(localStorage.getItem("currentUser"))
-      //   : {
-      //       email: "",
-      //       username: "",
-      //       id: 0,
-      //     },
       currentUser: this.store.user,
       workingTimes: {},
       currentUserId: "",
@@ -135,13 +162,11 @@ export default {
         StartDate: new Date().toLocaleString(),
         EndDate: new Date().toLocaleString(),
       },
-      isAddButtonSelected: false,
       isSubmitButtonSelected: false,
+      isAddButtonSelected: false,
 
 
       // Inplemented wtGraph to display working times in a chart
-
-
       wtGraph: {
           day: "",
           total: 0,
@@ -184,16 +209,17 @@ export default {
       noData: {
           text: 'Loading...'
       },
+      myWorkingTimes: {},
+      myWorkingTimesGraph: {
+          day: "",
+          total: 0,
+      },
   
     };
   },
   methods: {
     // get working times from user id
-    async getWorkingTimes() {
-      if (!this.currentUser.id) {
-        window.alert("Please select an employee");
-        return;
-      }
+    async getWorkingTimesByUserId() {
       const response = await axios.get(`/api/working_times/${this.userId}`)
       if (response.data.data.length > 0) {
         this.workingTimes = response.data.data;
@@ -218,19 +244,58 @@ export default {
       console.log(this.series, "series");
       this.isSubmitButtonSelected = true;
     },
+    // get working times from currentUser
+    async getWorkingTimes() {
+        const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
+        console.log(response.data.data, "response.data.data");
+        if (response.data.data.length > 0) {
+          this.myWorkingTimes = response.data.data;
+          this.myWorkingTimesGraph = this.myWorkingTimes.map((wt) => {
+            return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
+          })
+        } 
+        let formattedWtGraph = this.myWorkingTimesGraph.map(({day, total}) => {
+          return {
+            x: day,
+            y: total,
+          }
+        })
+        this.series =  [
+          {
+            name: "series-2",
+            data: formattedWtGraph,
+          },
+        ]
+      
+    },
   
     // Select one working time
     goWorkingTime(e) {
-      axios.get(`/api/working_times/${this.userId}`).then((response) => {
-        if (response.data.data.length > 0) {
-          this.workingTimes = response.data.data;
-          this.currentWorkingTimeId = e.target.value;
-          console.log(`current workingtime id : ${this.currentWorkingTimeId}`);
-          this.$router.push(
-            `/workings/${this.userId}/${this.currentWorkingTimeId}`
-          );
+      if (this.currentUser.role === "manager" || this.currentUser.role === "admin") {
+        axios
+          .get(`/api/working_times/${this.userId}`)
+          .then((response) => {
+          if (response.data.data.length > 0) {
+            this.workingTimes = response.data.data;
+            this.currentWorkingTimeId = e.target.value;
+            this.$router.push(
+              `/workings/${this.userId}/${this.currentWorkingTimeId}`
+            );
+          } 
+        });
+      } else {
+          axios
+          .get(`/api/working_times/${this.currentUser.id}`)
+          .then((response) => {
+            if (response.data.data.length > 0) {
+              this.workingTimes = response.data.data;
+              this.currentWorkingTimeId = e.target.value;
+              this.$router.push(
+                `/workings/${this.currentUser.id}/${this.currentWorkingTimeId}`
+              );
+            }
+          });
         }
-      });
     },
     // handle add working time button condition
     handleAddWorkingTime() {
@@ -274,6 +339,7 @@ export default {
   },
   mounted() {
     this.getWorkingTimes();
+    // this.getWorkingTimesByUserId();
   },
 };
 </script>

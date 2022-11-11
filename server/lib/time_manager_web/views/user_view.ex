@@ -20,8 +20,9 @@ defmodule TimeManagerWeb.UserView do
         if(Map.has_key?(user, :team_id),
           do: user.team_id,
           else: nil
-        )
-    }
+        ),
+        role: user.role,
+      }
   end
 
   def render("users_working_times.json", %{users: users}) do

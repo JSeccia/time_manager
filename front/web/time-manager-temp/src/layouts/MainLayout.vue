@@ -22,7 +22,6 @@
             <!-- test graph -->
             <q-breadcrumbs-el label="GraphTest" to="/graphtest" />
             <!-- test graph -->
-          <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="Admin" to="/admin" />
           
         </q-breadcrumbs>
         </q-toolbar>

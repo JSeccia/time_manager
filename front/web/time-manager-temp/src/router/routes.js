@@ -22,7 +22,7 @@ const routes = [
         path: "workings/:userId/:id", 
         component: WTPage,
       },
-      { path: "users", component: User },
+      { path: "users/:userId", component: User },
       { path: "signin", component: SignInPage},
       { path: "login", component: LoginPage},
       { path: "graphtest", component: GraphTestPage},
