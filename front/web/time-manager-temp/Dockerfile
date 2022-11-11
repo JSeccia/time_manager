@@ -4,9 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 COPY quasar.conf.js ./
 COPY . .
+RUN rm -rf node_modules
 RUN npm install
 RUN npm install -g @vue/cli
-RUN npm install -g @quasar/cli 
+RUN npm install -g @quasar/cli
 RUN quasar build
 
 # étape de production
