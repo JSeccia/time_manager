@@ -61,8 +61,6 @@
       <li>{{currentUser.username}}</li>
     </ul>
   </div>
-</section>
-
   <!-- date manipulate 
   <div>
     <h2 class="text-center mb-3">CLOCK</h2>
