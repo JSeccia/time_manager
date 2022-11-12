@@ -4,14 +4,11 @@
   <main v-if="currentUser.role === 'manager' || currentUser.role === 'admin'" class="main-workingtimes">
     <h1>Check working times</h1>
 
-    <ul :key="currentUser.id">
-      <li>{{ currentUser.id }}</li>
-      <li>{{ currentUser.username }}</li>
-    </ul>
+    
     <!-- Search Employee Id form -->
 
     <section class="search-wt-id">
-      <form @submit.prevent="getWorkingTimesByUserId">
+      <form @submit.prevent="getTeamWorkingTimesByUserId">
         <label for="get_user_working_times"></label>
         <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter employee id"
           ref="userIdInput" id="get_user_working_times" color="green-10">
@@ -72,34 +69,34 @@
   </main>
 
   <!-- Employee web WorkingTimes -->
-
-  <section class="display-wt-data" v-if="currentUser.role === 'user' || currentUser.role === 'admin'">
-    <h2> {{ currentUser.username }} Working Times:</h2>
-    <table class="WTs_table">
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="WTs_items" v-for="item in myWorkingTimesGraph" :key="item.id">
-          <td class="WTs_item">
-            <input class="select-wt" type="button" :value="item.id" @click="goWorkingTime" />
-          </td>
-          <td class="WTs_item">{{ format_date(item.start) }}</td>
-          <td class="WTs_item">{{ format_date(item.end) }}</td>
-          <td class="WTs_item">{{ item.total }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="bar-chart">
-      <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
+  <main class="main-workingtimes" v-if="currentUser.role === 'user' || currentUser.role === 'admin'">
+    <section class="display-wt-data" >
+      <h2> {{ upperCaseUsername }}'s working times:</h2>
+      <table class="WTs_table">
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="WTs_items" v-for="item in myWorkingTimesGraph" :key="item.id">
+            <td class="WTs_item">
+              <input class="select-wt" type="button" :value="item.id" @click="goWorkingTime" />
+            </td>
+            <td class="WTs_item">{{ format_date(item.start) }}</td>
+            <td class="WTs_item">{{ format_date(item.end) }}</td>
+            <td class="WTs_item">{{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <div class="TimeChart">
+        <TimeChart/>
     </div>
-
-  </section>
+  </main>
 
 
 </template>
@@ -109,10 +106,14 @@ import axios from "axios";
 import moment from "moment";
 import { calculateTotalWorkingTime } from "../utils/utils";
 import { useUserStore } from "src/stores/store-users";
+import TimeChart from "./TimeChart.vue";
 
 
 export default {
   name: "WorkingsComponent",
+  components: {
+    TimeChart,
+  },
   setup() {
     const store = useUserStore();
     return {
@@ -197,9 +198,16 @@ export default {
 
     };
   },
+  computed: {
+    upperCaseUsername() {
+      const username = this.currentUser.username;
+      const upperCaseUsername = username.charAt(0).toUpperCase() + username.slice(1);
+      return upperCaseUsername;
+    },
+  },
   methods: {
-    // get working times from user id
-    async getWorkingTimesByUserId() {
+    // get teams working times from user id
+    async getTeamWorkingTimesByUserId() {
       const response = await axios.get(`/api/working_times/${this.userId}`)
       if (response.data.data.length > 0) {
         this.workingTimes = response.data.data;
@@ -231,12 +239,44 @@ export default {
       console.log(this.series, "series");
       this.isSubmitButtonSelected = true;
     },
+
+    
+    //   if (response.data.data.length > 0) {
+    //     this.workingTimes = response.data.data;
+    //     this.currentUserId = this.$refs.userIdInput.value;
+    //     this.wtGraph = this.workingTimes.map((wt) => {
+    //       return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
+    //     })
+    //   }
+
+    //   let formattedWtGraph = this.wtGraph.map(({ day, total }) => {
+    //     return {
+    //       x: day,
+    //       y: total,
+    //       goals: [
+    //         {
+    //           name: 'Expected',
+    //           value: 7,
+    //         }
+    //       ],
+    //     }
+    //   })
+    //   this.series = [
+    //     {
+    //       name: "series-2",
+    //       data: formattedWtGraph,
+
+    //     },
+    //   ]
+    //   console.log(this.series, "series");
+    //   this.isSubmitButtonSelected = true;
+    // },
     // get working times from currentUser
     async getWorkingTimes() {
       const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
       console.log(response.data.data, "response.data.data");
       if (response.data.data.length > 0) {
-        this.myWorkingTimes = response.data.data;
+        this.myWorkingTimes = response.data.data.slice(Math.max(response.data.data.length - 10, 0));
         this.myWorkingTimesGraph = this.myWorkingTimes.map((wt) => {
           return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
         })
@@ -335,7 +375,7 @@ export default {
   },
   mounted() {
     this.getWorkingTimes();
-    // this.getWorkingTimesByUserId();
+    this.getTeamWorkingTimesByUserId();
   },
 };
 </script>
@@ -344,7 +384,9 @@ export default {
 .main-workingtimes {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100vw;
+  height: 100%;
 }
 
 .main-workingtimes h1 {
@@ -498,6 +540,15 @@ export default {
   cursor: pointer;
   padding: 10px 5px;
   margin: 10px 5px;
+}
+
+.TimeChart {
+  width: 80%;
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #create-form #create-submit:hover,

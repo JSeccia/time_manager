@@ -1,7 +1,7 @@
 <template>
   <main>
     <!-- Manager Web clocks page -->
-    <section v-if="currentUser.role === 'manager'" class="manager_clock">
+    <section v-if="currentUser.role === 'manager' || currentUser.role === 'admin'" class="manager_clock">
       <h1>Employees Clocks Trend</h1>
       <div class="search-employee-id">
         <form @submit.prevent="getAllClocksFromInput">
@@ -43,51 +43,35 @@
     <section class="user_clocks">
       <div v-if="currentUser.role === 'user'" class="clock">
         <div class="title_clocks2">
-          <h1>Welcome back {{ currentUser.username }}</h1>
+          <h1>Welcome back {{ upperCaseUsername }},</h1>
         </div>
-        <div class="clock-details">
-          <input class="input_btn_clocks" type="button" value="clock in" @click.prevent="postClock">
-          
-          
-          <table v-if="postClockSelected">
-          <thead>
-            <th>Clock Number</th>
-            <th>clock status</th>
-          </thead>
-          <tbody>
-            <tr v-for="clock in clocks" :key="clock.id">
-              <td>{{ clock.user }}</td>
-              <td>{{ clock.id }}</td>
-              <td>{{ clock.status }}</td>
-            </tr>
-          </tbody>
-        </table>
-          
+        <q-btn v-if="!postClockSelected" class="input_btn_clocks" type="button" label="clock in"
+          @click.prevent="postClock" push color="green 10" />
+        <q-btn v-else class="input_btn_clocks" type="button" label="clock out" @click.prevent="postClock" push
+          color="green 10" />
+        <div v-if="postClock" class="display-clocks">
+
+
+
+          <table class="users-table">
+            <thead>
+              <th>Clock Number</th>
+              <th>Clock Status</th>
+              <th>Day Time</th>
+            </thead>
+            <tbody>
+              <tr class="U_items" v-for="clock in clocks" :key="clock.id">
+                <td>{{ clock.id }}</td>
+                <td>{{ clock.status }}</td>
+                <td>{{ format_date(clock.time) }}</td>
+              </tr>
+            </tbody>
+          </table>
+
         </div>
       </div>
     </section>
   </main>
-  <!-- date manipulate 
-  <div>
-    <h2 class="text-center mb-3">CLOCK</h2>
-    <ul class="list-group">
-      <li class="list-group-item" v-show="timestamp">
-        <strong>Timestamp:</strong> {{ timestamp }}
-      </li>
-      <li class="list-group-item" v-show="date">
-        <strong>Date:</strong> {{ date }}
-      </li>
-      <li class="list-group-item" v-show="time">
-        <strong>Time:</strong> {{ time }}
-      </li>
-      <li class="list-group-item" v-show="year">
-        <strong>Current Year:</strong> {{ year }}
-      </li>
-      <li class="list-group-item" v-show="fulldatetime">
-        <strong>Full Date:</strong> {{ fulldatetime }}
-      </li>
-    </ul>
-  </div>-->
 </template>
 
 <script>
@@ -119,25 +103,48 @@ export default {
       employeeClocks: {},
       employeeToGetClocks: "",
       isGetAllClocksFromInputButtonSelected: false,
+      clockInBtn: false,
+
 
     }
+  },
+  computed: {
+    upperCaseUsername() {
+      const username = this.currentUser.username;
+      const upperCaseUsername = username.charAt(0).toUpperCase() + username.slice(1);
+      return upperCaseUsername;
+    },
   },
   methods: {
     // allow current user to clock in
     postClock() {
-      axios.post(`/api/clocks/${this.currentUser.username}`);
+      axios.post(`/api/clocks/${this.currentUser.username}`)
+        .then((response) => {
+          if(response.data) {
+            this.postClockSelected = true;
+            this.clocks = response.data;
+            console.log("1", this.clocks);
+          } else {
+            this.postClockSelected = false;
+            this.clocks = response.data;
+            console.log("2nd if statement", this.clocks);
+
+          } 
+          
+        }) 
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // get current user clock times
     getClocks() {
-      
+
       axios.get(`/api/clocks/${this.currentUser.id}`).then((response) => {
         console.log(response.data.data.length, "length");
         if (response.data.data.length > 0) {
           this.clocks = response.data.data;
           this.postClockSelected = true;
-        } else {
-          window.alert("No employee or clocks times found");
-        }
+        } 
       });
     },
     // get all clock times from one employee with its id
@@ -167,22 +174,8 @@ export default {
       window.location.reload();
     },
 
+
     // manipulate date
-    printDate: function () {
-      return new Date().toLocaleDateString();
-    },
-    printTime: function () {
-      return new Date().toLocaleTimeString();
-    },
-    printYear: function () {
-      return new Date().getFullYear();
-    },
-    printTimestamp: function () {
-      return Date.now();
-    },
-    printFullDate: function () {
-      return new Date();
-    },
     format_hours(value) {
       return moment(String(value)).format("hh:mm");
     },
@@ -191,17 +184,12 @@ export default {
     },
     format_date(value) {
       if (value) {
-        return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");
+        return moment(value).local().format("DD/MM/YYYY HH:mm:ss");
       }
     },
   },
 
   mounted: function () {
-    this.date = this.printDate();
-    this.time = this.printTime();
-    this.timestamp = this.printTimestamp();
-    this.year = this.printYear();
-    this.fulldatetime = this.printFullDate();
     this.getClocks();
   },
 };
@@ -227,7 +215,8 @@ tbody tr {
   margin: 0 50px;
 }
 
-.manager_clocks, .user_clocks {
+.manager_clocks,
+.user_clocks {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -240,7 +229,7 @@ tbody tr {
   flex-direction: column;
   align-items: center;
   height: 100%;
-  width: 100%;
+  width: 40%;
 }
 
 .title_clocks2 {
@@ -250,10 +239,25 @@ tbody tr {
   width: 100%;
 }
 
-.manager_clocks h1, .user_clocks h1 {
+.manager_clocks h1,
+.user_clocks h1 {
+  font-size: 25px;
   text-align: center;
-  border-bottom: 2px solid black;
-  height: 25%;
+  font-weight: bold;
+  height: 12%;
+  width: 100%;
+}
+
+.display-clocks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 5%;
+  width: 100%;
+}
+
+.display-clocks .users-table thead th {
+  color: #fff;
 }
 
 
@@ -267,8 +271,6 @@ tbody tr {
 .input_btn_clocks {
   margin: 3%;
   height: 10%;
-  width: 100%;
+  width: 40%;
 }
-
-
 </style>
