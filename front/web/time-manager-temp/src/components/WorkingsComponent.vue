@@ -4,33 +4,22 @@
   <main v-if="currentUser.role === 'manager' || currentUser.role === 'admin'" class="main-workingtimes">
     <h1>Check working times</h1>
 
-    <ul :key="currentUser.id">
-      <li>{{ currentUser.id }}</li>
-      <li>{{ currentUser.username }}</li>
-    </ul>
+    
     <!-- Search Employee Id form -->
 
     <section class="search-wt-id">
-      <form @submit.prevent="getWorkingTimesByUserId">
-        <label
-          for="get_user_working_times"
-        ></label>
-        <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter employee id" ref="userIdInput" id="get_user_working_times"
-            color="green-10" >
+      <form @submit.prevent="getTeamWorkingTimesByUserId">
+        <label for="get_user_working_times"></label>
+        <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter employee id"
+          ref="userIdInput" id="get_user_working_times" color="green-10">
         </q-input>
         <q-btn id="add-button" type="submit" class="search_wt_btn" push color="green-10" label="Get working times" />
 
       </form>
-      
+
       <!-- add working times button -->
-      <q-btn
-        href="#create-form"
-        id="add-button"
-        type="button"
-        label="Add working times"
-        push color="green-10"
-        @click="handleAddWorkingTime"
-      />
+      <q-btn href="#create-form" id="add-button" type="button" label="Add working times" push color="green-10"
+        @click="handleAddWorkingTime" />
     </section>
 
     <!-- Display Employee's Working Times from its ID -->
@@ -49,12 +38,7 @@
         <tbody>
           <tr class="WTs_items" v-for="item in wtGraph" :key="item.id">
             <td class="WTs_item">
-              <input
-                class="select-wt"
-                type="button"
-                :value="item.id"
-                @click="goWorkingTime"
-              />
+              <input class="select-wt" type="button" :value="item.id" @click="goWorkingTime" />
             </td>
             <td class="WTs_item">{{ format_date(item.start) }}</td>
             <td class="WTs_item">{{ format_date(item.end) }}</td>
@@ -63,33 +47,19 @@
         </tbody>
       </table>
       <div class="bar-chart">
-          <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
+        <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
       </div>
     </section>
     <!-- Create form -->
 
-    <form
-      id="create-form"
-      v-if="isAddButtonSelected"
-      @submit.prevent="createWorkingTime"
-    >
+    <form id="create-form" v-if="isAddButtonSelected" @submit.prevent="createWorkingTime">
       <fieldset>
         <h2 class="fs-title">Add working times</h2>
         <label for="start_date_input">Start Time</label>
-        <input
-          type="datetime-local"
-          v-model="StartDate"
-          id="start_date_input"
-          name="start_date_input"
-        />
+        <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input" />
         <br />
         <label for="end_date_input">End Time</label>
-        <input
-          type="datetime-local"
-          v-model="EndDate"
-          id="end_date_input"
-          name="end_date_input"
-        />
+        <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input" />
         <br />
         <q-btn id="create-submit" type="submit" class="create_wt_btn" push color="green-10" label="create" />
       </fieldset>
@@ -99,9 +69,9 @@
   </main>
 
   <!-- Employee web WorkingTimes -->
-
-  <section class="display-wt-data" v-if="currentUser.role === 'user' || currentUser.role === 'admin'">
-      <h2> {{ currentUser.username }} Working Times:</h2>
+  <main class="main-workingtimes" v-if="currentUser.role === 'user' || currentUser.role === 'admin'">
+    <section class="display-wt-data" >
+      <h2> {{ upperCaseUsername }}'s working times:</h2>
       <table class="WTs_table">
         <thead>
           <tr>
@@ -114,12 +84,7 @@
         <tbody>
           <tr class="WTs_items" v-for="item in myWorkingTimesGraph" :key="item.id">
             <td class="WTs_item">
-              <input
-                class="select-wt"
-                type="button"
-                :value="item.id"
-                @click="goWorkingTime"
-              />
+              <input class="select-wt" type="button" :value="item.id" @click="goWorkingTime" />
             </td>
             <td class="WTs_item">{{ format_date(item.start) }}</td>
             <td class="WTs_item">{{ format_date(item.end) }}</td>
@@ -127,13 +92,13 @@
           </tr>
         </tbody>
       </table>
-      <div class="bar-chart">
-        <apexchart width="600" type="bar" :options="options" :series="series"></apexchart>
-      </div>
-      
     </section>
+    <div class="TimeChart">
+        <TimeChart/>
+    </div>
+  </main>
 
-  
+
 </template>
 
 <script>
@@ -141,10 +106,14 @@ import axios from "axios";
 import moment from "moment";
 import { calculateTotalWorkingTime } from "../utils/utils";
 import { useUserStore } from "src/stores/store-users";
+import TimeChart from "./TimeChart.vue";
 
 
 export default {
   name: "WorkingsComponent",
+  components: {
+    TimeChart,
+  },
   setup() {
     const store = useUserStore();
     return {
@@ -168,58 +137,77 @@ export default {
 
       // Inplemented wtGraph to display working times in a chart
       wtGraph: {
-          day: "",
-          total: 0,
+        day: "",
+        total: 0,
       },
       options: {
-          chart: {
-              id: 'barchart-example'
+        chart: {
+          id: 'barchart-example'
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '50%',
+            endingShape: 'rounded'
           },
-          plotOptions: {
-              bar: {
-                  columnWidth: '50%',
-                  endingShape: 'rounded'
-              },
-          },
+        },
+        title: {
+          text: 'Working times by date',
+          align: 'left'
+        },
+        fill: {
+          colors: ['#4CAF50']
+        },
+        yaxis: {
+          min: 0,
+          max: 24,
           title: {
-              text: 'Working times by date',
-              align: 'left'
+            text: 'Working time (hours)'
           },
-          fill: {
-              colors: ['#4CAF50']
-          },
-          yaxis: {
-              min: 0,
-              max: 24,
-              title: {
-                  text: 'Working time (hours)'
-              },
-          },
-          xaxis: {
-              categories: [],
-              title: {
-                  text: 'working time (date)'
-              }  
+        },
+        xaxis: {
+          categories: [],
+          title: {
+            text: 'working time (date)'
           }
+        },
+        dataLabels: {
+          formatter: function (val, opt) {
+            const goals =
+              opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
+                .goals
+
+            if (goals && goals.length) {
+              return `${val} / ${goals[0].value}`
+            }
+            return val
+          }
+        },
       },
       series: [{
-          name: '1',
-          data: []
+        name: '',
+        data: []
       }],
       noData: {
-          text: 'Loading...'
+        text: 'Loading...'
       },
       myWorkingTimes: {},
       myWorkingTimesGraph: {
-          day: "",
-          total: 0,
+        day: "",
+        total: 0,
       },
-  
+
     };
   },
+  computed: {
+    upperCaseUsername() {
+      const username = this.currentUser.username;
+      const upperCaseUsername = username.charAt(0).toUpperCase() + username.slice(1);
+      return upperCaseUsername;
+    },
+  },
   methods: {
-    // get working times from user id
-    async getWorkingTimesByUserId() {
+    // get teams working times from user id
+    async getTeamWorkingTimesByUserId() {
       const response = await axios.get(`/api/working_times/${this.userId}`)
       if (response.data.data.length > 0) {
         this.workingTimes = response.data.data;
@@ -227,64 +215,112 @@ export default {
         this.wtGraph = this.workingTimes.map((wt) => {
           return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
         })
-      } 
+      }
 
-      let formattedWtGraph = this.wtGraph.map(({day, total}) => {
+      let formattedWtGraph = this.wtGraph.map(({ day, total }) => {
         return {
           x: day,
           y: total,
+          goals: [
+            {
+              name: 'Expected',
+              value: 7,
+            }
+          ],
         }
       })
-      this.series =  [
+      this.series = [
         {
           name: "series-2",
           data: formattedWtGraph,
+
         },
       ]
       console.log(this.series, "series");
       this.isSubmitButtonSelected = true;
     },
+
+    
+    //   if (response.data.data.length > 0) {
+    //     this.workingTimes = response.data.data;
+    //     this.currentUserId = this.$refs.userIdInput.value;
+    //     this.wtGraph = this.workingTimes.map((wt) => {
+    //       return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
+    //     })
+    //   }
+
+    //   let formattedWtGraph = this.wtGraph.map(({ day, total }) => {
+    //     return {
+    //       x: day,
+    //       y: total,
+    //       goals: [
+    //         {
+    //           name: 'Expected',
+    //           value: 7,
+    //         }
+    //       ],
+    //     }
+    //   })
+    //   this.series = [
+    //     {
+    //       name: "series-2",
+    //       data: formattedWtGraph,
+
+    //     },
+    //   ]
+    //   console.log(this.series, "series");
+    //   this.isSubmitButtonSelected = true;
+    // },
     // get working times from currentUser
     async getWorkingTimes() {
-        const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
-        console.log(response.data.data, "response.data.data");
-        if (response.data.data.length > 0) {
-          this.myWorkingTimes = response.data.data;
-          this.myWorkingTimesGraph = this.myWorkingTimes.map((wt) => {
-            return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
-          })
-        } 
-        let formattedWtGraph = this.myWorkingTimesGraph.map(({day, total}) => {
-          return {
-            x: day,
-            y: total,
-          }
+      const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
+      console.log(response.data.data, "response.data.data");
+      if (response.data.data.length > 0) {
+        this.myWorkingTimes = response.data.data.slice(Math.max(response.data.data.length - 10, 0));
+        this.myWorkingTimesGraph = this.myWorkingTimes.map((wt) => {
+          return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
         })
-        this.series =  [
-          {
-            name: "series-2",
-            data: formattedWtGraph,
-          },
-        ]
-      
+      }
+      let formattedWtGraph = this.myWorkingTimesGraph.map(({ day, total }) => {
+        return {
+          x: day,
+          y: total,
+          goals: [
+            {
+              name: 'Expected',
+              value: 7,
+              strokeHeight: 4,  
+              stroke: '#00D8FF',            
+
+            }
+          ],
+        }
+      })
+      this.series = [
+        {
+          name: "series-2",
+          data: formattedWtGraph,
+        },
+      ]
+
     },
-  
+
     // Select one working time
     goWorkingTime(e) {
       if (this.currentUser.role === "manager" || this.currentUser.role === "admin") {
         axios
           .get(`/api/working_times/${this.userId}`)
           .then((response) => {
-          if (response.data.data.length > 0) {
-            this.workingTimes = response.data.data;
-            this.currentWorkingTimeId = e.target.value;
-            this.$router.push(
-              `/workings/${this.userId}/${this.currentWorkingTimeId}`
-            );
-          } 
-        });
+            if (response.data.data.length > 0) {
+              this.workingTimes = response.data.data;
+              this.currentWorkingTimeId = e.target.value;
+              this.$router.push(
+                `/workings/${this.userId}/${this.currentWorkingTimeId}`
+              );
+            }
+          });
       } else {
-          axios
+        axios
           .get(`/api/working_times/${this.currentUser.id}`)
           .then((response) => {
             if (response.data.data.length > 0) {
@@ -295,7 +331,7 @@ export default {
               );
             }
           });
-        }
+      }
     },
     // handle add working time button condition
     handleAddWorkingTime() {
@@ -339,7 +375,7 @@ export default {
   },
   mounted() {
     this.getWorkingTimes();
-    // this.getWorkingTimesByUserId();
+    this.getTeamWorkingTimesByUserId();
   },
 };
 </script>
@@ -348,7 +384,9 @@ export default {
 .main-workingtimes {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100vw;
+  height: 100%;
 }
 
 .main-workingtimes h1 {
@@ -357,6 +395,7 @@ export default {
   border-bottom: 2px solid black;
   height: 10%;
 }
+
 /* search section */
 .search-wt-id {
   display: flex;
@@ -386,7 +425,7 @@ export default {
 }
 
 .search-wt-id form .search_wt_input .q-field__control {
- height: 40px;
+  height: 40px;
 }
 
 .search-wt-id form .search_wt_input .q-field__control .q-field__native {
@@ -430,6 +469,7 @@ export default {
   font-weight: 700;
   text-align: center;
 }
+
 .WTs_table th {
   padding: 4px;
   text-align: center;
@@ -446,6 +486,7 @@ export default {
   border: none;
   background-color: transparent;
 }
+
 .select-wt:hover {
   color: #4caf50;
   border-color: #4caf50;
@@ -460,6 +501,7 @@ export default {
   text-align: center;
   position: relative;
 }
+
 #create-form h2 {
   font-size: 20px;
   font-weight: bold;
@@ -487,6 +529,7 @@ export default {
   color: #2c3e50;
   font-size: 13px;
 }
+
 #create-form #create-submit {
   width: 100px;
   background: #27ae60;
@@ -498,6 +541,16 @@ export default {
   padding: 10px 5px;
   margin: 10px 5px;
 }
+
+.TimeChart {
+  width: 80%;
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 #create-form #create-submit:hover,
 #create-form #create-submit:focus {
   box-shadow: 0 0 0 2px white;

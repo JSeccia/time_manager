@@ -1,16 +1,16 @@
 <template>
   <main>
-
     <!-- Manager Web clocks page -->
-    <section v-if="currentUser.role === 'manager'" class="section_clocks">
-      <h1 class="title_clocks">Employees Clocks Trend</h1>
+    <section v-if="currentUser.role === 'manager' || currentUser.role === 'admin'" class="manager_clock">
+      <h1>Employees Clocks Trend</h1>
       <div class="search-employee-id">
         <form @submit.prevent="getAllClocksFromInput">
           <q-input rounded outlined v-model="userId" class="input_clocks" label="Employee ID" ref="userClockInput"
             color="green-10">
           </q-input>
-          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks" @click="handleGetAllClocksFromInput" />
-         
+          <q-btn class="input_btn_clocks" push color="green-10" label="Get employees last Clocks"
+            @click="handleGetAllClocksFromInput" />
+
         </form>
       </div>
 
@@ -29,7 +29,7 @@
               <td>{{ clock.user }}</td>
               <td>{{ clock.id }}</td>
               <td>{{ clock.status }}</td>
-              
+
             </tr>
           </tbody>
         </table>
@@ -38,50 +38,40 @@
         </button>
       </div>
     </section>
-  </main>
 
-  <!-- Employee web clocks page -->
-  <div v-if="currentUser.role === 'user'" class="clock">
+    <!-- Employee web clocks page -->
+    <section class="user_clocks">
+      <div v-if="currentUser.role === 'user'" class="clock">
+        <div class="title_clocks2">
+          <h1>Welcome back {{ upperCaseUsername }},</h1>
+        </div>
+        <q-btn v-if="!postClockSelected" class="input_btn_clocks" type="button" label="clock in"
+          @click.prevent="postClock" push color="green 10" />
+        <q-btn v-else class="input_btn_clocks" type="button" label="clock out" @click.prevent="postClock" push
+          color="green 10" />
+        <div v-if="postClock" class="display-clocks">
 
 
-    <div class="q-pa-md">
-      <div class="q-gutter-md">
-        <q-time v-model="clockIn" with-seconds />
+
+          <table class="users-table">
+            <thead>
+              <th>Clock Number</th>
+              <th>Clock Status</th>
+              <th>Day Time</th>
+            </thead>
+            <tbody>
+              <tr class="U_items" v-for="clock in clocks" :key="clock.id">
+                <td>{{ clock.id }}</td>
+                <td>{{ clock.status }}</td>
+                <td>{{ format_date(clock.time) }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
       </div>
-    </div> -->
-
-
-    <h1 class="title_clocks2">Welcome back, {{currentUser.username}}</h1>
-    <input class="input_btn_clocks" type="button" value="click to clock in" @click.prevent="postClock">
-
-    <button class="input_btn_clocks" @click="getClocks">
-        See your clock details:
-    </button>
-    <ul>
-      <li>{{currentUser.username}}</li>
-    </ul>
-  </div>
-  <!-- date manipulate 
-  <div>
-    <h2 class="text-center mb-3">CLOCK</h2>
-    <ul class="list-group">
-      <li class="list-group-item" v-show="timestamp">
-        <strong>Timestamp:</strong> {{ timestamp }}
-      </li>
-      <li class="list-group-item" v-show="date">
-        <strong>Date:</strong> {{ date }}
-      </li>
-      <li class="list-group-item" v-show="time">
-        <strong>Time:</strong> {{ time }}
-      </li>
-      <li class="list-group-item" v-show="year">
-        <strong>Current Year:</strong> {{ year }}
-      </li>
-      <li class="list-group-item" v-show="fulldatetime">
-        <strong>Full Date:</strong> {{ fulldatetime }}
-      </li>
-    </ul>
-  </div>-->
+    </section>
+  </main>
 </template>
 
 <script>
@@ -102,37 +92,59 @@ export default {
   data() {
     return {
       currentUser: this.store.user,
-    date: "",
-    time: "",
-    year: "",
-    timestamp: "",
-    fulldatetime: "",
-    // manager get all clocks from one employee id
-    employeeClocks: {},
-    employeeToGetClocks: "",
-    isGetAllClocksFromInputButtonSelected: false,
+      date: "",
+      time: "",
+      year: "",
+      timestamp: "",
+      fulldatetime: "",
+      clocks: [],
+      postClockSelected: false,
+      // manager get all clocks from one employee id
+      employeeClocks: {},
+      employeeToGetClocks: "",
+      isGetAllClocksFromInputButtonSelected: false,
+      clockInBtn: false,
+
+
     }
+  },
+  computed: {
+    upperCaseUsername() {
+      const username = this.currentUser.username;
+      const upperCaseUsername = username.charAt(0).toUpperCase() + username.slice(1);
+      return upperCaseUsername;
+    },
   },
   methods: {
     // allow current user to clock in
     postClock() {
-      axios.post(`/api/clocks/${this.currentUser.username}`);
+      axios.post(`/api/clocks/${this.currentUser.username}`)
+        .then((response) => {
+          if(response.data) {
+            this.postClockSelected = true;
+            this.clocks = response.data;
+            console.log("1", this.clocks);
+          } else {
+            this.postClockSelected = false;
+            this.clocks = response.data;
+            console.log("2nd if statement", this.clocks);
+
+          } 
+          
+        }) 
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // get current user clock times
-    getClocks(event) {
-      event.preventDefault();
+    getClocks() {
 
-      if (this.userId === "") {
-        window.alert("Please enter an employee id");
-        return;
-      }
       axios.get(`/api/clocks/${this.currentUser.id}`).then((response) => {
         console.log(response.data.data.length, "length");
         if (response.data.data.length > 0) {
           this.clocks = response.data.data;
-        } else {
-          window.alert("No employee or clocks times found");
-        }
+          this.postClockSelected = true;
+        } 
       });
     },
     // get all clock times from one employee with its id
@@ -162,22 +174,8 @@ export default {
       window.location.reload();
     },
 
+
     // manipulate date
-    printDate: function () {
-      return new Date().toLocaleDateString();
-    },
-    printTime: function () {
-      return new Date().toLocaleTimeString();
-    },
-    printYear: function () {
-      return new Date().getFullYear();
-    },
-    printTimestamp: function () {
-      return Date.now();
-    },
-    printFullDate: function () {
-      return new Date();
-    },
     format_hours(value) {
       return moment(String(value)).format("hh:mm");
     },
@@ -186,17 +184,13 @@ export default {
     },
     format_date(value) {
       if (value) {
-        return moment.utc(value).local().format("DD/MM/YYYY HH:mm:ss");
+        return moment(value).local().format("DD/MM/YYYY HH:mm:ss");
       }
     },
   },
 
   mounted: function () {
-    this.date = this.printDate();
-    this.time = this.printTime();
-    this.timestamp = this.printTimestamp();
-    this.year = this.printYear();
-    this.fulldatetime = this.printFullDate();
+    this.getClocks();
   },
 };
 </script>
@@ -221,20 +215,49 @@ tbody tr {
   margin: 0 50px;
 }
 
-.section_clocks {
+.manager_clocks,
+.user_clocks {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-  width: 85%;
-  border: 1px solid red;
+  height: 100%;
+  width: 100%;
 }
 
-.title_clocks {
+.clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 40%;
+}
+
+.title_clocks2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.manager_clocks h1,
+.user_clocks h1 {
   font-size: 25px;
+  text-align: center;
   font-weight: bold;
-  border-bottom: 2px solid black;
-  height: 10%;
+  height: 12%;
+  width: 100%;
+}
+
+.display-clocks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 5%;
+  width: 100%;
+}
+
+.display-clocks .users-table thead th {
+  color: #fff;
 }
 
 
@@ -248,26 +271,6 @@ tbody tr {
 .input_btn_clocks {
   margin: 3%;
   height: 10%;
-  width: 100%;
-}
-
-
-
-
-.section_clocks2 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  border: 1px solid red;
-}
-
-.title_clocks2 {
-  font-size: 21px;
-  font-weight: bold;
-  border-bottom: 2px solid black;
-  height: 10%;
-
+  width: 40%;
 }
 </style>

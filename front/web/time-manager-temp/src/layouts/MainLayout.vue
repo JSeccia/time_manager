@@ -14,14 +14,15 @@
 
         <q-toolbar inset v-if="currentUser.id" >
           <q-breadcrumbs active-color="white" style="font-size: 16px">
-            <q-breadcrumbs-el label="Profile" icon="home" to="/profile" />
-            <q-breadcrumbs-el label="Clocks" to="/clocks" />
-            <q-breadcrumbs-el label="Charts" to="/charts" />
-            <q-breadcrumbs-el label="Working times" to="/workingtimes" />
-            <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="User" to="/users" />
-            <!-- test graph -->
-            <q-breadcrumbs-el label="GraphTest" to="/graphtest" />
-            <!-- test graph -->
+            <q-breadcrumbs-el v-if="currentUser.role != 'admin'" label="Profile" icon="home" to="/profile" />
+            <q-breadcrumbs-el v-if="currentUser.role === 'manager' || currentUser.role === 'user'" label="Clocks" to="/clocks" />
+            <q-breadcrumbs-el v-if="currentUser.role === 'manager'" label="Charts" to="/charts" />
+            <q-breadcrumbs-el v-if="currentUser.role != 'admin'" label="Working times" to="/workingtimes" />
+            <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="Teams" to="/teams" />
+            <q-breadcrumbs-el v-if="currentUser.role === 'manager'" label="Team" to=teams />
+
+            <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="Users" to="/users" />
+            
           
         </q-breadcrumbs>
         </q-toolbar>

@@ -3,11 +3,12 @@ import ChartsPages from "../pages/ChartsPage.vue";
 import WorkingPage from "../pages/WorkingsPage.vue";
 import WTPage from "../pages/WTPage.vue";
 import ProfilePage from "../pages/ProfilePage.vue";
-import User from "../pages/User.vue";
 import LoginPage from "../pages/LoginPage.vue";
-import SignInPage from "../pages/SignInPage.vue";
-import GraphTestPage from "../pages/GraphTestPage.vue";
 import AdminPage from "../pages/AdminPage.vue";
+import AdminUserPage from "../pages/UsersPage.vue";
+import UserPage from "../pages/UserPage.vue";
+import TeamsPage from "../pages/TeamsPage.vue";
+import TeamPage from "../pages/TeamPage.vue";
 
 const routes = [
   {
@@ -22,10 +23,11 @@ const routes = [
         path: "workings/:userId/:id", 
         component: WTPage,
       },
-      { path: "users/:userId", component: User },
-      { path: "signin", component: SignInPage},
+      { path: "users", component: AdminUserPage },
+      { path: "users/:userId", component: UserPage },
       { path: "login", component: LoginPage},
-      { path: "graphtest", component: GraphTestPage},
+      { path: "teams", component: TeamsPage},
+      { path: "teams/:teamId", component: TeamPage},
 
       { path: "admin", component: AdminPage, meta: {requiresAuth: true},
     },

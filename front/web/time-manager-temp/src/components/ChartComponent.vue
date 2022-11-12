@@ -1,135 +1,59 @@
 <template>
   <main class="main_charts">
-    <div class="title_chart">
-      <h1>CHART ACTIVITY</h1>
-    </div>
+      <h1>Chart Activity</h1>
 
     <div class="Global_charts">
-      <div class="WT_charts">
-        <apexchart
-          type="pie"
-          :options="Optionschart"
-          :series="donnee"
-        ></apexchart>
-      </div>
-      <div class="hours_charts">
-        <apexchart
-          type="bar"
-          height="350"
-          :options="chartOptions"
-          :series="series"
-        ></apexchart>
+      <PieComponent />
+      <div class="bar_chart">
+        <BarComponent />
       </div>
     </div>
 
     <div class="btn_charts">
-      <q-btn class="WT_button" push color="green-10" label="Chart Times" />
-      <q-btn class="Hours_button" push color="green-10" label="Chart Hours" />
+      <q-btn class="WT_button" push color="green-10" label="Employees Working times" @click="wtButton" />
+      <q-btn class="Hours_button" push color="green-10" label="Employee last clock" @click="clockButton" />
     </div>
   </main>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-//import apexcharts from 'src/boot/apexcharts';
+import axios from "axios";
+import { useUserStore } from "src/stores/store-users";
+import { calculateTotalWorkingTimeinMinutes } from "src/utils/utils";
+import moment from "moment";
+import PieComponent from "./PieComponent.vue";
+import BarComponent from "./BarComponent.vue";
 
 export default defineComponent({
   name: "ChartComponent",
+  components: {
+    PieComponent,
+    BarComponent,
+  },
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    }
+  },
   data() {
     return {
-      series: [
-        {
-          name: "Hours Worked",
-          data: [126, 85, 111, 148, 127, 135, 91, 144, 94],
-        },
-        {
-          name: "Working Hours",
-          data: [150, 150, 150, 150, 150, 150, 150, 150, 150],
-        },
-      ],
-      chartOptions: {
-        chart: {
-          type: "bar",
-          height: 350,
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "55%",
-            endingShape: "rounded",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ["transparent"],
-        },
-        xaxis: {
-          categories: [
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-          ],
-        },
-        yaxis: {
-          title: {
-            text: "h (hours)",
-          },
-        },
-        fill: {
-          opacity: 1,
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return "H " + val + " Hours worked";
-            },
-          },
-        },
-      },
-      donnee: [25, 15, 44, 55, 41],
-      Optionschart: {
-        chart: {
-          width: "100%",
-          type: "pie",
-        },
-        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        theme: {
-          monochrome: {
-            enabled: true,
-          },
-        },
-        plotOptions: {
-          pie: {
-            dataLabels: {
-              offset: -5,
-            },
-          },
-        },
-        title: {
-          text: "Taux de présence par jours de travail",
-        },
-        dataLabels: {
-          formatter(val, opts) {
-            const name = opts.w.globals.labels[opts.seriesIndex];
-            return [name, val.toFixed(1) + "%"];
-          },
-        },
-        legend: {
-          show: false,
-        },
-      },
+      currentUser: this.store.user,
     };
   },
+  methods: {
+ 
+    wtButton() {
+      console.log("wtButton");
+      this.$router.push("/workingtimes");
+    },
+    clockButton() {
+      console.log("clockButton");
+      this.$router.push("/clocks");
+    },
+  },
+ 
 });
 </script>
 
@@ -141,21 +65,14 @@ export default defineComponent({
   justify-content: space-between;
   height: 100vh;
   width: 100%;
-  border: 1px solid black;
 }
 
-.title_chart {
-  width: 70%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.title_chart h1 {
+.main_charts h1 {
   font-size: 25px;
+  text-align: center;
   font-weight: bold;
-  border-bottom: 2px solid black;
+  height: 12%;
+  width: 60%;
 }
 
 .Global_charts {
@@ -169,29 +86,53 @@ export default defineComponent({
   position: relative;
 }
 
-.WT_charts {
+.WT_charts, .bar_chart {
   width: 50%;
-  height: 85%;
+  height: 80%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: #9ae691;
   box-shadow: 0 0 0 2px white;
   border-radius: 8px;
-  margin: 1%;
+  margin: 0 1%;
 }
 
-.hours_charts {
-  width: 50%;
-  height: 85%;
+.bar_chart {
   display: flex;
+  flex-direction: column;
+}
+
+.WT_charts .title_WT {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #9ae691;
-  box-shadow: 0 0 0 2px white;
-  border-radius: 8px;
-  margin: 1%;
 }
+
+.WT_charts .title_WT h2, .bar_chart h2 {
+  font-size: 26px;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+.WT_charts .vue-apexcharts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 50%;
+  width: 50%;
+}
+
+.WT_charts .vue-apexcharts .apexcharts-canvas .apexcharts-inner .apexcharts-text {
+  fill: #dce4e8;
+  font-weight: normal;
+}
+
 
 .btn_charts {
   width: 100%;
@@ -204,7 +145,7 @@ export default defineComponent({
 
 .btn_charts .WT_button,
 .btn_charts .Hours_button {
-  width: 15%;
+  width: 25%;
   height: 15%;
   margin: 4%;
 }

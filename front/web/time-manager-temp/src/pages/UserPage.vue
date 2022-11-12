@@ -1,24 +1,20 @@
 <template>
     <div>
-        <SignInComponent />
+        <UserComponent />
     </div>
 </template>
-
-
-
-
 
 
 <script>
 
 import { defineComponent } from 'vue';
-import SignInComponent from 'src/components/SignInComponent.vue';
+import UserComponent from 'src/components/UserComponent.vue';
 
 export default defineComponent({
-    name: 'SignInPage',
+    name: 'UserPage',
 
     components: {
-        SignInComponent,
+        UserComponent,
     },
 });
 
