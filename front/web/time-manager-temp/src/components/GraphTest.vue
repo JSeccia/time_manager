@@ -1,14 +1,15 @@
-
-
-
 <template>
+
+
     <div class="bar-chart">
         <apexchart width=700 height=350 type="bar" :options="bar1ChartOptions" :series="bar1Series"></apexchart>
     </div>
-    <!-- <div id="scatter">
-        <apexchart type="scatter" :options="scatterChartOptions" :series="scatterSeries"></apexchart>
-    </div>
-    -->
+
+
+    <q-btn label="Week" @click="handleWeek" />
+    <q-btn label="Month" @click="handleMonth" />
+    <q-btn label="Year" @click="handleYear" />
+
     <div class="bar-chart">
         <apexchart width=700 height=350 type="bar" :options="bar2ChartOptions" :series="bar2Series"></apexchart>
     </div>
@@ -37,7 +38,7 @@ export default {
                 {
                     name: 'Current Hours',
                     data: []
-                }
+                },
             ],
             bar1ChartOptions: {
                 chart: {
@@ -46,10 +47,10 @@ export default {
 
                 plotOptions: {
                     bar: {
-                        horizontal: true,
+                        horizontal: false,
+
                     }
                 },
-                colors: ['#00E396'],
                 dataLabels: {
                     formatter: function (val, opt) {
                         const goals =
@@ -62,43 +63,35 @@ export default {
                         return val
                     }
                 },
-                legend: {
-                    show: true,
-                    showForSingleSeries: true,
-                    customLegendItems: ['Current Hours', 'Expected'],
-                    markers: {
-                        fillColors: ['#00E396', '#775DD0']
+                fill: {
+                },
+
+
+            },
+            legend: {
+                show: true,
+                showForSingleSeries: true,
+                customLegendItems: ['Current Hours', 'Average Hours'],
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function (y) {
+                        if (typeof y !== 'undefined') {
+                            return y.toFixed(0) + ' hours'
+                        }
+                        return y
                     }
                 }
-            },
-            // scatter chart test
-            // userClocksGraph: {
-            // },
-            
-            scatterSeries: [
-                {
-                    name: "SAMPLE A",
-                    data: [],
-                }, 
-
-                {
-                    name: "SAMPLE B",
-                    data: [],
-                }, 
-                
-            ],
-            scatterChartOptions: {
-                chart: {
-                    height: 350,
-                    width: 500,
-                    type: 'scatter',
-                },
             },
             // getall wts
             wts: {},
             // get week wts start end
             weekWts: {},
-            // bar chart with daily working times
+
+
+            // bar chart for one user sorted by day, month and year 
             bar2Series: [
                 {
                     name: 'Daily Worked Hours',
@@ -109,7 +102,15 @@ export default {
                 chart: {
                     id: 'bar2chart'
                 },
-                colors: ['#00E396'],
+                colors: [
+                    function ({ value }) {
+                        if (value < 7) {
+                            return '#FF4560'
+                        } else {
+                            return '#00E396'
+                        }
+                    }
+                ],
                 dataLabels: {
                     formatter: function (val, opt) {
                         const goals =
@@ -122,6 +123,7 @@ export default {
                         return val
                     }
                 },
+
                 legend: {
                     show: true,
                     showForSingleSeries: true,
@@ -131,12 +133,62 @@ export default {
                     }
                 }
             },
-            WtObject: {},   
+
+            WtObject: {},
+            monthBtnSelected: false,
+            weekBtnSelected: false,
+            yearBtnSelected: false,
+           
+            wtsAllUsers: [],
         }
     },
 
     methods: {
+
+        async getAverageByWeekWTsForAllUsers() {
+            const response = await axios.get(`/api/working_times`)
+            if (response.status === 200) {
+                this.wts = response.data.data.map((wt) => {
+                    return {
+                        ...wt,
+                        day: moment(wt.start).format("dddd"),
+                        totalminutes: calculateTotalWorkingTimeinMinutes(wt),
+                    }
+                })
+                console.log(this.wts, "wts")
+                const averagebyDay = this.wts.reduce((acc, wt) => {
+                    const { day, totalminutes } = wt;
+                    if (!acc[day]) {
+                        acc[day] = {
+                            day,
+                            totalminutes: 0,
+                            count: 0,
+                        };
+                    }
+                    acc[day].totalminutes += totalminutes;
+                    acc[day].count++;
+                    return acc;
+                }, {});
+                console.log(averagebyDay, "averagebyDay");
+                const averagebyDayList = Object.values(averagebyDay).map((wt) => {
+                    return {
+                        ...wt,
+                        average: Math.floor((wt.totalminutes / wt.count) / 60),
+
+                    };
+                });
+                this.wtsAllUsers = averagebyDayList.map((wt) => {
+                    return {
+                        x: wt.day,
+                        y: wt.average,
+                        fillColor: '#4CAF50',               
+                    }
+                })
+            };
+        },
+       
         async getWorkingTimesWithGoals() {
+            await this.getAverageByWeekWTsForAllUsers();
             const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
             if (response.data.data.length > 0) {
                 const workingtimes = response.data.data;
@@ -147,100 +199,84 @@ export default {
                         total: calculateTotalWorkingTime(wt),
                     }
                 })
-            }
-            let formattedWorkingTimeGraph = this.workingtimeGraph.map(({ day, total }) => {
-                return {
-                    x: day,
-                    y: total,
-                    goals: [
-                        {
-                            name: 'Expected',
-                            value: 8,
-                        }
-                    ],
-                }
-            })
-            this.bar1Series = [
-                {
-                    name: "Current Hours",
-                    data: formattedWorkingTimeGraph,
-                },
-            ]
+                let formattedWorkingTimeGraph = this.workingtimeGraph.map(({ day, total }) => {
+                    return {
+                        x: day,
+                        y: total,
+                        fillColor: "#556B2F",
 
+                        goals: [
+                            {
+                                name: 'Expected',
+                                value: 8,
+
+                            }
+                        ],
+                    }
+                })
+                console.log(formattedWorkingTimeGraph, "formattedWorkingTimeGraph");
+                this.bar1Series = [
+                    {
+                        name: "Current Hours",
+                        data: formattedWorkingTimeGraph,
+                        type: "bar",
+                       
+                    },
+                    {
+                        name: "Average Hours",
+                        data: this.wtsAllUsers,
+                        type: "bar",
+
+                    },
+                ]
+                console.log(this.bar1Series, "bar1series"); 
+            }
         },
-        // async getClocksSeries() {
-        //     const response = await axios.get(`/api/clocks/${this.currentUser.id}`)
-        //     if (response.data.data.length > 0) {
-        //         let clocks = response.data.data;
-        //         this.userClocksGraph = clocks.map((clock) => {
-        //             let clockDayTime = moment.utc(clock.time).local().format("DD/MM/YYYY HH:mm")
-        //             return {
-        //                 ...clock,
-        //                 day: clockDayTime,
-        //                 start: clock.time,
-        //             }
-        //         })
-        //     }
-        //     let formattedUserClocksGraph = this.userClocksGraph.map(({day, start}) => {
-        //         return {
-        //             x: day,
-        //             y: moment(start).format("HH:mm"),
-        //         }
-        //     })
-        //     this.scatterSeries = [
-        //         {
-        //             name: "SAMPLE A",
-        //             data: formattedUserClocksGraph,
-        //         },
-        //     ]
-        // }
-        
+
         async getAverageWTsForAllUsers() {
             const response = await axios.get(`/api/working_times`)
-        if(response.status === 200) {
-        const wts = response.data.data
-        this.wts = wts.map((wt) => {
-            return {
-                ...wt, 
-                totalminutes: calculateTotalWorkingTimeinMinutes(wt),
-            }
-        })
-        const totalminutes = this.wts.map((wt) => {
-            return wt['totalminutes'];
-        })
-        const totalminutesvalues = Object.values(totalminutes)
-        const sum = totalminutesvalues.reduce((a, b) => a + b, 0) / totalminutesvalues.length;
-        const hours = Math.floor(sum / 60);
-        const minutes = (sum % 60).toFixed(0);
-        const averageWorkedtime = `${hours}h: ${minutes}m`;
-        return averageWorkedtime;
-
-
-        };
+            if (response.status === 200) {
+                const wts = response.data.data
+                this.wts = wts.map((wt) => {
+                    return {
+                        ...wt,
+                        totalminutes: calculateTotalWorkingTimeinMinutes(wt),
+                    }
+                })
+                const totalminutes = this.wts.map((wt) => {
+                    return wt['totalminutes'];
+                })
+                const totalminutesvalues = Object.values(totalminutes)
+                const sum = totalminutesvalues.reduce((a, b) => a + b, 0) / totalminutesvalues.length;
+                const hours = Math.floor(sum / 60);
+                const minutes = (sum % 60).toFixed(0);
+                const averageWorkedtime = `${hours}h: ${minutes}m`;
+                return averageWorkedtime;
+            };
         },
+
         async getAverageWTsForUser() {
             const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
-        if(response.status === 200) {
-        const wts = response.data.data
-        this.wts = wts.map((wt) => {
-            return {
-                ...wt, 
-                totalminutes: calculateTotalWorkingTimeinMinutes(wt),
-            }
-        })
+            if (response.status === 200) {
+                const wts = response.data.data
+                this.wts = wts.map((wt) => {
+                    return {
+                        ...wt,
+                        totalminutes: calculateTotalWorkingTimeinMinutes(wt),
+                    }
+                })
+                const totalminutes = this.wts.map((wt) => {
+                    return wt['totalminutes'];
+                })
+                const totalminutesvalues = Object.values(totalminutes)
+                const sum = totalminutesvalues.reduce((a, b) => a + b, 0) / totalminutesvalues.length;
+                const hours = Math.floor(sum / 60);
+                const minutes = (sum % 60).toFixed(0);
+                const averageWorkedtime = `${hours}h: ${minutes}m`;
+                return averageWorkedtime;
 
-        const totalminutes = this.wts.map((wt) => {
-            return wt['totalminutes'];
-        })
-        const totalminutesvalues = Object.values(totalminutes)
-        const sum = totalminutesvalues.reduce((a, b) => a + b, 0) / totalminutesvalues.length;
-        const hours = Math.floor(sum / 60);
-        const minutes = (sum % 60).toFixed(0);
-        const averageWorkedtime = `${hours}h: ${minutes}m`;
-        return averageWorkedtime;
 
-
-        };
+            };
         },
 
         async getWeekWTSByUser() {
@@ -260,53 +296,122 @@ export default {
                     return moment(wt).format("dddd")
                 })
 
-                
+
             }
 
         },
-        async getUserWTByWeekDay() {
+
+        // get User Working Times by week day, month, year
+        async getUserWTsGraph() {
             const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
             this.WtObject = response.data.data;
             let SortedWorkingTimes = this.WtObject.sort((a, b) => {
                 return new Date(a.start) - new Date(b.start);
             });
-            const FilteredWorkingTimes  = SortedWorkingTimes.filter((wt) => {
+            let AddKeyToWorkingTimes = {};
+            if (this.monthBtnSelected === true) {
+                // console.log("month graph")
+                const FilteredWorkingTimes = SortedWorkingTimes.filter((wt) => {
+                    return moment(wt.start).isBetween(moment().startOf('month'), moment().endOf('month'))
+                })
+                AddKeyToWorkingTimes = FilteredWorkingTimes.map((wt) => {
+                    return {
+                        ...wt,
+                        weekDay: moment(wt.start).format("DD - MMM"),
+                        totalHours: calculateTotalWorkingTime(wt),
+                    };
+                });
+            } else if (this.yearBtnSelected === true) {
+                // console.log("year graph")
+                const FilteredWorkingTimes = SortedWorkingTimes.filter((wt) => {
+                    return moment(wt.start).isBetween(moment().startOf('year'), moment().endOf('year'))
+                })
+                AddKeyToWorkingTimes = FilteredWorkingTimes.map((wt) => {
+                    return {
+                        ...wt,
+                        weekDay: moment(wt.start).format("DD-MM-YYYY"),
+                        totalHours: calculateTotalWorkingTime(wt),
+                    };
+                });
+            } else {
+                // console.log("week graph")
+                const FilteredWorkingTimes = SortedWorkingTimes.filter((wt) => {
                     return moment(wt.start).isBetween(moment().startOf('week'), moment().endOf('week'))
                 })
-            console.log(FilteredWorkingTimes, "FilteredWorkingTimes");
-            const AddKeyToWorkingTimes = FilteredWorkingTimes.map((wt) => {
-                return {
-                ...wt,
-                weekDay: moment(wt.start).format("dddd"),
-                totalHours: calculateTotalWorkingTime(wt),
-                };
-            });
-              let bar2graph = AddKeyToWorkingTimes.map(({ weekDay, totalHours }) => {
+                AddKeyToWorkingTimes = FilteredWorkingTimes.map((wt) => {
+                    return {
+                        ...wt,
+                        weekDay: moment(wt.start).format("dddd"),
+                        totalHours: calculateTotalWorkingTime(wt),
+                    };
+                });
+            }
+
+            // const GroupByWeekDay = AddKeyToWorkingTimes.reduce((r, a) => {
+            //     r[a.weekDay] = [...r[a.weekDay] || [], a];
+            //     return r;
+            // }, {});
+            const totalmin = AddKeyToWorkingTimes.map((wt) => {
+                return wt['totalHours'];
+            })
+            const splitTime = totalmin.map((b) => {
+                return moment.duration(b, 'minutes').asMinutes();
+            })
+            const totalminutesvalues = splitTime.reduce((a, b) => a + b, 0);
+            const hours = Math.floor(totalminutesvalues / 60);
+            const minutes = totalminutesvalues % 60;
+            const totaltime = `${hours}h: ${minutes}m`;
+            let bar2graph = AddKeyToWorkingTimes.map(({ weekDay, totalHours }) => {
                 return {
                     x: weekDay,
                     y: totalHours,
                     goals: [
-                    {
-                        name: "Expected",
-                        value: 7,
-                    },
+                        {
+                            name: "Expected",
+                            value: 7,
+                            strokeHeight: 4,
+
+                        },
                     ],
                 };
-                });
-                this.bar2Series = [
+            });
+            this.bar2Series = [
                 {
                     name: "Daily Worked Hours",
                     data: bar2graph,
                 },
-                ];
+            ];
+        },
+
+        //handle month btn clicked
+        handleMonth() {
+            this.monthBtnSelected = true;
+            this.weekBtnSelected = false;
+            this.yearBtnSelected = false;
+            this.getUserWTsGraph();
+        },
+        //handle week btn clicked
+        handleWeek() {
+            this.weekBtnSelected = true;
+            this.monthBtnSelected = false;
+            this.yearBtnSelected = false;
+            this.getUserWTsGraph();
+        },
+        //handle year btn clicked
+        handleYear() {
+            this.yearBtnSelected = true;
+            this.monthBtnSelected = false;
+            this.weekBtnSelected = false;
+            this.getUserWTsGraph();
         },
     },
     mounted() {
+        this.getAverageByWeekWTsForAllUsers();
         this.getWorkingTimesWithGoals();
-        this.getAverageWTsForAllUsers();
-        this.getAverageWTsForUser();
+        // this.getAverageWTsForAllUsers();
+        // this.getAverageWTsForUser();
         this.getWeekWTSByUser();
-        this.getUserWTByWeekDay();
+        this.getUserWTsGraph();
     },
 }
 </script>
@@ -323,10 +428,4 @@ export default {
     max-width: 800px;
     margin: 35px auto;
 }
-
-#scatter {
-    max-width: 800px;
-    margin: 35px auto;
-}
-
 </style>

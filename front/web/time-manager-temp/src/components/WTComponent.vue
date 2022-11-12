@@ -86,13 +86,6 @@ export default {
   },
   data() {
     return {
-      // currentUser: localStorage.getItem("currentUser")
-      //   ? JSON.parse(localStorage.getItem("currentUser"))
-      //   : {
-      //       email: "",
-      //       username: "",
-      //       id: 0,
-      //     },
       currentUser: this.store.user,
       workingTime: {},
       userId: this.$route.params.userId,

@@ -8,8 +8,8 @@
       <div class="WT_charts">
         <apexchart
           type="pie"
-          :options="Optionschart"
-          :series="donnee"
+          :options="pieOptionsChart"
+          :series="pieSeries"
         ></apexchart>
       </div>
       <div class="hours_charts">
@@ -31,10 +31,19 @@
 
 <script>
 import { defineComponent } from "vue";
+import axios from "axios";
+import { useUserStore } from "src/stores/store-users";
+import { calculateTotalWorkingTimeinMinutes } from "src/utils/utils";
 //import apexcharts from 'src/boot/apexcharts';
 
 export default defineComponent({
   name: "ChartComponent",
+  setup() {
+    const store = useUserStore();
+    return {
+      store,
+    }
+  },
   data() {
     return {
       series: [
@@ -96,16 +105,16 @@ export default defineComponent({
           },
         },
       },
-      donnee: [25, 15, 44, 55, 41],
-      Optionschart: {
+      pieSeries: [],
+      pieOptionsChart: {
         chart: {
           width: "100%",
           type: "pie",
         },
-        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        labels: [],
         theme: {
           monochrome: {
-            enabled: true,
+            enabled: false,
           },
         },
         plotOptions: {
@@ -116,19 +125,74 @@ export default defineComponent({
           },
         },
         title: {
-          text: "Taux de présence par jours de travail",
+          text: "yo",
         },
         dataLabels: {
           formatter(val, opts) {
             const name = opts.w.globals.labels[opts.seriesIndex];
-            return [name, val.toFixed(1) + "%"];
+            return [name, val.toFixed(0) + "%"];
           },
         },
         legend: {
           show: false,
         },
       },
+      userTeamId: {},
+      user: {},
+      currentUser: this.store.user,
     };
+  },
+  methods: {
+    async getWtsByTeam() {
+      const response = await axios.get(`/api/users/${this.currentUser.id}`)
+        this.user = response.data.data;
+        this.userTeamId = this.user.team_id;
+        const response2 = await axios.get(`/api/working_times/teams/${this.userTeamId}`)
+        const userAllWts = response2.data.data.map((workingtimes) => {
+          return {
+            name: workingtimes.username,
+            data: workingtimes.working_times.map((workingtime) => {
+              return calculateTotalWorkingTimeinMinutes(workingtime);
+            }),
+          }
+        })
+        const totalWtsByUser = userAllWts.map((workingtimes) => {
+          return {
+            name: workingtimes.name,
+            data: workingtimes.data.reduce((a, b) => a + b, 0),
+          }
+        })
+        const totalWts = totalWtsByUser.map((workingtimes) => {
+          return workingtimes.data;
+        })
+        const sum = totalWts.reduce((a, b) => a + b, 0);
+        const totalWtsByUserInPercent = totalWtsByUser.map((workingtimes) => {
+          return {
+            name: workingtimes.name,
+            data:(workingtimes.data / sum) * 100,
+          }
+        })
+        console.log("totalWtsByUserInPercent", totalWtsByUserInPercent);
+        let xPieGraph = totalWtsByUserInPercent.map((workingtimes) => {
+          return workingtimes.data;
+        })
+        console.log("xPieGraph", xPieGraph);
+        let yPieGraph = totalWtsByUserInPercent.map((workingtimes) => {
+          return workingtimes.name;
+        })
+        console.log("yPieGraph", yPieGraph);
+        this.pieSeries = 
+          xPieGraph;
+        console.log("this.pieSeries", this.pieSeries);
+        this.pieOptionsChart = {
+          labels: yPieGraph,
+        }
+        
+        console.log("this.pieOptionsChart.labels", this.pieOptionsChart);
+    },
+  },
+  mounted() {
+    this.getWtsByTeam();
   },
 });
 </script>
