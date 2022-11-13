@@ -4,14 +4,15 @@
 
     <div class="Global_charts">
       <PieComponent />
-      <div class="bar_chart">
-        <BarComponent />
-      </div>
     </div>
-
+    <!-- <div class="bar_chart">
+      <BarComponent />
+    </div>
+    -->
+    
     <div class="btn_charts">
-      <q-btn class="WT_button" push color="green-10" label="Employees Working times" @click="wtButton" />
-      <q-btn class="Hours_button" push color="green-10" label="Employee last clock" @click="clockButton" />
+      <q-btn class="WT_button" push color="green-10" label="Team Working times" @click="wtButton" />
+      <q-btn class="Hours_button" push color="green-10" label="Team last clock" @click="clockButton" />
     </div>
   </main>
 </template>
@@ -23,13 +24,13 @@ import { useUserStore } from "src/stores/store-users";
 import { calculateTotalWorkingTimeinMinutes } from "src/utils/utils";
 import moment from "moment";
 import PieComponent from "./PieComponent.vue";
-import BarComponent from "./BarComponent.vue";
+// import BarComponent from "./BarComponent.vue";
 
 export default defineComponent({
   name: "ChartComponent",
   components: {
     PieComponent,
-    BarComponent,
+    // BarComponent,
   },
   setup() {
     const store = useUserStore();
@@ -77,18 +78,18 @@ export default defineComponent({
 
 .Global_charts {
   width: 100%;
-  height: 83%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   box-shadow: 0 0 0 2px white;
   border-radius: 8px;
   position: relative;
 }
 
 .WT_charts, .bar_chart {
-  width: 50%;
-  height: 80%;
+  width: 75%;
+  height: 75%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -136,9 +137,9 @@ export default defineComponent({
 
 .btn_charts {
   width: 100%;
-  height: 10%;
+  height: 5%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   position: absolute;
   bottom: 0;
 }
@@ -146,7 +147,7 @@ export default defineComponent({
 .btn_charts .WT_button,
 .btn_charts .Hours_button {
   width: 25%;
-  height: 15%;
-  margin: 4%;
+  height: 30%;
+  margin: 2%;
 }
 </style>

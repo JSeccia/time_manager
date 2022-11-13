@@ -9,7 +9,6 @@
 
 <script>
 import axios from 'axios';
-import moment from 'moment';
 import { calculateTotalWorkingTimeinMinutes } from "src/utils/utils";
 
 import { useUserStore } from 'src/stores/store-users';
@@ -44,29 +43,97 @@ export default {
                 },
 
                 dataLabels: {
-                    // formatter(val, opts) {
-                    //   const name = opts.w.globals.labels[opts.seriesIndex];
-                    //   return [name, val.toFixed(0) + "%"];
-                    // },
+                    formatter(val, opts) {
+                      const name = opts.w.globals.labels[opts.seriesIndex];
+                      return [name, val.toFixed(1) + "%"];
+                    },
                 },
 
                 legend: {
                     show: true,
-                },
-                // responsive: [
-                //   {
-                //     breakpoint: 480,
-                //     options: {
-                //       chart: {
 
-                //         width: 200,
-                //       },
-                //       legend: {
-                //         position: "bottom",
-                //       },
-                //     },
-                //   },
-                // ],
+                },
+                responsive: [
+                  {
+                    breakpoint: 480,
+                    options: {
+                      chart: {
+
+                        width: 200,
+                      },
+                      legend: {
+                        position: "bottom",
+                      },
+                    },
+                  },
+                  {
+                    breakpoint: 768,
+                    options: {
+                      chart: {
+                        width: 300,
+                      },
+                      legend: {
+                        position: "bottom",
+                      },
+                    },
+                  },
+                  {
+                    breakpoint: 1024,
+                    options: {
+                      chart: {
+                        width: 400,
+                      },
+                      legend: {
+                        position: "bottom",
+                      },
+                    },
+                  },
+                  {
+                    breakpoint: 1280,
+                    options: {
+                      chart: {
+                        width: 400,
+                      },
+                      legend: {
+                        position: "right",
+                      },
+                    },
+                  },
+                  {
+                    breakpoint: 1366,
+                    options: {
+                      chart: {
+                        width: 400,
+                      },
+                      legend: {
+                        position: "right",
+                      },
+                    },
+                  },
+                  {
+                    breakpoint: 1840,
+                    options: {
+                      chart: {
+                        width: 500,
+                      },
+                      legend: {
+                        position: "right",
+                      },
+                    },
+                  },
+                  {
+                    breakpoint: 2020,
+                    options: {
+                      chart: {
+                        width: 500,
+                      },
+                      legend: {
+                        position: "right",
+                      },
+                    },
+                  },
+                  
+                ],
             },
             userTeamId: {},
             user: {},

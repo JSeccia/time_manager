@@ -4,7 +4,6 @@
   <main v-if="currentUser.role === 'manager' || currentUser.role === 'admin'" class="main-workingtimes">
     <h1>Check working times</h1>
 
-    
     <!-- Search Employee Id form -->
 
     <section class="search-wt-id">
@@ -195,7 +194,6 @@ export default {
         day: "",
         total: 0,
       },
-
     };
   },
   computed: {
@@ -240,37 +238,6 @@ export default {
       this.isSubmitButtonSelected = true;
     },
 
-    
-    //   if (response.data.data.length > 0) {
-    //     this.workingTimes = response.data.data;
-    //     this.currentUserId = this.$refs.userIdInput.value;
-    //     this.wtGraph = this.workingTimes.map((wt) => {
-    //       return { ...wt, day: moment(wt.start).format("DD/MM/YYYY"), total: calculateTotalWorkingTime(wt) };
-    //     })
-    //   }
-
-    //   let formattedWtGraph = this.wtGraph.map(({ day, total }) => {
-    //     return {
-    //       x: day,
-    //       y: total,
-    //       goals: [
-    //         {
-    //           name: 'Expected',
-    //           value: 7,
-    //         }
-    //       ],
-    //     }
-    //   })
-    //   this.series = [
-    //     {
-    //       name: "series-2",
-    //       data: formattedWtGraph,
-
-    //     },
-    //   ]
-    //   console.log(this.series, "series");
-    //   this.isSubmitButtonSelected = true;
-    // },
     // get working times from currentUser
     async getWorkingTimes() {
       const response = await axios.get(`/api/working_times/${this.currentUser.id}`)
@@ -302,7 +269,6 @@ export default {
           data: formattedWtGraph,
         },
       ]
-
     },
 
     // Select one working time
