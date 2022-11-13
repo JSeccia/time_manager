@@ -3,7 +3,7 @@
         <section v-if="currentUser.role === 'admin'" class="managing_teams">
 
 
-            <h1>Team n°{{teamId}} Details</h1>
+            <h1>Team n°{{ teamId }} Details</h1>
 
             <div class="display-teams">
                 <table class="teams-table">
@@ -35,9 +35,9 @@
             <table class="teams-table">
                 <thead>
                     <th>
-                        <td>Id</td>
-                        <td>Name</td>
-                        <td>Email</td>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Email</td>
                     </th>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
                 </tbody>
 
             </table>
-            
+
         </section>
 
     </main>
@@ -87,53 +87,60 @@ export default {
     },
     methods: {
         getTeamForAdmin() {
-            axios
-                .get(`/api/teams/${this.teamId}`)
-                .then((response) => {
-                    console.log(response.data, "team");
-                    this.team = response.data.users.map((t) => {
-                        return {
-                            id: t.team_id,
-                            user: t.username
-                        }
-                    });
-                    const retrieveManager = this.team.splice(0, 1);
-                    console.log(retrieveManager, "retrieve manager");
+            if (this.currentUser.role === 'admin') {
+                axios
+                    .get(`/api/teams/${this.teamId}`)
+                    .then((response) => {
+                        console.log(response.data, "team");
+                        this.team = response.data.users.map((t) => {
+                            return {
+                                id: t.team_id,
+                                user: t.username
+                            }
+                        });
+                        const retrieveManager = this.team.splice(0, 1);
+                        console.log(retrieveManager, "retrieve manager");
 
-                    console.log(this.team, "teamUsers");
-                    this.ManagerName = response.data.users.filter((t) => t.role === "manager").map((t) => {
-                        return t.username
+                        console.log(this.team, "teamUsers");
+                        this.ManagerName = response.data.users.filter((t) => t.role === "manager").map((t) => {
+                            return t.username
 
-                    });
-                    console.log(this.ManagerName, "manager");
-                })
+                        });
+                        console.log(this.ManagerName, "manager");
+                    })
+            }
+
 
         },
         deleteTeam() {
             console.log("Delete team button clicked");
             if (confirm("Are you sure you want to delete this team?")) {
                 axios.delete(`/api/teams/${this.teamId}`)
-                .then((response) => {
-                this.$router.push({ path: `/teams` })
-                .then(() => { this.$router.go() })
-                })
+                    .then((response) => {
+                        this.$router.push({ path: `/teams` })
+                            .then(() => { this.$router.go() })
+                    })
             }
         },
         getTeamForManager() {
-            axios
-                .get(`/api/users`)
-                .then((response) => {
-                    console.log(response.data.data, "Apiusers");
-                    const users = response.data.data;
-                    const currentUser = users.filter((u) => u.username === this.currentUser.username);
-                    const currentUserTeamId = currentUser.map((u) => u.team_id);
-                     this.ManagerTeam = users.filter((u) => u.team_id === currentUserTeamId[0]);
-                    console.log(this.ManagerTeam, "ManagerTeam");
-                })
+            if (this.currentUser.role === 'manager') {
+                axios
+                    .get(`/api/users`)
+                    .then((response) => {
+                        console.log(response.data.data, "Apiusers");
+                        const users = response.data.data;
+                        const currentUser = users.filter((u) => u.username === this.currentUser.username);
+                        const currentUserTeamId = currentUser.map((u) => u.team_id);
+                        this.ManagerTeam = users.filter((u) => u.team_id === currentUserTeamId[0]);
+                        console.log(this.ManagerTeam, "ManagerTeam");
+                    })
+            }
+
+
 
 
         }
-            
+
     },
     mounted() {
         this.getTeamForAdmin();
@@ -167,6 +174,7 @@ export default {
 .T_items td:last-child {
     border-left: 1px solid black;
 }
+
 .T_items .team_members {
     width: 10%;
     flex-wrap: wrap;

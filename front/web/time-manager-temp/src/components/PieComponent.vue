@@ -142,7 +142,8 @@ export default {
     },
     methods: {
         async getWtsByTeam() {
-        const response = await axios.get(`/api/users/${this.currentUser.id}`)
+        if (this.currentUser.role === 'manager') {
+          const response = await axios.get(`/api/users/${this.currentUser.id}`)
         this.user = response.data.data;
         this.userTeamId = this.user.team_id;
         const response2 = await axios.get(`/api/working_times/teams/${this.userTeamId}`)
@@ -185,7 +186,8 @@ export default {
         }
 
         console.log("this.pieOptionsChart.labels", this.pieOptionsChart);
-        },
+        }
+        }
     },
     mounted() {
         this.getWtsByTeam();

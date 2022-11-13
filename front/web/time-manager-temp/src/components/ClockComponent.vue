@@ -6,9 +6,9 @@
       <div class="search-employee-id">
         <form @submit.prevent="getAllClocksFromInput">
           <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter team member id"
-          ref="userClockInput" id="get_user_clocks" color="green-10">
+            ref="userClockInput" id="get_user_clocks" color="green-10">
           </q-input>
-          
+
           <q-btn class="search_wt_btn" push color="green-10" label="get team last Clocks"
             @click="handleGetAllClocksFromInput" />
 
@@ -33,17 +33,16 @@
             </tr>
           </tbody>
         </table>
-        
-        
+        <q-btn class="input_btn_clocks" type="button" label="see other clocks" @click.prevent="reloadPage" push
+          color="green 10" />
+
       </div>
     </section>
 
     <!-- Employee web clocks page -->
-    <section class="user_clocks">
-      <div v-if="currentUser.role === 'user'" class="clock">
-        <div class="title_clocks2">
-          <h1>Welcome back {{ upperCaseUsername }},</h1>
-        </div>
+    <section v-if="currentUser.role === 'user'" class="user_clocks">
+        <h1>Welcome back {{ upperCaseUsername }},</h1>
+      <div  class="clock">
         <q-btn v-if="!postClockSelected" class="input_btn_clocks" type="button" label="clock in"
           @click.prevent="postClock" push color="green 10" />
         <q-btn v-else class="input_btn_clocks" type="button" label="clock out" @click.prevent="postClock" push
@@ -119,51 +118,53 @@ export default {
     postClock() {
       axios.post(`/api/clocks/${this.currentUser.username}`)
         .then((response) => {
-          if(response.data) {
+          if (response.data) {
             this.postClockSelected = true;
             this.clocks = response.data;
             console.log("1", this.clocks);
           } else {
             this.postClockSelected = false;
             this.clocks = response.data;
+
             console.log("2nd if statement", this.clocks);
 
-          } 
-          
-        }) 
+          }
+
+        })
         .catch((error) => {
           console.log(error);
         });
     },
     // get current user clock times
     getClocks() {
+      if (this.currentUser.role === 'user') {
 
-      axios.get(`/api/clocks/${this.currentUser.id}`).then((response) => {
-        console.log(response.data.data.length, "length");
-        if (response.data.data.length > 0) {
-          this.clocks = response.data.data;
-          this.postClockSelected = true;
-        } 
-      });
+        axios.get(`/api/clocks/${this.currentUser.id}`).then((response) => {
+          console.log(response.data.data.length, "length");
+          if (response.data.data.length > 0) {
+            this.clocks = response.data.data;
+            this.postClockSelected = true;
+          }
+        });
+      }
     },
     // get all clock times from one employee with its id
     getAllClocksFromInput() {
-      console.log("before axios call");
-      // if (this.userId.team_id != this.currentUser.team_id) {
-      //   window.alert("Please enter a team id valid");
-      //   return;
-      // }
-      axios.get(`api/clocks/${this.userId}`).then((response) => {
-        console.log("during axios call");
-        console.log(response.data.data, "response.data.data");
-        if (response.data.data.length > 0) {
-          this.employeeClocks = response.data.data;
-          this.currentUserId = this.$refs.userClockInput.value;
-          console.log(this.employeeClocks, "employeeClocks");
-        } else {
-          window.alert("No employee or clocks times found");
-        }
-      });
+      if (this.currentUser.role === 'manager') {
+        console.log("before axios call");
+        axios.get(`api/clocks/${this.userId}`).then((response) => {
+          console.log("during axios call");
+          console.log(response.data.data, "response.data.data");
+          if (response.data.data.length > 0) {
+            this.employeeClocks = response.data.data;
+            this.currentUserId = this.$refs.userClockInput.value;
+            console.log(this.employeeClocks, "employeeClocks");
+          } else {
+            window.alert("No clock times found");
+          }
+        });
+      }
+
     },
     // handle gacfi button click
     handleGetAllClocksFromInput() {
@@ -195,7 +196,6 @@ export default {
 </script>
 
 <style>
-
 .main-manager-clocks {
   display: flex;
   justify-content: center;
@@ -203,9 +203,8 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 100vh
-  
-
 }
+
 .manager_clock,
 .user_clocks {
   display: flex;
@@ -227,7 +226,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
 }
 
 .manager_clock .search-employee-id form {
@@ -250,7 +249,7 @@ export default {
   align-items: center;
   height: 35%;
 }
- 
+
 
 .clock {
   display: flex;
