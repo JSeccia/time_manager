@@ -85,6 +85,28 @@ defmodule TimeManagerWeb.TeamController do
     render(conn, "team.json", team: team)
   end
 
+  def show_by_manager(conn, %{"manager_id" => manager_id}) do
+    IO.inspect(manager_id)
+
+    query =
+      from(t in Team,
+        inner_join: u in User,
+        on: u.team_id == t.id,
+        where: t.manager == ^manager_id,
+        preload: [users: u]
+      )
+
+    team = Repo.one(query)
+
+    if team == nil do
+      conn
+      |> put_status(:not_found)
+      |> render("failure.json", message: "Team not found")
+    else
+      render(conn, "team.json", team: team)
+    end
+  end
+
   def update(conn, %{"id" => id, "team" => team_params}) do
     team =
       Repo.one(
