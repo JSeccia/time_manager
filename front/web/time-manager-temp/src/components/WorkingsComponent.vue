@@ -47,20 +47,7 @@
         <apexchart width="700" type="area" :options="options" :series="series"></apexchart>
       </div>
     </section>
-    <!-- Create form -->
-
-    <form id="create-form" v-if="isAddButtonSelected" @submit.prevent="createWorkingTime">
-      <fieldset>
-        <h2 class="fs-title">Add working times</h2>
-        <label for="start_date_input">Start Time</label>
-        <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input" />
-        <br />
-        <label for="end_date_input">End Time</label>
-        <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input" />
-        <br />
-        <q-btn id="create-submit" type="submit" class="create_wt_btn" push color="green-10" label="create" />
-      </fieldset>
-    </form>
+    
 
 
   </main>
@@ -92,11 +79,25 @@
           </tr>
         </tbody>
       </table>
+      <!-- Create form -->
+
+    <form id="create-form" v-if="isAddButtonSelected" @submit.prevent="createWorkingTime">
+      <fieldset>
+        <h2 class="fs-title">Add working times</h2>
+        <label for="start_date_input">Start Time</label>
+        <input type="datetime-local" v-model="StartDate" id="start_date_input" name="start_date_input" />
+        <br />
+        <label for="end_date_input">End Time</label>
+        <input type="datetime-local" v-model="EndDate" id="end_date_input" name="end_date_input" />
+        <br />
+        <q-btn id="create-submit" type="submit" class="create_wt_btn" push color="green-10" label="create" />
+      </fieldset>
+    </form>
     </section>
     <div class="TimeChart">
       <TimeChart />
     </div>
-
+    
   </main>
 
 
