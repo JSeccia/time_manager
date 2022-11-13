@@ -28,6 +28,8 @@ const routes = [
       { path: "login", component: LoginPage},
       { path: "teams", component: TeamsPage},
       { path: "teams/:teamId", component: TeamPage},
+      { path: "teams/manager/:manager_id", component: TeamsPage},
+
 
       { path: "admin", component: AdminPage, meta: {requiresAuth: true},
     },

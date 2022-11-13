@@ -5,12 +5,13 @@
       <h1>Team last Clocks</h1>
       <div class="search-employee-id">
         <form @submit.prevent="getAllClocksFromInput">
-          <q-input rounded outlined v-model="userId" class="search_wt_input" placeholder="enter team member id"
+          <q-input  rounded outlined v-model="userId" class="search_wt_input" placeholder="enter team member id"
             ref="userClockInput" id="get_user_clocks" color="green-10">
           </q-input>
 
-          <q-btn class="search_wt_btn" push color="green-10" label="get team last Clocks"
-            @click="handleGetAllClocksFromInput" />
+          <q-btn type="submit" class="search_wt_btn" push color="green-10" label="get team last Clocks"
+           />
+          
 
         </form>
       </div>
@@ -159,6 +160,7 @@ export default {
             this.employeeClocks = response.data.data;
             this.currentUserId = this.$refs.userClockInput.value;
             console.log(this.employeeClocks, "employeeClocks");
+            this.isGetAllClocksFromInputButtonSelected = true;
           } else {
             window.alert("No clock times found");
           }
@@ -166,10 +168,7 @@ export default {
       }
 
     },
-    // handle gacfi button click
-    handleGetAllClocksFromInput() {
-      this.isGetAllClocksFromInputButtonSelected = true;
-    },
+    
     reloadPage() {
       window.location.reload();
     },
