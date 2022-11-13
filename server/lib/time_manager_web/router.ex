@@ -75,6 +75,7 @@ defmodule TimeManagerWeb.Router do
     resources("/working_times", WorkingTimeController, only: [:update, :delete])
     resources("/clocks", ClockController, only: [:update, :delete])
     post("/users/login", UserController, :login)
+    get("/teams/manager/:manager_id", TeamController, :show_by_manager)
   end
 
   # Enables LiveDashboard only for development
