@@ -9,7 +9,7 @@ const calculateTotalWorkingTime = (w) => {
     const hours = Math.floor(totalDurationInMinutes / 60);
     const minutes = totalDurationInMinutes % 60;
     //   console.log(hours, minutes);
-    const totalWorkedtime = `${hours}h: ${minutes}m`;
+    const totalWorkedtime = `${hours}:${minutes}`;
     return totalWorkedtime;
 }
 

@@ -12,7 +12,7 @@ defmodule TimeManagerWeb.ClockController do
   action_fallback(TimeManagerWeb.FallbackController)
 
   def index(conn, %{"user_id" => user_id}) do
-    clocks = Repo.all(from(c in Clock, where: c.user == ^user_id))
+    clocks = Repo.all(from(c in Clock, where: c.user_id == ^user_id))
     render(conn, "index.json", clocks: clocks)
   end
 
@@ -20,12 +20,12 @@ defmodule TimeManagerWeb.ClockController do
     user = Repo.one(from(u in User, where: u.username == ^username))
 
     previous_clock =
-      Repo.one(from(c in Clock, where: c.user == ^user.id, order_by: [desc: c.id], limit: 1))
+      Repo.one(from(c in Clock, where: c.user_id == ^user.id, order_by: [desc: c.id], limit: 1))
 
     if previous_clock == nil || previous_clock.status == false do
       clock_params = %{}
       clock_params = Map.put(clock_params, "status", true)
-      clock_params = Map.put(clock_params, "user", user.id)
+      clock_params = Map.put(clock_params, "user_id", user.id)
       clock_params = Map.put(clock_params, "time", Timex.now())
 
       with {:ok, %Clock{} = clock} <- Api.create_clock(clock_params) do

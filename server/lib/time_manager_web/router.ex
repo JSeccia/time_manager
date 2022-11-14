@@ -71,6 +71,7 @@ defmodule TimeManagerWeb.Router do
     pipe_through([:api, :team_manager])
     get("/teams/:team_id", TeamController, :show)
     get("/working_times/teams/:team_id", UserController, :wt_by_team)
+    get("/clocks/teams/:team_id", UserController, :clocks_by_team)
   end
 
   scope "/api", TimeManagerWeb do
@@ -104,7 +105,12 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api])
+    resources("/users", UserController)
+    resources("/working_times", WorkingTimeController, only: [:update, :delete])
+    resources("/clocks", ClockController, only: [:update, :delete])
+    resources("/teams", TeamController, only: [:index])
     post("/users/login", UserController, :login)
+    get("/teams/manager/:manager_id", TeamController, :show_by_manager)
   end
 
   # Enables LiveDashboard only for development

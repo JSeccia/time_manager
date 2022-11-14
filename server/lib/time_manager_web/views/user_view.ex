@@ -1,6 +1,7 @@
 defmodule TimeManagerWeb.UserView do
   use TimeManagerWeb, :view
   alias TimeManagerWeb.UserView
+  alias TimeManagerWeb.ClockView
   alias TimeManagerWeb.WorkingTimeView
 
   def render("index.json", %{users: users}) do
@@ -20,7 +21,29 @@ defmodule TimeManagerWeb.UserView do
         if(Map.has_key?(user, :team_id),
           do: user.team_id,
           else: nil
-        )
+        ),
+      role: user.role
+    }
+  end
+
+  def render("users_clock.json", %{user: user}) do
+    %{
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      team_id:
+        if(Map.has_key?(user, :team_id),
+          do: user.team_id,
+          else: nil
+        ),
+      role: user.role,
+      clock: render_one(user.clock, ClockView, "clock.json")
+    }
+  end
+
+  def render("users_clocks.json", %{users: users}) do
+    %{
+      data: render_many(users, UserView, "users_clock.json")
     }
   end
 

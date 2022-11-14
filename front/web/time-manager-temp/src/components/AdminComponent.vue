@@ -1,73 +1,62 @@
 <template>
     <main v-if="currentUser.role === 'admin'">
-    <h1>Admin Dashboard Page</h1>
-    <div class="managing_users">
-        {{users}}
-    </div>
-
-    <div class="managing_teams">
-
-    </div>  
-
-    <div class="managing_managers">
-
-    </div>
-
+        <ProfileComponent/>
     </main>
     <h1 class="unauthorize" v-else>You are not authorized to view this page !</h1>
 </template>
 
 <script>
-import { useUserStore } from 'src/stores/store-users'; 
+import { useUserStore } from 'src/stores/store-users';
 import axios from 'axios';
+import ProfileComponent from './ProfileComponent.vue';
 
 export default {
     name: 'AdminComponent',
-    setup () {
+    components: {
+    ProfileComponent,
+    },
+    setup() {
         const store = useUserStore();
         return {
             store
         }
     },
 
-    data () {
+    data() {
         return {
             currentUser: this.store.user,
-
+            isEditUserButtonSelected: false,
             users: {},
-            teams: [],
             managers: [],
             employee: [],
+            user: {
+                username: '',
+                email: '',
+                role: '',
+                team_id: ''
+            },
+            currentUserSelected: "",
+            isCreateSelected: false,
+            teams: {},
         }
     },
     methods: {
-        getUsers() {
-            if (this.currentUser.role === "admin") {
-                axios
-                .get(`api/users`)
+
+        getTeams() {
+            axios
+                .get("/api/teams")
                 .then((response) => {
                     console.log(response.data.data);
-                    this.users = response.data.data;
-                    console.log(this.users);
-                    return this.users;
+                    // this.teams = response.data.data;
                 })
-            } else {
-                window.alert("You are not an admin");
-            }
-        }
+        },
+       
     },
-    
+    mounted() {
+        this.getTeams();
+
+    }
+
 
 }
 </script>
-<style>
-.unauthorize {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin: 0 auto;
-    border-bottom: none;
-    color: red;
-}
-</style>
