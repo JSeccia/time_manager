@@ -16,9 +16,9 @@
                     </thead>
                     <tbody>
                         <tr class="T_items">
-                            <td>{{ ManagerName[0] }}</td>
-                            <td class="team_members" v-for="t in team" :key="t.user">{{ t.user }}</td>
-
+                            <!-- <td>{{ ManagerName[0] }}</td> -->
+                            <td>{{team.manager.username}}({{team.manager.id}})</td>
+                            <td><ul><li class="team_members" v-for="u in team.users" :key="u.id">{{ u.username }}</li></ul></td>
                             <td>
                                 <input class="delete-button" type="button" value="🗑" @click="deleteTeam" />
                             </td>
@@ -53,13 +53,9 @@
                         </td>
                     </tr>
                 </tbody>
-
             </table>
-
         </section>
-
     </main>
-
 </template>
 
 <script>
@@ -79,7 +75,8 @@ export default {
         return {
             currentUser: this.store.user,
             teamId: this.$route.params.teamId,
-            team: {},
+            team: {manager: {username: '', id: ''}, users: []},
+
             ManagerName: [],
             ManagerTeamId: "",
             ManagerTeam: {},
@@ -92,26 +89,13 @@ export default {
                     .get(`/api/teams/${this.teamId}`)
                     .then((response) => {
                         console.log(response.data, "team");
-                        this.team = response.data.users.map((t) => {
-                            return {
-                                id: t.team_id,
-                                user: t.username
-                            }
+                        this.team = response.data
                         });
-                        const retrieveManager = this.team.splice(0, 1);
-                        console.log(retrieveManager, "retrieve manager");
-
-                        console.log(this.team, "teamUsers");
-                        this.ManagerName = response.data.users.filter((t) => t.role === "manager").map((t) => {
-                            return t.username
-
-                        });
-                        console.log(this.ManagerName, "manager");
-                    })
-            }
+                    }
+            },
 
 
-        },
+        // },
         deleteTeam() {
             console.log("Delete team button clicked");
             if (confirm("Are you sure you want to delete this team?")) {
@@ -135,12 +119,7 @@ export default {
                         console.log(this.ManagerTeam, "ManagerTeam");
                     })
             }
-
-
-
-
         }
-
     },
     mounted() {
         this.getTeamForAdmin();

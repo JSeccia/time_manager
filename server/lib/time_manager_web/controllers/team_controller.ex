@@ -12,9 +12,20 @@ defmodule TimeManagerWeb.TeamController do
 
   def index(conn, _params) do
     query =
-      from(t in Team, inner_join: u in User, as: :user, on: u.team_id == t.id, preload: [users: u])
+      from(
+        t in Team,
+        inner_join: m in User,
+        on: m.id == t.manager,
+        as: :manager,
+        inner_join: u in User,
+        as: :user,
+        on: u.team_id == t.id,
+        preload: [users: u, team_manager: m]
+      )
 
     teams = Repo.all(query)
+
+    IO.inspect(teams)
     render(conn, "teams.json", teams: teams)
   end
 
@@ -31,16 +42,6 @@ defmodule TimeManagerWeb.TeamController do
 
   def add_user(conn, %{"team_id" => team_id, "user_id" => user_id}) do
     try do
-      team =
-        Repo.one(
-          from(t in Team,
-            left_join: u in User,
-            on: u.team_id == t.id,
-            where: t.id == ^team_id,
-            preload: [users: u]
-          )
-        )
-
       # team = Api.get_team!(team_id, preload: [:users])
       user = Api.get_user!(user_id)
 
@@ -57,8 +58,11 @@ defmodule TimeManagerWeb.TeamController do
               inner_join: u in User,
               as: :user,
               on: u.team_id == t.id,
+              inner_join: m in User,
+              on: m.id == t.manager,
+              as: :manager,
               where: t.id == ^team_id,
-              preload: [users: u]
+              preload: [users: u, team_manager: m]
             )
           )
 
@@ -77,8 +81,11 @@ defmodule TimeManagerWeb.TeamController do
       from(t in Team,
         inner_join: u in User,
         on: u.team_id == t.id,
+        inner_join: m in User,
+        on: m.id == t.manager,
+        as: :manager,
         where: t.id == ^id,
-        preload: [users: u]
+        preload: [users: u, team_manager: m]
       )
 
     team = Repo.one(query)
@@ -92,8 +99,11 @@ defmodule TimeManagerWeb.TeamController do
       from(t in Team,
         inner_join: u in User,
         on: u.team_id == t.id,
+        inner_join: m in User,
+        on: m.id == t.manager,
+        as: :manager,
         where: t.manager == ^manager_id,
-        preload: [users: u]
+        preload: [users: u, team_manager: m]
       )
 
     team = Repo.one(query)
@@ -114,8 +124,11 @@ defmodule TimeManagerWeb.TeamController do
           inner_join: u in User,
           as: :user,
           on: u.team_id == t.id,
+          inner_join: m in User,
+          on: m.id == t.manager,
+          as: :manager,
           where: t.id == ^id,
-          preload: [users: u]
+          preload: [users: u, team_manager: m]
         )
       )
 

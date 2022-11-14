@@ -20,7 +20,7 @@
                   @click.prevent="goTeamShow"
                 />
               </td>
-              <td>{{ team.manager }}</td>
+              <td>{{ team.manager.username }}({{ team.manager.id }})</td>
               <td>{{ team.users.length }}</td>
             </tr>
           </tbody>
@@ -91,39 +91,6 @@ export default {
     getTeams() {
       axios.get("/api/teams").then((response) => {
         this.teams = response.data.data;
-        // this.teamsUsers = teams.map((team) => {
-        //   return {
-        //     id: team.find((user) => user.team_id).team_id,
-        //     manager: team.find((user) => user.role === "manager").id,
-
-        //     users: team.map((t) => (t.role === "user" ? t.username : "")),
-        //   };
-        // });
-        // console.log(this.teams, "teams");
-        //  this.managerId = this.teams.map((team) => {
-        //     return team.manager })
-        // console.log(this.managerId, "this.managerId");
-        //  this.ids = this.managerId.map((id) => {
-        //     return id
-        // });
-        // console.log(this.ids, "this.ids");
-        // for (let i = 0; i < this.ids.length; i++) {
-        //     if (this.ids[i] === this.teams[i].manager) {
-        //         this.id = this.ids[i]
-        //         console.log(this.id, "this.id");
-        //         axios
-        //         .get(`/api/teams/manager/${this.id}`)
-        //         .then((response) => {
-        //             console.log(response.data.data, "response.data.data");
-        //             this.teamWithManagerId = response.data.data;
-        //             console.log(this.teamWithManagerId, "this.teamWithManagerId");
-        //             console.log(this.id, "this.id");
-        //     })
-        //     } else {
-        //         console.log("no id");
-        //     }
-        // }
-        // console.log(this.id, "this.id");
       });
     },
     goTeamShow(e) {

@@ -10,7 +10,7 @@ defmodule TimeManagerWeb.TeamView do
   def render("team.json", %{team: team}) do
     %{
       id: team.id,
-      manager: team.manager,
+      manager: render_one(team.team_manager, UserView, "user.json"),
       users: render_many(team.users, UserView, "user.json")
     }
   end
