@@ -13,7 +13,6 @@ defmodule TimeManager.Api.Team do
   def changeset(team, attrs) do
     team
     |> cast(attrs, [:manager])
-    |> cast_assoc(:manager)
     |> cast_assoc(:users)
   end
 end
