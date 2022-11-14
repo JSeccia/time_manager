@@ -41,7 +41,7 @@
                     </th>
                 </thead>
                 <tbody>
-                    <tr v-for="u in ManagerTeam" class="T_items" :key="u.id">
+                    <tr v-for="u in teamUsers" class="T_items" :key="u.id">
                         <td>
                             {{ u.id }}
                         </td>
@@ -77,9 +77,7 @@ export default {
             teamId: this.$route.params.teamId,
             team: {manager: {username: '', id: ''}, users: []},
 
-            ManagerName: [],
-            ManagerTeamId: "",
-            ManagerTeam: {},
+            teamUsers: [],
         }
     },
     methods: {
@@ -109,13 +107,12 @@ export default {
         getTeamForManager() {
             if (this.currentUser.role === 'manager') {
                 axios
-                    .get(`/api/users`)
+                    .get(`/api/teams/manager/${this.currentUser.id}`)
                     .then((response) => {
-                        console.log(response.data.data, "Apiusers");
-                        const users = response.data.data;
-                        const currentUser = users.filter((u) => u.username === this.currentUser.username);
-                        const currentUserTeamId = currentUser.map((u) => u.team_id);
-                        this.ManagerTeam = users.filter((u) => u.team_id === currentUserTeamId[0]);
+                        // console.log(response.data, "Apiusers");
+                        this.teamUsers = response.data.users;
+                        const currentUserTeamId = response.data.id
+                        // this.ManagerTeam = users.filter((u) => u.team_id === currentUserTeamId[0]);
                         console.log(this.ManagerTeam, "ManagerTeam");
                     })
             }
