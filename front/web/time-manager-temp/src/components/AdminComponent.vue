@@ -40,23 +40,5 @@ export default {
             teams: {},
         }
     },
-    methods: {
-
-        getTeams() {
-            axios
-                .get("/api/teams")
-                .then((response) => {
-                    console.log(response.data.data);
-                    // this.teams = response.data.data;
-                })
-        },
-       
-    },
-    mounted() {
-        this.getTeams();
-
-    }
-
-
 }
 </script>
