@@ -6,6 +6,7 @@ defmodule TimeManagerWeb.UserController do
   alias TimeManager.Repo
   alias TimeManager.Api
   alias TimeManager.Api.User
+  alias TimeManager.Api.Clock
   alias TimeManager.Api.WorkingTime
 
   action_fallback(TimeManagerWeb.FallbackController)
@@ -46,6 +47,20 @@ defmodule TimeManagerWeb.UserController do
       )
 
     render(conn, "users_working_times.json", users: users)
+  end
+
+  def clocks_by_team(conn, %{"team_id" => team_id}) do
+    users =
+      Repo.all(
+        from(u in User,
+          join: c in Clock,
+          on: c.user_id == u.id,
+          where: u.team_id == ^team_id,
+          preload: [clock: c]
+        )
+      )
+
+    render(conn, "users_clocks.json", users: users)
   end
 
   def index(conn, %{"email" => email} = _params) do

@@ -7,6 +7,7 @@ defmodule TimeManager.Api.User do
     field(:username, :string)
     field(:password, :string, virtual: true)
     field(:password_hash, :string)
+    has_one(:clock, TimeManager.Api.Clock, foreign_key: :user_id, references: :id)
     belongs_to(:team, TimeManager.Api.Team, foreign_key: :team_id, references: :id)
     has_many(:working_times, TimeManager.Api.WorkingTime, foreign_key: :user_id, references: :id)
     field(:role, :string)
@@ -28,6 +29,7 @@ defmodule TimeManager.Api.User do
     user
     |> cast(attrs, [:team_id])
     |> cast_assoc(:working_times)
+    |> cast_assoc(:clock)
     |> validate_required([:team_id])
   end
 

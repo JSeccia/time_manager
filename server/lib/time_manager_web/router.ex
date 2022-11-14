@@ -53,6 +53,7 @@ defmodule TimeManagerWeb.Router do
     pipe_through([:api, :team_manager])
     get("/teams/:team_id", TeamController, :show)
     get("/working_times/teams/:team_id", UserController, :wt_by_team)
+    get("/clocks/teams/:team_id", UserController, :clocks_by_team)
   end
 
   scope "/api", TimeManagerWeb do
