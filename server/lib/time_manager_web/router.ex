@@ -66,7 +66,7 @@ defmodule TimeManagerWeb.Router do
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :auth, :admin])
     get("/working_times", WorkingTimeController, :get_all_working_times)
-    resources("/teams", TeamController, only: [:create, :update, :index, :delete])
+    resources("/teams", TeamController, only: [:create, :update, :delete])
   end
 
   scope "/api", TimeManagerWeb do
@@ -74,6 +74,7 @@ defmodule TimeManagerWeb.Router do
     resources("/users", UserController)
     resources("/working_times", WorkingTimeController, only: [:update, :delete])
     resources("/clocks", ClockController, only: [:update, :delete])
+    resources("/teams", TeamController, only: [:index])
     post("/users/login", UserController, :login)
     get("/teams/manager/:manager_id", TeamController, :show_by_manager)
   end
