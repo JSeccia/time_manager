@@ -1,6 +1,6 @@
 <template>
   <main class="main_charts">
-      <h1>Chart Activity</h1>
+    <h1>Chart Activity</h1>
 
     <div class="Global_charts">
       <PieComponent />
@@ -9,17 +9,28 @@
       <BarComponent />
     </div>
     -->
-    
+
     <div class="btn_charts">
-      <q-btn class="WT_button" push color="green-10" label="Team Working times" @click="wtButton" />
-      <q-btn class="Hours_button" push color="green-10" label="Team last clock" @click="clockButton" />
+      <q-btn
+        class="WT_button"
+        push
+        color="green-10"
+        label="Team Working times"
+        @click="wtButton"
+      />
+      <q-btn
+        class="Hours_button"
+        push
+        color="green-10"
+        label="Team last clock"
+        @click="clockButton"
+      />
     </div>
   </main>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import axios from "axios";
 import { useUserStore } from "src/stores/store-users";
 import { calculateTotalWorkingTimeinMinutes } from "src/utils/utils";
 import moment from "moment";
@@ -36,7 +47,7 @@ export default defineComponent({
     const store = useUserStore();
     return {
       store,
-    }
+    };
   },
   data() {
     return {
@@ -44,7 +55,6 @@ export default defineComponent({
     };
   },
   methods: {
- 
     wtButton() {
       console.log("wtButton");
       this.$router.push("/workingtimes");
@@ -54,7 +64,6 @@ export default defineComponent({
       this.$router.push("/clocks");
     },
   },
- 
 });
 </script>
 
@@ -87,7 +96,8 @@ export default defineComponent({
   position: relative;
 }
 
-.WT_charts, .bar_chart {
+.WT_charts,
+.bar_chart {
   width: 75%;
   height: 75%;
   display: flex;
@@ -114,7 +124,8 @@ export default defineComponent({
   justify-content: center;
 }
 
-.WT_charts .title_WT h2, .bar_chart h2 {
+.WT_charts .title_WT h2,
+.bar_chart h2 {
   font-size: 26px;
   text-align: center;
   color: #fff;
@@ -129,11 +140,14 @@ export default defineComponent({
   width: 50%;
 }
 
-.WT_charts .vue-apexcharts .apexcharts-canvas .apexcharts-inner .apexcharts-text {
+.WT_charts
+  .vue-apexcharts
+  .apexcharts-canvas
+  .apexcharts-inner
+  .apexcharts-text {
   fill: #dce4e8;
   font-weight: normal;
 }
-
 
 .btn_charts {
   width: 100%;
