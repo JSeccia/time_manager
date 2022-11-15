@@ -12,20 +12,30 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 
 
-const LoginScreen = (navigation) => {
-    const [email, setEmail] = useState('');
+const SignIn = () => {
+  const dispatch = useDispatch();
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: api.params.client_id,
+      scopes: api.scopes,
+      redirectUri: api.params.redirect_uri,
+    },
+    api.endpoints
+  );
+  function logIn() {
+    promptAsync();
+  }
 
-    const [password, setPassword] = useState('');
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
+      api.login(code).then((res) => {
+        dispatch(setLogIn(res));
+      });
 
-    // const { onPress, title = 'Connect' } = props;
+    }
 
-    const onLoginPressed = () => {
-        console.warn("Connect pressed");
-    };
-
-    const onForgotPasswordPressed = () => {
-        console.warn("Forgot password pressed");
-    };
+  }, [response]);
 
   return (
     <View style={styles.container}>
