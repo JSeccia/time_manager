@@ -21,6 +21,16 @@ defmodule TimeManagerWeb.UserController do
     render(conn, "show.json", user: user)
   end
 
+  def index(conn, %{"email" => email} = _params) do
+    user = Repo.one(from(u in User, where: u.email == ^email))
+    render(conn, "show.json", user: user)
+  end
+
+  def index(conn, _params) do
+    users = Api.list_users()
+    render(conn, "index.json", users: users)
+  end
+
   def wt_by_team(conn, %{"team_id" => team_id, "start" => start, "end" => end_}) do
     users =
       Repo.all(
@@ -61,16 +71,6 @@ defmodule TimeManagerWeb.UserController do
       )
 
     render(conn, "users_clocks.json", users: users)
-  end
-
-  def index(conn, %{"email" => email} = _params) do
-    user = Repo.one(from(u in User, where: u.email == ^email))
-    render(conn, "show.json", user: user)
-  end
-
-  def index(conn, _params) do
-    users = Api.list_users()
-    render(conn, "index.json", users: users)
   end
 
   def login(conn, %{"email" => email, "password" => password}) do
