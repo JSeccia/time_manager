@@ -109,6 +109,14 @@ defmodule TimeManagerWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Api.get_user!(id)
 
+    if user.id != conn.assigns.current_user.id && conn.assigns.current_user.role != "admin" do
+      render(conn, "failure.json", message: "You can't update other users")
+    else
+      with {:ok, %User{} = user} <- Api.update_user(user, user_params) do
+        render(conn, "show.json", user: user)
+      end
+    end
+
     with {:ok, %User{} = user} <- Api.update_user(user, user_params) do
       render(conn, "show.json", user: user)
     end
@@ -116,6 +124,14 @@ defmodule TimeManagerWeb.UserController do
 
   def update_password(conn, %{"id" => id, "user" => user_params}) do
     user = Api.get_user!(id)
+
+    if user.id != conn.assigns.current_user.id && conn.assigns.current_user.role != "admin" do
+      render(conn, "failure.json", message: "You can't update other users")
+    else
+      with {:ok, %User{} = user} <- Api.update_user_password(user, user_params) do
+        render(conn, "show.json", user: user)
+      end
+    end
 
     with {:ok, %User{} = user} <- Api.change_user_password(user, user_params) do
       render(conn, "show.json", user: user)
@@ -125,8 +141,12 @@ defmodule TimeManagerWeb.UserController do
   def delete(conn, %{"id" => id}) do
     user = Api.get_user!(id)
 
-    with {:ok, %User{}} <- Api.delete_user(user) do
-      send_resp(conn, :no_content, "")
+    if user.id != conn.assigns.current_user.id && conn.assigns.current_user.role != "admin" do
+      render(conn, "failure.json", message: "You can't delete other users")
+    else
+      with {:ok, %User{}} <- Api.delete_user(user) do
+        send_resp(conn, :no_content, "")
+      end
     end
   end
 end

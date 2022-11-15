@@ -105,7 +105,6 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api])
-    resources("/users", UserController)
     resources("/working_times", WorkingTimeController, only: [:update, :delete])
     resources("/clocks", ClockController, only: [:update, :delete])
     resources("/teams", TeamController, only: [:index])
