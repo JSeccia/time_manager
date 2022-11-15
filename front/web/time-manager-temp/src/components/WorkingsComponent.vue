@@ -462,8 +462,6 @@ export default {
 .main-manager-workingtimes {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  width: 100vw;
   height: 100%;
   position: relative;
 }
@@ -471,8 +469,11 @@ export default {
 .main-workingtimes h1 {
   font-size: 25px;
   font-weight: bold;
-  border-bottom: 2px solid black;
   height: 10%;
+}
+
+.main-manager-workingtimes h1 {
+  height: 20%;
 }
 
 /* search section */
@@ -488,6 +489,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 10%;
 }
 
 .main-manager-workingtimes .search-wt-id form .search_wt_input {

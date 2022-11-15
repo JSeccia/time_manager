@@ -4,13 +4,7 @@
 
     <div class="Global_charts">
       <PieComponent />
-    </div>
-    <!-- <div class="bar_chart">
-      <BarComponent />
-    </div>
-    -->
-
-    <div class="btn_charts">
+      <div class="btn_charts">
       <q-btn
         class="WT_button"
         push
@@ -26,6 +20,13 @@
         @click="clockButton"
       />
     </div>
+    </div>
+    <!-- <div class="bar_chart">
+      <BarComponent />
+    </div>
+    -->
+
+    
   </main>
 </template>
 
@@ -73,7 +74,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 100vh;
+  height: 80%;
   width: 100%;
 }
 
@@ -81,25 +82,26 @@ export default defineComponent({
   font-size: 25px;
   text-align: center;
   font-weight: bold;
-  height: 12%;
+  height: 25%;
   width: 60%;
+  margin: 0 auto;
 }
 
 .Global_charts {
-  width: 100%;
-  height: 100%;
+  width: 75%;
+  height: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 0 2px white;
   border-radius: 8px;
   position: relative;
+
 }
 
 .WT_charts,
 .bar_chart {
   width: 75%;
-  height: 75%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,7 +118,7 @@ export default defineComponent({
 }
 
 .WT_charts .title_WT {
-  height: 10%;
+  height: 15%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -135,9 +137,7 @@ export default defineComponent({
 .WT_charts .vue-apexcharts {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height: 50%;
-  width: 50%;
+  align-items: center;  
 }
 
 .WT_charts
@@ -150,18 +150,18 @@ export default defineComponent({
 }
 
 .btn_charts {
-  width: 100%;
-  height: 5%;
+  width: 40%;
+  height: 40%;
   display: flex;
   justify-content: center;
   position: absolute;
-  bottom: 0;
+  top: 270px;
 }
 
 .btn_charts .WT_button,
 .btn_charts .Hours_button {
-  width: 25%;
-  height: 30%;
+  width: 50%;
+  height: 100%;
   margin: 2%;
 }
 </style>

@@ -9,11 +9,12 @@ import AdminUserPage from "../pages/UsersPage.vue";
 import UserPage from "../pages/UserPage.vue";
 import TeamsPage from "../pages/TeamsPage.vue";
 import TeamPage from "../pages/TeamPage.vue";
+import IndexPage from "src/pages/IndexPage.vue";
 
 const routes = [
   {
     path: "/",
-    component: () => import("layouts/MainLayout.vue"),
+    component: IndexPage,
     children: [
       { path: "profile", component: ProfilePage },
       { path: "clocks", component: ClockPage },

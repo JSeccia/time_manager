@@ -114,7 +114,7 @@ export default {
             breakpoint: 1840,
             options: {
               chart: {
-                width: 500,
+                width: 450,
               },
               legend: {
                 position: "right",
@@ -125,7 +125,7 @@ export default {
             breakpoint: 2020,
             options: {
               chart: {
-                width: 500,
+                width: 400,
               },
               legend: {
                 position: "right",

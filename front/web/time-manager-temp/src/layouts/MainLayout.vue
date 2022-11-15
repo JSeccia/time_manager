@@ -3,33 +3,36 @@
     <q-header>
       <div class="bg-green text-white">
         <q-toolbar>
-          <div v-if="!currentUser.id">
-            <q-btn flat round dense icon="assignment_ind" to="/login" label="Sign in" @click="handleSigninButton"/>
-          </div>
-          
+
 
           <q-space />
-          <q-btn v-if="currentUser.role === 'admin'" flat round dense icon="lock" to="/admin" label="admin" @click="handleAdminButton" class="q-mr-xs" />
+          <q-btn v-if="currentUser.role === 'admin'" flat round dense icon="lock" to="/admin" label="admin"
+            @click="handleAdminButton" class="q-mr-xs" />
         </q-toolbar>
 
-        <q-toolbar inset v-if="currentUser.id" >
+        <q-toolbar inset v-if="currentUser.id">
           <q-breadcrumbs active-color="white" style="font-size: 16px">
             <q-breadcrumbs-el v-if="currentUser.role != 'admin'" label="Profile" icon="home" to="/profile" />
-            <q-breadcrumbs-el v-if="currentUser.role === 'manager' || currentUser.role === 'user'" label="Clocks" to="/clocks" />
+            <q-breadcrumbs-el v-if="currentUser.role === 'manager' || currentUser.role === 'user'" label="Clocks"
+              to="/clocks" />
             <q-breadcrumbs-el v-if="currentUser.role === 'manager'" label="Charts" to="/charts" />
             <q-breadcrumbs-el v-if="currentUser.role != 'admin'" label="Working times" to="/workingtimes" />
             <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="Teams" to="/teams" />
             <q-breadcrumbs-el v-if="currentUser.role === 'manager'" label="Team" to=teams />
 
             <q-breadcrumbs-el v-if="currentUser.role === 'admin'" label="Users" to="/users" />
-            
-          
-        </q-breadcrumbs>
+
+
+          </q-breadcrumbs>
         </q-toolbar>
       </div>
     </q-header>
+
     <q-page-container>
+
+
       <router-view />
+
     </q-page-container>
   </q-layout>
 </template>
@@ -40,7 +43,7 @@ import { useUserStore } from "src/stores/store-users";
 
 export default defineComponent({
   name: "MainLayout",
-  
+
   setup() {
     const store = useUserStore();
     return {
@@ -54,18 +57,11 @@ export default defineComponent({
   },
   methods: {
     handleAdminButton() {
-      if(this.currentUser.role === 'admin') {
+      if (this.currentUser.role === 'admin') {
         this.$router.push({ path: '/admin' });
       }
     },
-    handleSigninButton () {
-      if(!this.currentUser) {
-        this.$router.push({ path: '/login' });
-      }
-    },
-  },
-    
 
-  
+  },
 });
 </script>

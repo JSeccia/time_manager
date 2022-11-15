@@ -25,7 +25,7 @@
             </tr>
             <tr>
               <td>
-                <span> Team n°{{ user.team_id }}</span>
+                <span v-if="this.currentUser.role === 'user'"> Team n°{{ user.team_id }}</span>
               </td>
             </tr>
           </tbody>
@@ -89,17 +89,28 @@ export default {
 </script>
 
 <style>
+
+.q-page-container {
+  height: 100vh;
+  padding-top: 190px !important;
+}
+
+.q-page-container > div {
+  height: 100%;
+}
+
 .main_profile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 90vh;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
 }
 
 .profile_section {
   width: 30%;
-  height: 70%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -111,7 +122,7 @@ export default {
 
 .avatar {
   width: 30%;
-  height: 25%;
+  height: 30%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -124,7 +135,7 @@ export default {
 }
 
 .avatar-img {
-  height: 135px;
+  height: 130px;
   width: 100%;
   border-radius: 50%;
 }
@@ -134,7 +145,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 80%;
+  width: 50%;
   font-size: 15px;
 }
 
@@ -153,4 +164,19 @@ export default {
 #hidden {
   display: none;
 }
+
+@media only screen and (min-width: 780px) and (max-width: 820px) {
+  .q-page-container > div {
+    height: 50%;
+  }
+
+  .q-page-container .main_profile {
+    height: 85%;
+  }
+  
+  .profile_section {
+    width: 50%;
+  }
+}
+
 </style>
