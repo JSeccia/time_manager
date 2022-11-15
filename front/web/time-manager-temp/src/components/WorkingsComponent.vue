@@ -65,7 +65,7 @@
                 class="select-wt"
                 type="button"
                 :value="item.id"
-                @click="goWorkingTime"
+                @click="goWorkingTime(item.user, item.id)"
               />
             </td>
             <td class="WTs_item">{{ format_date(item.start) }}</td>
@@ -122,7 +122,7 @@
                 class="select-wt"
                 type="button"
                 :value="item.id"
-                @click="goWorkingTime"
+                @click="goWorkingTime(item.user, item.id)"
               />
             </td>
             <td class="WTs_item">{{ format_date(item.start) }}</td>
@@ -370,34 +370,22 @@ export default {
     },
 
     // Select one working time
-    goWorkingTime(e) {
-      if (
-        this.currentUser.role === "manager" ||
-        this.currentUser.role === "admin"
-      ) {
-        axios.get(`/api/working_times/${this.userId}`).then((response) => {
-          if (response.data.data.length > 0) {
+    goWorkingTime(userId, workingTimeId) {
+      console.log(userId, workingTimeId);
+      axios
+        .get(`/api/working_times/${userId}/${workingTimeId}`)
+        .then((response) => {
+          if (response.data) {
             this.workingTimes = response.data.data;
-            this.currentWorkingTimeId = e.target.value;
-            this.$router.push(
-              `/workings/${this.userId}/${this.currentWorkingTimeId}`
-            );
+            // this.currentWorkingTimeId = e.target.value;
+            this.$router.push({ path: `/workings/${userId}/${workingTimeId}` });
+            //   .then(() => {
+            //     this.$router.go();
+            //   });
           }
         });
-      } else {
-        axios
-          .get(`/api/working_times/${this.currentUser.id}`)
-          .then((response) => {
-            if (response.data.data.length > 0) {
-              this.workingTimes = response.data.data;
-              this.currentWorkingTimeId = e.target.value;
-              this.$router.push(
-                `/workings/${this.currentUser.id}/${this.currentWorkingTimeId}`
-              );
-            }
-          });
-      }
     },
+
     // handle add working time button condition
     handleAddWorkingTime() {
       console.log("add WorkingTime button clicked");

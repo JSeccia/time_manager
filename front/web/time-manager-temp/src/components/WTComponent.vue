@@ -21,7 +21,11 @@
             </td>
             <td :key="workingTime.end">{{ format_date(workingTime.end) }}</td>
             <td>{{ totalWt }}</td>
-            <td>
+            <td
+              v-if="
+                currentUser.role === 'admin' || currentUser.role === 'manager'
+              "
+            >
               <!-- update working time -->
               <input
                 class="edit-button"
@@ -66,8 +70,13 @@
           name="end_date_input"
         />
         <br />
-        <q-btn id="edit-submit" type="submit" push color="green-10" label="edit" />
-
+        <q-btn
+          id="edit-submit"
+          type="submit"
+          push
+          color="green-10"
+          label="edit"
+        />
       </fieldset>
     </form>
   </main>
@@ -125,7 +134,8 @@ export default {
           start:
             moment.utc(moment(this.StartDate)).format("YYYY-MM-DD HH:mm") ??
             null,
-          end: moment.utc(moment(this.EndDate)).format("YYYY-MM-DD HH:mm") ?? null,
+          end:
+            moment.utc(moment(this.EndDate)).format("YYYY-MM-DD HH:mm") ?? null,
         },
       };
       axios

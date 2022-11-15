@@ -125,7 +125,9 @@ export default {
     },
   },
   mounted() {
-    this.getTeams();
+    if (this.currentUser.role === "admin") {
+      this.getTeams();
+    }
   },
 };
 </script>
