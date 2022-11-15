@@ -13,7 +13,17 @@ defmodule TimeManager.Plug.UserIdAuth do
   end
 
   def call(conn, _opts) do
-    user = Repo.one(from(u in User, where: u.username == ^conn.params["user_id"]))
+    user =
+      try do
+        TimeManager.Api.get_user!(conn.params["user_id"])
+      rescue
+        e in Ecto.NoResultsError ->
+          conn
+          |> put_status(:not_found)
+          |> Phoenix.Controller.put_view(TimeManagerWeb.ErrorView)
+          |> Phoenix.Controller.render(:"404")
+          |> halt()
+      end
 
     case conn.assigns.current_user.role do
       "admin" ->
