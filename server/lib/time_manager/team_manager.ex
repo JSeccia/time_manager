@@ -25,10 +25,6 @@ defmodule TimeManager.Plug.TeamManager do
             |> halt()
         end
 
-      IO.inspect(conn.assigns.current_user.id)
-      IO.inspect("pipi")
-      IO.inspect(team.manager)
-
       if team.manager != conn.assigns.current_user.id do
         conn
         |> put_status(:unauthorized)

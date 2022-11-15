@@ -71,7 +71,7 @@ defmodule TimeManager.Api do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.changeset_update(attrs)
     |> Repo.update()
   end
 
@@ -111,8 +111,8 @@ defmodule TimeManager.Api do
       %Ecto.Changeset{data: %User{}}
   
   """
-  def change_user(%User{} = user, attrs \\ %{}) do
-    User.changeset(user, attrs)
+  def change_user_password(%User{} = user, attrs \\ %{}) do
+    User.changeset_password(user, attrs)
   end
 
   alias TimeManager.Api.WorkingTime
