@@ -76,8 +76,8 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through([:api, :user_id_auth])
-    get("/working_times/:user_id/:id", WorkingTimeController, :get_one)
     get("/working_times/:user_id", WorkingTimeController, :index)
+    get("/working_times/:user_id/:id", WorkingTimeController, :get_one)
   end
 
   scope "/api", TimeManagerWeb do

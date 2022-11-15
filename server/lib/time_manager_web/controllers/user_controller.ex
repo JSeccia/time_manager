@@ -128,13 +128,9 @@ defmodule TimeManagerWeb.UserController do
     if user.id != conn.assigns.current_user.id && conn.assigns.current_user.role != "admin" do
       render(conn, "failure.json", message: "You can't update other users")
     else
-      with {:ok, %User{} = user} <- Api.update_user_password(user, user_params) do
+      with {:ok, %User{} = user} <- Api.change_user_password(user, user_params) do
         render(conn, "show.json", user: user)
       end
-    end
-
-    with {:ok, %User{} = user} <- Api.change_user_password(user, user_params) do
-      render(conn, "show.json", user: user)
     end
   end
 
