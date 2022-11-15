@@ -2,7 +2,7 @@
   <main class="main_teams">
     <section v-if="currentUser.role === 'admin'" class="managing_teams">
       <h1>Manage Teams</h1>
-      <q-btn label="Create Team" @click="handleTeamCreate" />
+      <!-- <q-btn label="Create Team" @click="handleTeamCreate" /> -->
       <div class="display-teams">
         <table class="teams-table">
           <thead>
