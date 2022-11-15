@@ -131,9 +131,14 @@
           </tr>
         </tbody>
       </table>
-      <!-- Create form -->
+      
+    </section>
+    <div class="TimeChart">
+      <TimeChart />
+    </div>
+    <!-- Create form -->
 
-      <form
+    <form
         id="create-form"
         v-if="isAddButtonSelected"
         @submit.prevent="createWorkingTime"
@@ -166,10 +171,6 @@
           />
         </fieldset>
       </form>
-    </section>
-    <div class="TimeChart">
-      <TimeChart />
-    </div>
   </main>
 </template>
 
